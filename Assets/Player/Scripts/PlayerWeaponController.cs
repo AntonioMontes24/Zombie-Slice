@@ -98,7 +98,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         Debug.DrawRay(ray.origin, ray.direction * currentGun.shootRange, Color.red, 1f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, currentGun.shootRange, ~ignoreLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, currentGun.shootRange))
         {
             Debug.Log("Hit: " + hit.collider.name);
 
@@ -227,5 +227,18 @@ public class PlayerWeaponManager : MonoBehaviour
         yield return new WaitForSeconds(muzzleFlashTime);
         muzzleFlashPrefab.SetActive(false);
     }
+
+    void OnGUI()
+    {
+        if (gunList.Count == 0) return;
+        GunStats currentGun = gunList[gunList.Count - 1];
+
+        GUIStyle style = new GUIStyle(GUI.skin.label);
+        style.fontSize = 24;
+        style.normal.textColor = Color.blueViolet;
+
+        GUI.Label(new Rect(300, 10, 300, 40), "Ammo: " + currentGun.ammoCur + " / " + currentGun.ammoMax, style);
+    }
+
 
 }
