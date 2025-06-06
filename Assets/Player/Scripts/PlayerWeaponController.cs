@@ -5,6 +5,7 @@ using NUnit.Framework.Interfaces;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
+    //Gunstats
     public List<GunStats> gunList = new List<GunStats>();
     public AudioSource aud;
     public GameObject muzzleFlashPrefab;
@@ -15,6 +16,9 @@ public class PlayerWeaponManager : MonoBehaviour
     public GameObject tracerPrefab;
     public Transform barrelTip;
     public Camera gameplayCamera;
+    public GameObject shellCasingPrefab;
+    public Transform shellEjectionPoint;
+    public float shellEjectForce = 2f;
 
     Transform currentHipPosition;
     Transform currentAdsPosition;
@@ -104,6 +108,19 @@ public class PlayerWeaponManager : MonoBehaviour
                     rb.AddForce(tracer.transform.forward * 1000f);
                 Destroy(tracer, 2f);
             }
+
+            if (shellCasingPrefab != null && shellEjectionPoint != null)
+            {
+                GameObject shell = Instantiate(shellCasingPrefab, shellEjectionPoint.position, shellEjectionPoint.rotation);
+                Rigidbody rb = shell.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.AddForce(shellEjectionPoint.forward * shellEjectForce, ForceMode.Impulse);
+                    rb.AddTorque(Random.insideUnitSphere * shellEjectForce, ForceMode.Impulse);
+                }
+                Destroy(shell, 3f);
+            }
+
         }
     }
 
