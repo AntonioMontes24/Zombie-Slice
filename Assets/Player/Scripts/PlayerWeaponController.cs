@@ -228,4 +228,17 @@ public class PlayerWeaponManager : MonoBehaviour
         muzzleFlashPrefab.SetActive(false);
     }
 
+    void OnGUI()
+    {
+        if (gunList.Count == 0) return;
+        GunStats currentGun = gunList[gunList.Count - 1];
+
+        GUIStyle style = new GUIStyle(GUI.skin.label);
+        style.fontSize = 24;
+        style.normal.textColor = Color.blueViolet;
+
+        GUI.Label(new Rect(300, 10, 300, 40), "Ammo: " + currentGun.ammoCur + " / " + currentGun.ammoMax, style);
+    }
+
+
 }
