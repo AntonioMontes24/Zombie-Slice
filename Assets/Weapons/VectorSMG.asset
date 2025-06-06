@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac454a474364a3d4b91fabf34fc09b61, type: 3}
+  m_Name: VectorSMG
+  m_EditorClassIdentifier: 
+  gunModel: {fileID: 1961990101587943724, guid: 3bb575d36b416484bb6772f69f878ae5, type: 3}
+  shootDamage: 5
+  shootRate: 0.1
+  shootRange: 90
+  ammoCur: 17
+  ammoMax: 30
+  reloadTime: 1.2
+  canSwitchFireMode: 1
+  isAutomaticDefault: 0
+  autoFireRate: 0.08
+  semiFireRate: 0.25
+  bulletHolePrefab: {fileID: 1986255721100838, guid: 30e516f4b3dfb49b5aea34c8077d64e5, type: 3}
+  hitEffect: {fileID: 970440554703164915, guid: 47096eff328e11a418ace7db2d72aa97, type: 3}
+  shootSound: {fileID: 8300000, guid: 57a5ad6d126b4454b8ea286fc426c12e, type: 3}
+  reloadSound: {fileID: 8300000, guid: 65aceeaf1509a0e4bb260b79c899628d, type: 3}
+  shootVol: 1
+  fireModeSwitchSound: {fileID: 8300000, guid: e4401dc0d0f420346950f2d8d71d4e51, type: 3}
