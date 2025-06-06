@@ -15,18 +15,42 @@ public class PlayerWeaponManager : MonoBehaviour
     public float adsSpeed;
     public GameObject tracerPrefab;
     public Transform barrelTip;
+
+    //Camera
     public Camera gameplayCamera;
+
+    //ShellCasing
     public GameObject shellCasingPrefab;
     public Transform shellEjectionPoint;
     public float shellEjectForce = 2f;
 
+    //ADS
     Transform currentHipPosition;
     Transform currentAdsPosition;
+    //Firemode
     bool isAutomaticMode;
     bool isReloading;
     Coroutine reloadCoroutine;
     float shootCooldown = 0f;
     bool isAiming;
+
+    //Recoil
+    public float weaponRecoilKick = 0.1f;
+    public float weaponRecoilRecoverySpeed = 10f;
+
+    private Vector3 initialGunPosition;
+    private Vector3 currentGunOffset;
+
+
+
+    private void Start()
+    {
+        if(gunModel != null)
+        {
+            initialGunPosition = gunModel.transform.localPosition;
+        }
+    }
+
 
     public void HandleShooting()
     {
@@ -107,6 +131,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 if (rb != null)
                     rb.AddForce(tracer.transform.forward * 1000f);
                 Destroy(tracer, 2f);
+
             }
 
             if (shellCasingPrefab != null && shellEjectionPoint != null)
@@ -120,6 +145,8 @@ public class PlayerWeaponManager : MonoBehaviour
                 }
                 Destroy(shell, 3f);
             }
+
+            currentGunOffset.z -= weaponRecoilKick;
 
         }
     }
@@ -158,12 +185,17 @@ public class PlayerWeaponManager : MonoBehaviour
 
         Transform target = isAiming ? currentAdsPosition : currentHipPosition;
 
-        gunModel.transform.localPosition = Vector3.Lerp(
+        Vector3 recoilAdjustedPosition = target.localPosition + currentGunOffset;
+        gunModel.transform.localPosition = Vector3.Lerp
+            (
             gunModel.transform.localPosition,
-            target.localPosition,
+            recoilAdjustedPosition,
             Time.deltaTime * adsSpeed
         );
-        gunModel.transform.localRotation = Quaternion.Slerp(
+
+        currentGunOffset = Vector3.Lerp(currentGunOffset, Vector3.zero, Time.deltaTime * weaponRecoilRecoverySpeed);
+        gunModel.transform.localRotation = Quaternion.Slerp
+            (
             gunModel.transform.localRotation,
             target.localRotation,
             Time.deltaTime * adsSpeed
@@ -195,4 +227,5 @@ public class PlayerWeaponManager : MonoBehaviour
         yield return new WaitForSeconds(muzzleFlashTime);
         muzzleFlashPrefab.SetActive(false);
     }
+
 }
