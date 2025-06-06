@@ -98,7 +98,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         Debug.DrawRay(ray.origin, ray.direction * currentGun.shootRange, Color.red, 1f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, currentGun.shootRange, ~ignoreLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, currentGun.shootRange))
         {
             Debug.Log("Hit: " + hit.collider.name);
 
