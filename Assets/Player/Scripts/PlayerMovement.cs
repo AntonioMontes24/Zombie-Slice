@@ -4,19 +4,19 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public CharacterController controller;
-    public float walkSpeed;
-    public float sprintMultiplier;
-    public int jumpMax;
-    public float jumpForce;
-    public float gravity;
-    public AudioSource aud;
-    public AudioClip[] audioSteps;
-    [Range(0, 1)] public float audioStepsVol = 0.9f;
-    public AudioClip[] audioJump;
-    [Range(0, 1)] public float audioJumpVol = 0.9f;
-    public AudioClip[] audioLand;
-    [Range(0, 1)] public float audioLandVol = 0.9f;
+    [SerializeField] CharacterController controller;
+    [SerializeField] float walkSpeed;
+    [SerializeField] float sprintMultiplier;
+    [SerializeField] int jumpMax;
+    [SerializeField] float jumpForce;
+    [SerializeField] float gravity;
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip[] audioSteps;
+    [SerializeField] public float audioStepsVol;
+    [SerializeField] AudioClip[] audioJump;
+    [SerializeField] public float audioJumpVol;
+    [SerializeField] AudioClip[] audioLand;
+    [SerializeField] public float audioLandVol;
 
     Vector3 moveDir;
     Vector3 playerVel;
