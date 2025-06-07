@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 1828467094430558984}
   - component: {fileID: 5388525181068941285}
   - component: {fileID: 5108651073664488776}
+  - component: {fileID: 7339763463625293449}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -209,7 +210,7 @@ MonoBehaviour:
   barrelTip: {fileID: 4412718766743066968}
   gameplayCamera: {fileID: 777895409618514678}
   shellCasingPrefab: {fileID: 1002650325336458, guid: 0ba70bec049ce044698a5e99706278da, type: 3}
-  shellEjectionPoint: {fileID: 2924691678577548569}
+  shellEjectionPoint: {fileID: 3986746252314547725}
   shellEjectForce: 2
   weaponRecoilKick: 0.04
   weaponRecoilRecoverySpeed: 10
@@ -327,6 +328,23 @@ MonoBehaviour:
   deathEffect: {fileID: 0}
   hurtSound: {fileID: 8300000, guid: d48661b34c13f3c4d8a2f96a61d2d0ed, type: 3}
   deathSound: {fileID: 8300000, guid: 30be35cbf7cbeda4698a085c64115377, type: 3}
+--- !u!114 &7339763463625293449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156476038347565909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4bc983a45bef904e9ea033191470168, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 100
+  deathEffect: {fileID: 0}
+  hurtSound: {fileID: 8300000, guid: d48661b34c13f3c4d8a2f96a61d2d0ed, type: 3}
+  deathSound: {fileID: 8300000, guid: 30be35cbf7cbeda4698a085c64115377, type: 3}
 --- !u!1 &1207658442423282720
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +412,7 @@ Transform:
   - {fileID: 2643241457193889986}
   - {fileID: 4412718766743066968}
   - {fileID: 2924691678577548569}
+  - {fileID: 3986746252314547725}
   m_Father: {fileID: 6940721495392030550}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1688676946882202230
@@ -472,6 +491,37 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2020322743500786168}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0138, y: 0.0833, z: 0.2245}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3129758015420695674}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2046740264593476346
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3986746252314547725}
+  m_Layer: 3
+  m_Name: ShellEject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &3986746252314547725
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046740264593476346}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.0138, y: 0.0833, z: 0.2245}
@@ -948,7 +998,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6857086436471412723}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &1426804254170751474
 MonoBehaviour:
   m_ObjectHideFlags: 0
