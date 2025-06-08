@@ -5,52 +5,41 @@ using NUnit.Framework.Interfaces;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
-    //Gunstats
-    public List<GunStats> gunList = new List<GunStats>();
-    public AudioSource aud;
-    public GameObject muzzleFlashPrefab;
-    public float muzzleFlashTime = 0.05f;
-    public LayerMask ignoreLayer;
-    public GameObject gunModel;
-    public float adsSpeed;
-    public GameObject tracerPrefab;
-    public Transform barrelTip;
+    [SerializeField] List<GunStats> gunList = new List<GunStats>();
+    [SerializeField] AudioSource aud;
+    [SerializeField] GameObject muzzleFlashPrefab;
+    [SerializeField] float muzzleFlashTime;
+    [SerializeField] LayerMask ignoreLayer;
+    [SerializeField] GameObject gunModel;
+    [SerializeField] float adsSpeed;
+    [SerializeField] GameObject tracerPrefab;
+    [SerializeField] Transform barrelTip;
+    [SerializeField] Camera gameplayCamera;
+    [SerializeField] GameObject shellCasingPrefab;
+    [SerializeField] Transform shellEjectionPoint;
+    [SerializeField] float shellEjectForce;
 
-    //Camera
-    public Camera gameplayCamera;
-
-    //ShellCasing
-    public GameObject shellCasingPrefab;
-    public Transform shellEjectionPoint;
-    public float shellEjectForce = 2f;
-
-    //ADS
     Transform currentHipPosition;
     Transform currentAdsPosition;
-    //Firemode
     bool isAutomaticMode;
     bool isReloading;
     Coroutine reloadCoroutine;
-    float shootCooldown = 0f;
+    float shootCooldown;
     bool isAiming;
 
-    //Recoil
-    public float weaponRecoilKick = 0.1f;
-    public float weaponRecoilRecoverySpeed = 10f;
+    [SerializeField] private float weaponRecoilKick;
+    [SerializeField] private float weaponRecoilRecoverySpeed;
 
     private Vector3 initialGunPosition;
     private Vector3 currentGunOffset;
 
-
-
     private void Start()
     {
-        if(gunModel != null)
+        if (gunModel != null)
         {
             initialGunPosition = gunModel.transform.localPosition;
         }
     }
-
 
     public void HandleShooting()
     {
@@ -91,17 +80,32 @@ public class PlayerWeaponManager : MonoBehaviour
         if (currentGun.shootSound != null)
             aud.PlayOneShot(currentGun.shootSound, currentGun.shootVol);
 
-        Ray ray = gameplayCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        Ray ray;
+
+        if (isAiming)
+        {
+            ray = gameplayCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        }
+        else
+        {
+            float spreadAngle = 5f;
+            Vector3 spreadDir = Quaternion.Euler(
+                Random.Range(-spreadAngle, spreadAngle),
+                Random.Range(-spreadAngle, spreadAngle),
+                0
+            ) * barrelTip.forward;
+
+            ray = new Ray(barrelTip.position, spreadDir);
+        }
 
         if (muzzleFlashPrefab != null)
             StartCoroutine(MuzzleFlashRoutine());
 
         Debug.DrawRay(ray.origin, ray.direction * currentGun.shootRange, Color.red, 1f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, currentGun.shootRange))
+        if (Physics.Raycast(ray, out RaycastHit hit, currentGun.shootRange, ~ignoreLayer))
         {
             Debug.Log("Hit: " + hit.collider.name);
-
             if (currentGun.hitEffect != null)
             {
                 var i = Instantiate(currentGun.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
@@ -123,15 +127,15 @@ public class PlayerWeaponManager : MonoBehaviour
             if (dmg != null)
                 dmg.takeDamage(currentGun.shootDamage);
 
-            if (tracerPrefab != null && barrelTip != null)
+            if (tracerPrefab != null)
             {
-                GameObject tracer = Instantiate(tracerPrefab, barrelTip.position, barrelTip.rotation);
+                Vector3 tracerStart = barrelTip.position;
+                GameObject tracer = Instantiate(tracerPrefab, tracerStart, Quaternion.identity);
                 tracer.transform.LookAt(hit.point);
                 Rigidbody rb = tracer.GetComponent<Rigidbody>();
                 if (rb != null)
-                    rb.AddForce(tracer.transform.forward * 1000f);
+                    rb.AddForce(tracer.transform.forward * 1000f, ForceMode.Impulse);
                 Destroy(tracer, 2f);
-
             }
 
             if (shellCasingPrefab != null && shellEjectionPoint != null)
@@ -140,16 +144,21 @@ public class PlayerWeaponManager : MonoBehaviour
                 Rigidbody rb = shell.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
-                    rb.AddForce(shellEjectionPoint.forward * shellEjectForce, ForceMode.Impulse);
+                    Vector3 ejectDirection = shellEjectionPoint.right +
+                                             (shellEjectionPoint.up * Random.Range(-0.2f, 0.2f)) +
+                                             (shellEjectionPoint.forward * Random.Range(-0.1f, 0.1f));
+
+                    rb.AddForce(ejectDirection.normalized * shellEjectForce, ForceMode.Impulse);
                     rb.AddTorque(Random.insideUnitSphere * shellEjectForce, ForceMode.Impulse);
                 }
                 Destroy(shell, 3f);
             }
 
-            currentGunOffset.z -= weaponRecoilKick;
 
+            currentGunOffset.z -= weaponRecoilKick;
         }
     }
+
 
     IEnumerator ReloadRoutine(GunStats gun)
     {
@@ -186,16 +195,14 @@ public class PlayerWeaponManager : MonoBehaviour
         Transform target = isAiming ? currentAdsPosition : currentHipPosition;
 
         Vector3 recoilAdjustedPosition = target.localPosition + currentGunOffset;
-        gunModel.transform.localPosition = Vector3.Lerp
-            (
+        gunModel.transform.localPosition = Vector3.Lerp(
             gunModel.transform.localPosition,
             recoilAdjustedPosition,
             Time.deltaTime * adsSpeed
         );
 
         currentGunOffset = Vector3.Lerp(currentGunOffset, Vector3.zero, Time.deltaTime * weaponRecoilRecoverySpeed);
-        gunModel.transform.localRotation = Quaternion.Slerp
-            (
+        gunModel.transform.localRotation = Quaternion.Slerp(
             gunModel.transform.localRotation,
             target.localRotation,
             Time.deltaTime * adsSpeed
@@ -239,6 +246,4 @@ public class PlayerWeaponManager : MonoBehaviour
 
         GUI.Label(new Rect(300, 10, 300, 40), "Ammo: " + currentGun.ammoCur + " / " + currentGun.ammoMax, style);
     }
-
-
 }
