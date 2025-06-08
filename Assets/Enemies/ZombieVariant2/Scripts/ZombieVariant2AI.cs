@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
+
 public class ZombieVariant2AI : MonoBehaviour, IDamage
 {
     // create some serialized variables
@@ -59,12 +60,20 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         // we want to make him stop before he collides with the player
 
         // take the players current position from the game manager and subtract our position
-        playerDirection = GameManager.instance.transform.position - transform.position;
+        playerDirection = GameManager.instance.player.transform.position - transform.position;
+        // playerDirection = ZGameManager.instance.player.transform.position - transform.position;
 
-        if(playerInRange)
+        if (playerInRange)
         {
             // set our navmesh agent towards the players position
             agent.SetDestination(GameManager.instance.player.transform.position);
+            // agent.SetDestination(ZGameManager.instance.player.transform.position);
+
+            if(agent.remainingDistance <= agent.stoppingDistance)
+            {
+                // we need to face the player
+                faceTarget();
+            }
         }
 
         
@@ -95,5 +104,15 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
             // player left our range
             playerInRange = false;
         }
+    }
+
+    void faceTarget()
+    {
+        // turn our enemy towards the player when he is not moving
+        // we need a direction not a position to rotate, example a position - a position
+
+        Quaternion rotate_val = (Quaternion.LookRotation(new Vector3(playerDirection.x, 0, playerDirection.z)));
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotate_val, Time.deltaTime * faceTargetSpeed);
+
     }
 }
