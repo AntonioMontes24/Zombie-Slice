@@ -9,9 +9,9 @@ public class enemyAI : MonoBehaviour
     [SerializeField] NavMeshAgent agent;
     [SerializeField] int HP; //Enemy HP variable
     [SerializeField] int facePlayerSpeed;
-    [SerializeField] float speed;
-    public Transform target;
-    public Rigidbody rb;
+   
+   // public Transform target;
+    //public Rigidbody rb;
     Color colorOrig; //Original color for hit feedback
 
     bool playerInRange; //Will check to see if player in range for attack
@@ -28,14 +28,14 @@ public class enemyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       playerDir = GameManager.instance.player.transform.position - transform.position; //Track player
+       playerDir = zGameManager.instance.player.transform.position - transform.position; //Track player - calling zGameManager - created to test movement
 
         if (playerInRange)
         {
-            agent.SetDestination(GameManager.instance.player.transform.position);
+            agent.SetDestination(zGameManager.instance.player.transform.position);
             if (agent.remainingDistance <= agent.stoppingDistance)
             {
-                chasePlayer();
+                FacePlayer();
             }
         }
     }
@@ -68,12 +68,7 @@ public class enemyAI : MonoBehaviour
         }
     }
 
-    void chasePlayer()
-    {
-        Vector3 pos = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
-        rb.MovePosition(pos);
-        FacePlayer();
-    }
+  
 
     /*DAMAGE*/
     public void takeDamge(int amount)
