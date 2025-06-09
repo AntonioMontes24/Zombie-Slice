@@ -55,6 +55,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerMovement: {fileID: 398686685933024459}
   weaponManager: {fileID: 1828467094430558984}
+  playerHealth: {fileID: 5108651073664488776}
 --- !u!114 &398686685933024459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 100
+  HPOrig: 0
   deathEffect: {fileID: 0}
   hurtSound: {fileID: 8300000, guid: d48661b34c13f3c4d8a2f96a61d2d0ed, type: 3}
   deathSound: {fileID: 8300000, guid: 30be35cbf7cbeda4698a085c64115377, type: 3}
