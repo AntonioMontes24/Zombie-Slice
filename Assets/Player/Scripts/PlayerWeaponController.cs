@@ -19,13 +19,18 @@ public class PlayerWeaponManager : MonoBehaviour
     [SerializeField] Transform shellEjectionPoint;
     [SerializeField] float shellEjectForce;
 
+
+    //ADS and Hip position transforms
     Transform currentHipPosition;
     Transform currentAdsPosition;
+
     bool isAutomaticMode;
     bool isReloading;
+    bool playedEmptySound;
     Coroutine reloadCoroutine;
     float shootCooldown;
     bool isAiming;
+    int currentAmmoLimit;
 
     [SerializeField] private float weaponRecoilKick;
     [SerializeField] private float weaponRecoilRecoverySpeed;
@@ -41,7 +46,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void HandleShooting()
+    public void HandleShooting()//Handles Shooting
     {
         shootCooldown -= Time.deltaTime;
         if (gunList.Count == 0) return;
@@ -53,26 +58,47 @@ public class PlayerWeaponManager : MonoBehaviour
 
         if (fireInput && shootCooldown <= 0f)
         {
-            if (currentGun.ammoCur > 0)
+            if (currentGun.ammoCur > 0) // Check if mag is not empty, then fire
             {
                 shootCooldown = isAutomaticMode ? currentGun.autoFireRate : currentGun.semiFireRate;
                 Shoot();
                 currentGun.ammoCur--;
+                playedEmptySound = false;
 
-                if (currentGun.ammoCur <= 0)
+                if (currentGun.ammoCur <= 0 && currentGun.ammoReserve > 0)
+                {
                     reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));
+                }
             }
             else
             {
-                if (reloadCoroutine == null) reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));
+                if (currentGun.ammoReserve > 0 && reloadCoroutine == null) // Checks ammo Reserve
+                {
+                    reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));
+                    playedEmptySound = false;
+                }
+                else if (currentGun.emptySound != null && !playedEmptySound)// Flag to avoid empty sound spam 
+                {
+                    aud.PlayOneShot(currentGun.emptySound);
+                    playedEmptySound = true;
+                }
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && currentGun.ammoCur < currentGun.ammoMax && !isReloading)
-            reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));
+        // Reset the empty sound flag when player releases fire
+        if (!Input.GetButton("Fire1"))
+        {
+            playedEmptySound = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R) && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
+        {
+            reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));// Starts Reload
+        }
     }
 
-    void Shoot()
+
+    void Shoot()//Handles damage/Ray cast/ and checks for current gun and gun stats
     {
         if (gunList.Count == 0 || gameplayCamera == null) return;
         GunStats currentGun = gunList[gunList.Count - 1];
@@ -98,14 +124,14 @@ public class PlayerWeaponManager : MonoBehaviour
             ray = new Ray(barrelTip.position, spreadDir);
         }
 
-        if (muzzleFlashPrefab != null)
+        if (muzzleFlashPrefab != null)//Muzzle flash handler
             StartCoroutine(MuzzleFlashRoutine());
 
         Debug.DrawRay(ray.origin, ray.direction * currentGun.shootRange, Color.red, 1f);
 
         if (Physics.Raycast(ray, out RaycastHit hit, currentGun.shootRange, ~ignoreLayer))
         {
-            Debug.Log("Hit: " + hit.collider.name);
+            Debug.Log("Hit: " + hit.collider.name);// Debug screen message to check what was hit
             if (currentGun.hitEffect != null)
             {
                 var i = Instantiate(currentGun.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
@@ -123,11 +149,11 @@ public class PlayerWeaponManager : MonoBehaviour
                 Destroy(bulletHole, 10f);
             }
 
-            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            IDamage dmg = hit.collider.GetComponent<IDamage>(); //------Damage
             if (dmg != null)
                 dmg.takeDamage(currentGun.shootDamage);
 
-            if (tracerPrefab != null)
+            if (tracerPrefab != null)//-----Tracer Prefab
             {
                 Vector3 tracerStart = barrelTip.position;
                 GameObject tracer = Instantiate(tracerPrefab, tracerStart, Quaternion.identity);
@@ -138,13 +164,13 @@ public class PlayerWeaponManager : MonoBehaviour
                 Destroy(tracer, 2f);
             }
 
-            if (shellCasingPrefab != null && shellEjectionPoint != null)
+            if (shellCasingPrefab != null && shellEjectionPoint != null)//------Shell casing Prefab
             {
                 GameObject shell = Instantiate(shellCasingPrefab, shellEjectionPoint.position, shellEjectionPoint.rotation);
                 Rigidbody rb = shell.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
-                    Vector3 ejectDirection = shellEjectionPoint.right +
+                    Vector3 ejectDirection = shellEjectionPoint.right + // Random Shell ejection
                                              (shellEjectionPoint.up * Random.Range(-0.2f, 0.2f)) +
                                              (shellEjectionPoint.forward * Random.Range(-0.1f, 0.1f));
 
@@ -153,24 +179,33 @@ public class PlayerWeaponManager : MonoBehaviour
                 }
                 Destroy(shell, 3f);
             }
-
-
             currentGunOffset.z -= weaponRecoilKick;
         }
     }
 
-
-    IEnumerator ReloadRoutine(GunStats gun)
+    IEnumerator ReloadRoutine(GunStats gun)//Handles reload and ammo limit reserve. 
     {
         isReloading = true;
         if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound, 0.8f);
         yield return new WaitForSeconds(gun.reloadTime);
-        gun.ammoCur = gun.ammoMax;
+
+        int needed = gun.ammoMax - gun.ammoCur;
+
+        if(gun.ammoReserve >= needed)
+        {
+            gun.ammoCur += needed;
+            gun.ammoReserve -= needed;
+        }
+        else
+        {
+            gun.ammoCur += gun.ammoReserve;
+            gun.ammoReserve = 0;
+        }
         isReloading = false;
         reloadCoroutine = null;
     }
 
-    public void GetGunStats(GunStats gun)
+    public void GetGunStats(GunStats gun)//---Gets gun and gunstats
     {
         gunList.Add(gun);
         isAutomaticMode = gun.isAutomaticDefault;
@@ -182,12 +217,12 @@ public class PlayerWeaponManager : MonoBehaviour
         currentAdsPosition = gunModel.transform.Find("ADSPosition");
     }
 
-    public void SetAiming(bool aim)
+    public void SetAiming(bool aim)//Sets aiming bool
     {
         isAiming = aim;
     }
 
-    public void HandleADS()
+    public void HandleADS()//Handles ads position/recoil
     {
         if (currentHipPosition == null || currentAdsPosition == null)
             return;
@@ -209,7 +244,7 @@ public class PlayerWeaponManager : MonoBehaviour
         );
     }
 
-    public void ToggleFireMode()
+    public void ToggleFireMode()//Sets Firemode
     {
         if (gunList.Count == 0) return;
         GunStats currentGun = gunList[gunList.Count - 1];
@@ -223,19 +258,19 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public bool HasGun()
+    public bool HasGun()//Checks if there is a current gun 
     {
         return gunList.Count > 0;
     }
 
-    IEnumerator MuzzleFlashRoutine()
+    IEnumerator MuzzleFlashRoutine()//----Muzzle Flash vfx handler
     {
         muzzleFlashPrefab.SetActive(true);
         yield return new WaitForSeconds(muzzleFlashTime);
         muzzleFlashPrefab.SetActive(false);
     }
 
-    void OnGUI()
+    void OnGUI()//---- TEMP UI 
     {
         if (gunList.Count == 0) return;
         GunStats currentGun = gunList[gunList.Count - 1];
@@ -245,5 +280,6 @@ public class PlayerWeaponManager : MonoBehaviour
         style.normal.textColor = Color.blueViolet;
 
         GUI.Label(new Rect(300, 10, 300, 40), "Ammo: " + currentGun.ammoCur + " / " + currentGun.ammoMax, style);
+        GUI.Label(new Rect(1000,10,300,40), "Ammo Reserve: " + currentGun.ammoReserve,style);
     }
 }

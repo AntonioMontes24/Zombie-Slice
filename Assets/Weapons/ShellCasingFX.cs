@@ -9,7 +9,7 @@ public class ShellCasing : MonoBehaviour
     private AudioSource audioSource;
     private bool hasPlayed = false;
 
-    void Start()
+    void Start()//Handles shell sfx 
     {
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.clip = hitSound;
@@ -17,7 +17,7 @@ public class ShellCasing : MonoBehaviour
         Destroy(gameObject, destroyDelay);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)//Checks collision with ground or object to play sfx
     {
         if (!hasPlayed && collision.relativeVelocity.magnitude > minVelocity)
         {

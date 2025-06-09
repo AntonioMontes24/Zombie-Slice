@@ -10,7 +10,7 @@ public class pickup : MonoBehaviour
         gun.ammoCur = gun.ammoMax;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)//---Handles weapon pick up
     {
         if (other.CompareTag("Player"))
         {

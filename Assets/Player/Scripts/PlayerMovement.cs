@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     bool isPlayingStep;
     bool wasGrounded;
 
-    public void HandleMove()
+    public void HandleMove()//Movement
     {
         HandleJump();
         wasGrounded = controller.isGrounded;
@@ -49,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(PlaySteps());
     }
 
-    public void HandleSprint()
+    public void HandleSprint()//Sprint
     {
         if (Input.GetButtonDown("Sprint"))
             isSprinting = true;
@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
             isSprinting = false;
     }
 
-    public void HandleJump()
+    public void HandleJump()//Jump
     {
         if (Input.GetButtonDown("Jump") && wasGrounded)
         {
@@ -69,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void HandleLanding()
+    public void HandleLanding()//Landing
     {
         if (isJumped && controller.isGrounded && audioLand.Length > 0)
             aud.PlayOneShot(audioLand[Random.Range(0, audioLand.Length)], audioLandVol);
@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
             isJumped = false;
     }
 
-    IEnumerator PlaySteps()
+    IEnumerator PlaySteps()//Steps sfx
     {
         isPlayingStep = true;
         aud.PlayOneShot(audioSteps[Random.Range(0, audioSteps.Length)], audioStepsVol);
