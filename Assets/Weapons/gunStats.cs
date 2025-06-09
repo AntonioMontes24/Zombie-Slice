@@ -3,27 +3,30 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewGunStats", menuName = "Weapon/Gun Stats")]
 public class GunStats : ScriptableObject
 {
+
     [Header("Weapons Stats")]
-    public GameObject gunModel;
-    public int shootDamage;
-    public float shootRate;
-    public int shootRange;
-    public int ammoCur, ammoMax;
-    public float reloadTime;
+    [SerializeField] public GameObject gunModel;
+    [SerializeField] public int shootDamage;
+    [SerializeField] public float shootRate;
+    [SerializeField] public int shootRange;
+    [SerializeField] public int ammoCur, ammoMax;
+    [SerializeField] public float reloadTime;
+    [SerializeField] public int ammoReserve;
 
     [Header("Weapon Fire Type")]
-    public bool canSwitchFireMode;
-    public bool isAutomaticDefault;
-    public float autoFireRate;
-    public float semiFireRate;
+    [SerializeField] public bool canSwitchFireMode;
+    [SerializeField] public bool isAutomaticDefault;
+    [SerializeField] public float autoFireRate;
+    [SerializeField] public float semiFireRate;
 
     [Header("VFX")]
-    public GameObject bulletHolePrefab;
-    public ParticleSystem hitEffect;
+    [SerializeField] public GameObject bulletHolePrefab;
+    [SerializeField] public ParticleSystem hitEffect;
 
     [Header("SFX")]
-    public AudioClip shootSound;
-    public AudioClip reloadSound;
-    [Range(0, 1)] public float shootVol = 1f;
-    public AudioClip fireModeSwitchSound;
+    [SerializeField] public AudioClip shootSound;
+    [SerializeField] public AudioClip reloadSound;
+    [SerializeField] public AudioClip emptySound;
+    [SerializeField] public float shootVol;
+    [SerializeField] public AudioClip fireModeSwitchSound;
 }

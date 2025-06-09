@@ -3,13 +3,14 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Player Health")]
-    public float maxHealth;
-    public float currentHealth;
+    [SerializeField] int maxHealth;
+    [SerializeField] int currentHealth;
+    public int HPOrig;
 
     [Header("VFX")]
     public GameObject deathEffect;//If we want like a bloody screen or something
-    public AudioClip hurtSound;
-    public AudioClip deathSound;
+    public AudioClip hurtSound;//hurt sfx   
+    public AudioClip deathSound;// death sfx
 
 
     private AudioSource audioSource;
@@ -20,27 +21,25 @@ public class PlayerHealth : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    public void TakeDamage(float amount)
+    public void TakeDamage(int amount)// handles damage take
     {
         currentHealth -= amount;
-        currentHealth = Mathf.Clamp(currentHealth,0f,maxHealth);
 
         if(hurtSound) audioSource?.PlayOneShot(hurtSound);
 
-        if (currentHealth <= 0f)
+        if (currentHealth <= 0)
         {
             Die();
         }
         Debug.Log("PlayerHealth: " + currentHealth);
     }
 
-    public void Heal(float amount)
+    public void Heal(int amount)//Handles healing waiting on health pick up to test
     {
-        currentHealth += amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        currentHealth += Mathf.Min(currentHealth + amount, maxHealth);
     }
 
-    void Die()
+    void Die()//Handles death/VFX/SFX
     {
         if (deathEffect) Instantiate(deathEffect, transform.position, Quaternion.identity);
         if (deathSound && audioSource) audioSource.PlayOneShot(deathSound);
@@ -56,6 +55,13 @@ public class PlayerHealth : MonoBehaviour
 
         Debug.Log("Player died!");
     }
+
+    public void updateOrigHP()//Updates Health
+    {
+        HPOrig = currentHealth;
+    }
+
+
     //Temporary Debug Info
      void OnGUI()
     {
