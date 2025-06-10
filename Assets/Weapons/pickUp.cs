@@ -1,12 +1,12 @@
-using System.Collections;
 using UnityEngine;
 
-public class pickup : MonoBehaviour
+public class pickup : PickupBase
 {
     [SerializeField] GunStats gun;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         gun.ammoCur = gun.ammoMax;
     }
 

@@ -247,6 +247,12 @@ public class PlayerWeaponManager : MonoBehaviour
 
     }
 
+    public void AddAmmoToReserve(int ammoCount)
+    {
+        var gun = gunList[gunList.Count - 1];
+        gun.ammoReserve += ammoCount;
+    }
+
     public void GetGunStats(GunStats gun)//---Gets gun and gunstats
     {
         gunList.Add(gun);
