@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDamage
 {
     [Header("Player Health")]
     [SerializeField] int maxHealth;
@@ -12,6 +13,11 @@ public class PlayerHealth : MonoBehaviour
     public AudioClip hurtSound;//hurt sfx   
     public AudioClip deathSound;// death sfx
 
+    Coroutine damageSoundRoutine;
+
+    bool playedHurtSound;
+    bool isTakingDotDamage;
+    bool hasDied;
 
     private AudioSource audioSource;
 
@@ -21,16 +27,34 @@ public class PlayerHealth : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    public void TakeDamage(int amount)// handles damage take
+    public void takeDamage(int amount)// handles damage take
     {
-        currentHealth -= amount;
+        if (hasDied) return;
 
-        if(hurtSound) audioSource?.PlayOneShot(hurtSound);
+        currentHealth -= amount;
 
         if (currentHealth <= 0)
         {
-            Die();
+            if (!hasDied)
+            {
+                hasDied = true;
+                if (deathSound && audioSource)
+                    audioSource.PlayOneShot(deathSound);
+                Die();
+
+                if (damageSoundRoutine != null)
+                    StopCoroutine(damageSoundRoutine);
+            }
         }
+        else
+        {
+            if (!isTakingDotDamage)
+            {
+                isTakingDotDamage = true;
+                damageSoundRoutine = StartCoroutine(LoopHurtSound());
+            }
+        }
+
         Debug.Log("PlayerHealth: " + currentHealth);
     }
 
@@ -61,9 +85,31 @@ public class PlayerHealth : MonoBehaviour
         HPOrig = currentHealth;
     }
 
+    IEnumerator LoopHurtSound()//Hurt sound flag to avoid span
+    {
+        while (isTakingDotDamage && !hasDied)
+        {
+            if (hurtSound && audioSource)
+                audioSource.PlayOneShot(hurtSound);
+
+            yield return new WaitForSeconds(.8f);
+        }
+    }
+
+    public void CancelHurtLoop()//Cancels the hurt loop sound
+    {
+        isTakingDotDamage = false;
+        if(damageSoundRoutine != null)
+        {
+            StopCoroutine(damageSoundRoutine);
+            damageSoundRoutine = null;
+        }
+        playedHurtSound = false;
+    }
+
 
     //Temporary Debug Info
-     void OnGUI()
+    void OnGUI()
     {
         GUIStyle style = new GUIStyle(GUI.skin.label);
         style.fontSize = 24;

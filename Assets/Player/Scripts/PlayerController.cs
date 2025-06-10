@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
         playerMovement.HandleSprint();// Updates Sprint handling
         playerMovement.HandleLanding();// updates landing handling
         weaponManager.HandleShooting();// updates shooting
-        playerHealth.updateOrigHP();//handles health updates
-        
 
         if (Input.GetButtonDown("FireMode"))//Handles Firemode switch
         {
