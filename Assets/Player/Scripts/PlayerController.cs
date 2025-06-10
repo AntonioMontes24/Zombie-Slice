@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private PlayerWeaponManager weaponManager;
     [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] public GameObject armsModel;
 
 
     // Update is called once per frame
@@ -14,6 +15,11 @@ public class PlayerController : MonoBehaviour
         playerMovement.HandleSprint();// Updates Sprint handling
         playerMovement.HandleLanding();// updates landing handling
         weaponManager.HandleShooting();// updates shooting
+
+        if(armsModel != null)
+        {
+            armsModel.SetActive(weaponManager.HasGun());
+        }
 
         if (Input.GetButtonDown("FireMode"))//Handles Firemode switch
         {

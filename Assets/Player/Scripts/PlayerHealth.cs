@@ -104,7 +104,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
             StopCoroutine(damageSoundRoutine);
             damageSoundRoutine = null;
         }
-        playedHurtSound = false;
+        //playedHurtSound = false;
     }
 
 
