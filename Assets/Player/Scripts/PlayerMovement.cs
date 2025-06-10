@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] public float audioJumpVol;
     [SerializeField] AudioClip[] audioLand;
     [SerializeField] public float audioLandVol;
+    [SerializeField] public Animator animator;
 
     Vector3 moveDir;
     Vector3 playerVel;
@@ -41,6 +42,9 @@ public class PlayerMovement : MonoBehaviour
         float currentSpeed = isSprinting ? walkSpeed * sprintMultiplier : walkSpeed;
         controller.Move(moveDir * currentSpeed * Time.deltaTime);
 
+        if(animator != null)
+            animator.SetBool("isWalking", moveDir.magnitude > 0.1f);
+
 
         controller.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
@@ -53,9 +57,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetButtonDown("Sprint"))
             isSprinting = true;
-        else if (Input.GetButtonUp("Sprint"))
+
+        if (Input.GetButtonUp("Sprint"))
             isSprinting = false;
+
+        if (animator != null && animator.runtimeAnimatorController != null)
+            animator.SetBool("isRunning", isSprinting && moveDir.magnitude > 0.1f);
     }
+
 
     public void HandleJump()//Jump
     {

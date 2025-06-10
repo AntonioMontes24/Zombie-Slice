@@ -5,44 +5,75 @@ using NUnit.Framework.Interfaces;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
+    [Header("Weapon Items")]
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
-    [SerializeField] AudioSource aud;
-    [SerializeField] GameObject muzzleFlashPrefab;
-    [SerializeField] float muzzleFlashTime;
-    [SerializeField] LayerMask ignoreLayer;
-    [SerializeField] GameObject gunModel;
     [SerializeField] float adsSpeed;
-    [SerializeField] GameObject tracerPrefab;
-    [SerializeField] Transform barrelTip;
+    [SerializeField] GameObject gunModel;
+
+    [Header("Weapon Components")]
+    [SerializeField] AudioSource aud;
     [SerializeField] Camera gameplayCamera;
+
+    [Header("VFX Prefabs")]
+    [SerializeField] GameObject muzzleFlashPrefab;
+    [SerializeField] GameObject tracerPrefab;
     [SerializeField] GameObject shellCasingPrefab;
+    [SerializeField] float muzzleFlashTime;
+
+    [Header("Layers")]
+    [SerializeField] LayerMask ignoreLayer;
+
+    [Header("Weapon Transforms")]
+    [SerializeField] Transform barrelTip;
     [SerializeField] Transform shellEjectionPoint;
     [SerializeField] float shellEjectForce;
+    [SerializeField] Transform leftHandGrip;
+    [SerializeField] Transform rightHandGrip;
 
+    [Header("Recoil Setup")]
+    [SerializeField] private float weaponRecoilKick;
+    [SerializeField] private float weaponRecoilRecoverySpeed;
+    [SerializeField] float handRecoilKick;
+    [SerializeField] float handRecoilRecoverySpeed;
 
-    //ADS and Hip position transforms
+    [Header("Animations")]
+    [SerializeField] Animator animator;
+
+    [Header("Runtime State")]
     Transform currentHipPosition;
     Transform currentAdsPosition;
-
     bool isAutomaticMode;
     bool isReloading;
     bool playedEmptySound;
     Coroutine reloadCoroutine;
     float shootCooldown;
     bool isAiming;
-    int currentAmmoLimit;
-
-    [SerializeField] private float weaponRecoilKick;
-    [SerializeField] private float weaponRecoilRecoverySpeed;
-
     private Vector3 initialGunPosition;
     private Vector3 currentGunOffset;
+    private Vector3 initialLeftHandPos;
+    private Vector3 initialRightHandPos;
+    private Vector3 currentLeftHandOffset;
+    private Vector3 currentRightHandOffset;
 
     private void Start()
     {
+        //if(gunModel != null) Will be added if adding more guns
+        //{
+            //initialGunPosition = gunModel.transform.localPosition;
+        //}    
         if (gunModel != null)
         {
             initialGunPosition = gunModel.transform.localPosition;
+        }
+
+        if (leftHandGrip != null)
+        {
+            initialLeftHandPos = leftHandGrip.localPosition;
+        }
+
+        if (rightHandGrip != null)
+        {
+            initialRightHandPos = rightHandGrip.localPosition;
         }
     }
 
@@ -179,13 +210,22 @@ public class PlayerWeaponManager : MonoBehaviour
                 }
                 Destroy(shell, 3f);
             }
-            currentGunOffset.z -= weaponRecoilKick;
+            currentGunOffset.y -= weaponRecoilKick;
+
+            //----- Apply hand recoil
+            currentLeftHandOffset.z -= handRecoilKick;
+            currentRightHandOffset.z -= handRecoilKick;
         }
     }
 
     IEnumerator ReloadRoutine(GunStats gun)//Handles reload and ammo limit reserve. 
     {
         isReloading = true;
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            animator.SetTrigger("Reload");
+        }
+
         if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound, 0.8f);
         yield return new WaitForSeconds(gun.reloadTime);
 
@@ -203,6 +243,8 @@ public class PlayerWeaponManager : MonoBehaviour
         }
         isReloading = false;
         reloadCoroutine = null;
+
+
     }
 
     public void GetGunStats(GunStats gun)//---Gets gun and gunstats
@@ -242,6 +284,26 @@ public class PlayerWeaponManager : MonoBehaviour
             target.localRotation,
             Time.deltaTime * adsSpeed
         );
+
+        if (leftHandGrip != null)
+        {
+            leftHandGrip.localPosition = Vector3.Lerp(
+                leftHandGrip.localPosition,
+                initialLeftHandPos + currentLeftHandOffset,
+                Time.deltaTime * handRecoilRecoverySpeed
+            );
+            currentLeftHandOffset = Vector3.Lerp(currentLeftHandOffset, Vector3.zero, Time.deltaTime * handRecoilRecoverySpeed);
+        }
+
+        if (rightHandGrip != null)
+        {
+            rightHandGrip.localPosition = Vector3.Lerp(
+                rightHandGrip.localPosition,
+                initialRightHandPos + currentRightHandOffset,
+                Time.deltaTime * handRecoilRecoverySpeed
+            );
+            currentRightHandOffset = Vector3.Lerp(currentRightHandOffset, Vector3.zero, Time.deltaTime * handRecoilRecoverySpeed);
+        }
     }
 
     public void ToggleFireMode()//Sets Firemode
