@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     //public Image playerHealthBar;
 
     public GameObject player;
-    public playerControllerTemp playerScript;
+    public PlayerController playerScript;
 
     public bool isPaused;
 
@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         player = GameObject.FindWithTag("Player");
-        playerScript = player.GetComponent<playerControllerTemp>();
+        playerScript = player.GetComponent<PlayerController>();
         timeScaleOrig = Time.timeScale;
 
         //timeRemaining = TimeSpan.FromSeconds(gameTimer);
