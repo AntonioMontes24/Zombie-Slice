@@ -2439,26 +2439,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gunList: []
+  adsSpeed: 8
+  gunModel: {fileID: 7812831269440599260}
   aud: {fileID: 1376639031142738430}
+  gameplayCamera: {fileID: 3442965812359219988}
   muzzleFlashPrefab: {fileID: 8245379594993680253}
+  tracerPrefab: {fileID: 1552566167613512, guid: 569ba53b79feedd4fa146892e858e629, type: 3}
+  shellCasingPrefab: {fileID: 1002650325336458, guid: 0ba70bec049ce044698a5e99706278da, type: 3}
   muzzleFlashTime: 0.05
   ignoreLayer:
     serializedVersion: 2
     m_Bits: 0
-  gunModel: {fileID: 7812831269440599260}
-  adsSpeed: 8
-  tracerPrefab: {fileID: 1552566167613512, guid: 569ba53b79feedd4fa146892e858e629, type: 3}
   barrelTip: {fileID: 432861620686626887}
-  gameplayCamera: {fileID: 3442965812359219988}
-  shellCasingPrefab: {fileID: 1002650325336458, guid: 0ba70bec049ce044698a5e99706278da, type: 3}
   shellEjectionPoint: {fileID: 8050292271955806339}
   shellEjectForce: 2
-  weaponRecoilKick: 0.02
-  weaponRecoilRecoverySpeed: 10
   leftHandGrip: {fileID: 322782255809886429}
   rightHandGrip: {fileID: 322782255647348999}
+  weaponRecoilKick: 0.02
+  weaponRecoilRecoverySpeed: 10
   handRecoilKick: 0.03
   handRecoilRecoverySpeed: 10
+  animator: {fileID: 370833657653594523}
 --- !u!114 &3452665998452918354
 MonoBehaviour:
   m_ObjectHideFlags: 0
