@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetButtonDown("Cancel"))
         {
-            if(menuActive = null)
+            if(menuActive == null)
             {
                 statePause();
                 menuActive = menuPause;
