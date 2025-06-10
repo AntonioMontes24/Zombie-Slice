@@ -8,7 +8,7 @@ public class PickupSpawner : MonoBehaviour
     [SerializeField] float maxMoveForce, minMoveForce;
     [SerializeField] float maxJumpForce, minJumpForce;
 
-    private void OnDestroy()
+    public void Spawn()
     {
         float count;
         while (true)
