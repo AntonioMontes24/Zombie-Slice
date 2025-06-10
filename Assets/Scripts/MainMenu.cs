@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     public GameObject mainMenu;
-    public string level = "Main";
+    public string level = "Zombie_Scene(Main)";
 
 
     public void PlayeGame()

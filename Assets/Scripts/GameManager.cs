@@ -11,12 +11,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
-    [SerializeField] TMP_Text gameTimerText;
-    [SerializeField] TMP_Text gameScoreText;
+    //[SerializeField] TMP_Text gameTimerText;
+    //[SerializeField] TMP_Text gameScoreText;
 
 
-    public GameObject playerDamageScreen;
-    public Image playerHealthBar;
+    //public GameObject playerDamageScreen;
+    //public Image playerHealthBar;
+
     public GameObject player;
     public PlayerController playerScript;
 
@@ -24,9 +25,9 @@ public class GameManager : MonoBehaviour
 
     float timeScaleOrig;
 
-    public float gameTimer = 300f;
-    int gameScore;
-    private TimeSpan timeRemaining;
+    //public float gameTimer = 300f;
+    //int gameScore;
+    //private TimeSpan timeRemaining;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -37,7 +38,7 @@ public class GameManager : MonoBehaviour
         playerScript = player.GetComponent<PlayerController>();
         timeScaleOrig = Time.timeScale;
 
-        timeRemaining = TimeSpan.FromSeconds(gameTimer);
+        //timeRemaining = TimeSpan.FromSeconds(gameTimer);
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -60,15 +61,15 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if(timeRemaining.TotalSeconds > 0)
-        {
-            timeRemaining -= TimeSpan.FromSeconds(Time.deltaTime);
+        //if(timeRemaining.TotalSeconds > 0)
+        //{
+        //    timeRemaining -= TimeSpan.FromSeconds(Time.deltaTime);
 
-            gameTimerText.text = string.Format("{0:D2}:{1:D2}", timeRemaining.Minutes, timeRemaining.Seconds);
-        } else
-        {
-            gameTimerText.text = "00:00";
-        }
+        //    gameTimerText.text = string.Format("{0:D2}:{1:D2}", timeRemaining.Minutes, timeRemaining.Seconds);
+        //} else
+        //{
+        //    gameTimerText.text = "00:00";
+        //}
         
     }
 
@@ -97,11 +98,11 @@ public class GameManager : MonoBehaviour
         menuActive.SetActive(true);
     }
 
-    public void updateGameScore(int amount)
-    {
-        gameScore += amount;
-        gameScoreText.text = gameScore.ToString("F0");
-    }
+    //public void updateGameScore(int amount)
+    //{
+    //    gameScore += amount;
+    //    gameScoreText.text = gameScore.ToString("F0");
+    //}
 
 
 }
