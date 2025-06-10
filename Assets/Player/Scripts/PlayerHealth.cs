@@ -1,16 +1,23 @@
+using System.Collections;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDamage
 {
     [Header("Player Health")]
-    public float maxHealth;
-    public float currentHealth;
+    [SerializeField] int maxHealth;
+    [SerializeField] int currentHealth;
+    public int HPOrig;
 
     [Header("VFX")]
     public GameObject deathEffect;//If we want like a bloody screen or something
-    public AudioClip hurtSound;
-    public AudioClip deathSound;
+    public AudioClip hurtSound;//hurt sfx   
+    public AudioClip deathSound;// death sfx
 
+    Coroutine damageSoundRoutine;
+
+    bool playedHurtSound;
+    bool isTakingDotDamage;
+    bool hasDied;
 
     private AudioSource audioSource;
 
@@ -20,27 +27,43 @@ public class PlayerHealth : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    public void TakeDamage(float amount)
+    public void takeDamage(int amount)// handles damage take
     {
+        if (hasDied) return;
+
         currentHealth -= amount;
-        currentHealth = Mathf.Clamp(currentHealth,0f,maxHealth);
 
-        if(hurtSound) audioSource?.PlayOneShot(hurtSound);
-
-        if (currentHealth <= 0f)
+        if (currentHealth <= 0)
         {
-            Die();
+            if (!hasDied)
+            {
+                hasDied = true;
+                if (deathSound && audioSource)
+                    audioSource.PlayOneShot(deathSound);
+                Die();
+
+                if (damageSoundRoutine != null)
+                    StopCoroutine(damageSoundRoutine);
+            }
         }
+        else
+        {
+            if (!isTakingDotDamage)
+            {
+                isTakingDotDamage = true;
+                damageSoundRoutine = StartCoroutine(LoopHurtSound());
+            }
+        }
+
         Debug.Log("PlayerHealth: " + currentHealth);
     }
 
-    public void Heal(float amount)
+    public void Heal(int amount)//Handles healing waiting on health pick up to test
     {
-        currentHealth += amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        currentHealth += Mathf.Min(currentHealth + amount, maxHealth);
     }
 
-    void Die()
+    void Die()//Handles death/VFX/SFX
     {
         if (deathEffect) Instantiate(deathEffect, transform.position, Quaternion.identity);
         if (deathSound && audioSource) audioSource.PlayOneShot(deathSound);
@@ -56,8 +79,37 @@ public class PlayerHealth : MonoBehaviour
 
         Debug.Log("Player died!");
     }
+
+    public void updateOrigHP()//Updates Health
+    {
+        HPOrig = currentHealth;
+    }
+
+    IEnumerator LoopHurtSound()//Hurt sound flag to avoid span
+    {
+        while (isTakingDotDamage && !hasDied)
+        {
+            if (hurtSound && audioSource)
+                audioSource.PlayOneShot(hurtSound);
+
+            yield return new WaitForSeconds(.8f);
+        }
+    }
+
+    public void CancelHurtLoop()//Cancels the hurt loop sound
+    {
+        isTakingDotDamage = false;
+        if(damageSoundRoutine != null)
+        {
+            StopCoroutine(damageSoundRoutine);
+            damageSoundRoutine = null;
+        }
+        //playedHurtSound = false;
+    }
+
+
     //Temporary Debug Info
-     void OnGUI()
+    void OnGUI()
     {
         GUIStyle style = new GUIStyle(GUI.skin.label);
         style.fontSize = 24;

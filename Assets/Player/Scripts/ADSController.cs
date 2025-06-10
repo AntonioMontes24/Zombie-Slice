@@ -26,14 +26,10 @@ public class AimDownSights : MonoBehaviour
 
     void Update()
     {
-        // decide which FOV we want this frame
         bool isAiming = Input.GetKey(aimButton);
         targetFov = isAiming ? adsFov : hipFov;
 
-        // smooth transition
-        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView,
-                                     targetFov,
-                                     Time.deltaTime * zoomSpeed);
+        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, targetFov, Time.deltaTime * zoomSpeed);
 
         weaponManager?.SetAiming(isAiming);
     }

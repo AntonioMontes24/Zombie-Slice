@@ -16,9 +16,10 @@ MonoBehaviour:
   shootDamage: 5
   shootRate: 0.1
   shootRange: 90
-  ammoCur: 17
+  ammoCur: 30
   ammoMax: 30
   reloadTime: 1.2
+  ammoReserve: 368
   canSwitchFireMode: 1
   isAutomaticDefault: 0
   autoFireRate: 0.08
@@ -27,5 +28,6 @@ MonoBehaviour:
   hitEffect: {fileID: 970440554703164915, guid: 47096eff328e11a418ace7db2d72aa97, type: 3}
   shootSound: {fileID: 8300000, guid: 57a5ad6d126b4454b8ea286fc426c12e, type: 3}
   reloadSound: {fileID: 8300000, guid: 65aceeaf1509a0e4bb260b79c899628d, type: 3}
+  emptySound: {fileID: 8300000, guid: 16a8e60d462c0a94db09e9bc39557be0, type: 3}
   shootVol: 1
   fireModeSwitchSound: {fileID: 8300000, guid: e4401dc0d0f420346950f2d8d71d4e51, type: 3}

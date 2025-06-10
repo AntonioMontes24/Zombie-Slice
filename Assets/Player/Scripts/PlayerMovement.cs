@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] public float audioJumpVol;
     [SerializeField] AudioClip[] audioLand;
     [SerializeField] public float audioLandVol;
+    [SerializeField] public Animator animator;
 
     Vector3 moveDir;
     Vector3 playerVel;
@@ -25,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     bool isPlayingStep;
     bool wasGrounded;
 
-    public void HandleMove()
+    public void HandleMove()//Movement
     {
         HandleJump();
         wasGrounded = controller.isGrounded;
@@ -41,6 +42,9 @@ public class PlayerMovement : MonoBehaviour
         float currentSpeed = isSprinting ? walkSpeed * sprintMultiplier : walkSpeed;
         controller.Move(moveDir * currentSpeed * Time.deltaTime);
 
+        if(animator != null)
+            animator.SetBool("isWalking", moveDir.magnitude > 0.1f);
+
 
         controller.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
@@ -49,15 +53,20 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(PlaySteps());
     }
 
-    public void HandleSprint()
+    public void HandleSprint()//Sprint
     {
         if (Input.GetButtonDown("Sprint"))
             isSprinting = true;
-        else if (Input.GetButtonUp("Sprint"))
+
+        if (Input.GetButtonUp("Sprint"))
             isSprinting = false;
+
+        if (animator != null && animator.runtimeAnimatorController != null)
+            animator.SetBool("isRunning", isSprinting && moveDir.magnitude > 0.1f);
     }
 
-    public void HandleJump()
+
+    public void HandleJump()//Jump
     {
         if (Input.GetButtonDown("Jump") && wasGrounded)
         {
@@ -69,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void HandleLanding()
+    public void HandleLanding()//Landing
     {
         if (isJumped && controller.isGrounded && audioLand.Length > 0)
             aud.PlayOneShot(audioLand[Random.Range(0, audioLand.Length)], audioLandVol);
@@ -78,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
             isJumped = false;
     }
 
-    IEnumerator PlaySteps()
+    IEnumerator PlaySteps()//Steps sfx
     {
         isPlayingStep = true;
         aud.PlayOneShot(audioSteps[Random.Range(0, audioSteps.Length)], audioStepsVol);
