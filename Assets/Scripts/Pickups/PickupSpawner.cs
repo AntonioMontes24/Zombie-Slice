@@ -1,13 +1,14 @@
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class PickupSpawner : MonoBehaviour
 {
     [SerializeField] GameObject pickup;
     [SerializeField] int maxSpawn, minSpawn;
     [SerializeField] AnimationCurve spawnProbabilityFalloff;
-    [SerializeField] float maxMoveForce, minMoveForce;
-    [SerializeField] float maxJumpForce, minJumpForce;
+    [SerializeField] float maxSpawnArea, minSpawnArea;
 
+    [ContextMenu("Spawn Test")]
     public void Spawn()
     {
         float count;
@@ -20,12 +21,9 @@ public class PickupSpawner : MonoBehaviour
         }
         for (int i = 0; i < count; i++)
         {
-            var g = Instantiate(pickup, transform.position, Quaternion.identity);
-            var forceY = Random.Range(minJumpForce, maxJumpForce);
-            var forceX = Random.Range(minMoveForce, maxMoveForce);
-            var forceZ = Random.Range(minMoveForce, maxMoveForce);
-            Debug.Log((forceZ, forceX, forceY));
-            g.GetComponent<Rigidbody>().AddForce(new Vector3(forceX, forceY, forceZ), ForceMode.Impulse);
+            var t = Instantiate(pickup, transform.position, Quaternion.identity).GetComponent<Transform>();
+            var pos = transform.position + new Vector3(Random.Range(minSpawnArea, maxSpawnArea), 0, Random.Range(minSpawnArea, maxSpawnArea));
+            t.SetPositionAndRotation(pos, Quaternion.Euler(0, Random.Range(0, 360), 0));
         }
     }
 }
