@@ -11,6 +11,6 @@ public class HealthPickup : PickupBase
         if (!healthComponent.CanHeal())
             return;
         healthComponent.Heal(health);
-        Destroy(transform.parent.gameObject);
+        Destroy(transform.gameObject);
     }
 }

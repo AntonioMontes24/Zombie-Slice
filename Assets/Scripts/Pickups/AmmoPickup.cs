@@ -11,6 +11,6 @@ public class AmmoPickup : PickupBase
         if (weapon == null)
             return;
         weapon.AddAmmoToReserve(bullets);
-        Destroy(transform.parent.gameObject);
+        Destroy(transform.gameObject);
     }
 }
