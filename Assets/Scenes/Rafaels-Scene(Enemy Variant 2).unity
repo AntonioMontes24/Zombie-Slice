@@ -176,6 +176,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e83ad29fc1001e4499edaa5ccdb4bb14, type: 3}
+--- !u!95 &686140184 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 998971717950686681, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+  m_PrefabInstance: {fileID: 2101771433}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &938196092
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,13 +521,53 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 20964814579813406, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+      propertyPath: m_Speed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 20964814579813406, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 387520165228413661, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+      propertyPath: speed
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 387520165228413661, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
       propertyPath: headPos
       value: 
       objectReference: {fileID: 2101771434}
     - target: {fileID: 387520165228413661, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 686140184}
+    - target: {fileID: 387520165228413661, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+      propertyPath: biteRate
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 387520165228413661, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+      propertyPath: swipeRate
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 387520165228413661, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+      propertyPath: biteDamage
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 387520165228413661, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+      propertyPath: swipeDamage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 387520165228413661, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
       propertyPath: field_of_view
       value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 998971717950686681, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+      propertyPath: m_WarningMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 998971717950686681, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3969985077415545442, guid: 46fa0dc1bf9b3a34783d166283649c4f, type: 3}
       propertyPath: m_Name
