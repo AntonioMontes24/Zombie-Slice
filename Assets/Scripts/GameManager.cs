@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
-    //[SerializeField] TMP_Text gameTimerText;
+    [SerializeField] TMP_Text gameTimerText;
     //[SerializeField] TMP_Text gameScoreText;
 
 
@@ -25,9 +25,9 @@ public class GameManager : MonoBehaviour
 
     float timeScaleOrig;
 
-    //public float gameTimer = 300f;
+    public float gameTimer = 30f;
     //int gameScore;
-    //private TimeSpan timeRemaining;
+    private TimeSpan timeRemaining;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
         playerScript = player.GetComponent<PlayerController>();
         timeScaleOrig = Time.timeScale;
 
-        //timeRemaining = TimeSpan.FromSeconds(gameTimer);
+        timeRemaining = TimeSpan.FromSeconds(gameTimer);
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -61,16 +61,17 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        //if(timeRemaining.TotalSeconds > 0)
-        //{
-        //    timeRemaining -= TimeSpan.FromSeconds(Time.deltaTime);
+        if (timeRemaining.TotalSeconds > 0)
+        {
+            timeRemaining -= TimeSpan.FromSeconds(Time.deltaTime);
 
-        //    gameTimerText.text = string.Format("{0:D2}:{1:D2}", timeRemaining.Minutes, timeRemaining.Seconds);
-        //} else
-        //{
-        //    gameTimerText.text = "00:00";
-        //}
-        
+            gameTimerText.text = string.Format("{0:D2}:{1:D2}", timeRemaining.Minutes, timeRemaining.Seconds);
+        }
+        else
+        {
+            gameTimerText.text = "00:00";
+        }
+
     }
 
     public void statePause()
