@@ -165,7 +165,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 var i = Instantiate(currentGun.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
             }
 
-            if (!hit.collider.CompareTag("Enemy").bulletHolePrefab != null)
+            if (!hit.collider.CompareTag("Enemy")&& currentGun.bulletHolePrefab != null)
             {
                 var bulletHole = Instantiate(
                     currentGun.bulletHolePrefab,
