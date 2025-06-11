@@ -23,6 +23,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
     private void Start()
     {
         currentHealth = maxHealth;
+        updatePlayerUI();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -31,6 +32,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
         if (hasDied) return;
 
         currentHealth -= amount;
+        updatePlayerUI();
 
         if (currentHealth <= 0)
         {
@@ -40,6 +42,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
                 if (deathSound && audioSource)
                     audioSource.PlayOneShot(deathSound);
                 Die();
+                GameManager.instance.youLose();
 
                 if (damageSoundRoutine != null)
                     StopCoroutine(damageSoundRoutine);
@@ -116,6 +119,11 @@ public class PlayerHealth : MonoBehaviour, IDamage
         style.normal.textColor = Color.red;
 
         GUI.Label(new Rect(10,10,300,40), "Health: " + currentHealth,style);
+    }
+
+    void updatePlayerUI()
+    {
+        GameManager.instance.playerHPBar.fillAmount = (float)currentHealth/maxHealth;
     }
 
 }
