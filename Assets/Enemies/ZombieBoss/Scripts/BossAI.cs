@@ -1,17 +1,17 @@
 using System.Collections;
-// using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class ZombieVariant2AI : MonoBehaviour, IDamage
+public class BossAI : MonoBehaviour, IDamage
 {
     // create some serialized variables
     [SerializeField] int currHealth;                        // the current health 
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
+
     [SerializeField] Renderer model;                        // Model we will use when we flash a new color on hit or when damaged.
     [SerializeField] NavMeshAgent agent;                    // NavMeshAgent to traverse our navmesh
     [SerializeField] Animator animator;                     // this will handle our animations
@@ -21,25 +21,72 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     [SerializeField] int field_of_view;                     // the number of degrees our of enemy can see
     [SerializeField] Transform headPos;                     // for raycast to player. Can he see where we are at
     float angle_to_player;                                  // the angle to the player 
+   
+    // power attack fields
+    bool canPowerAttack;                                    // can we power attack
+    int powerAttackCounter;                                 // increment to be able to power attack
+    [SerializeField] int powerAttackRate;                   // how often we can power attack
+    [SerializeField] int powerAttackDamage;                 // how much damage does power attack do
 
-    // for swipeAttack
-    bool canSwipe;                                          // can we swipe
-    int swipeCounter;                                       // incremented until we hit the swipeRate
-    [SerializeField] int swipeRate;                         // our swipeAttack cooldown
-    [SerializeField] int swipeDamage;                       // how much damage do we do
+    // blightball fields
+    [SerializeField] Transform shootPosition;               // where does our blightball spawn from
+    [SerializeField] GameObject blightBall;                 // our projectile
+    bool canShootBlight;                                    // can we shoot our blight ball
+    int blightBallCounter;                                  // increment to be able to shoot our blight ball
+    [SerializeField] int blightBallRate;                    // how often we can shoot our blight ball
+    [SerializeField] int blightBallDamage;                  // how much damage does a blight ball do
+    [SerializeField] float minShootDistance;                // minimum range to shoot blightball
 
-    // for bite attack
-    bool canBite;                                           // can we bite
-    int biteCounter;                                        // incremented until we hit the biteRate
-    [SerializeField] int biteRate;                          // our bite cooldown
-    [SerializeField] int biteDamage;                        // how much damage does a bite do?
-
-    // for IDamage
-    public void takeDamage(int amount)
+    // coroutines 
+    IEnumerator powerAttack()
     {
-        // we need to apply the damage.
-        // check for death of the variant
-        // and if we have a win condition to kill all enemies, update it
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            animator.SetBool("canPowerAttack", true);
+
+            // wait 1 second
+            yield return new WaitForSeconds(1);
+
+            animator.SetBool("canPowerAttack", false);
+
+            // assign damage to the player
+            IDamage player_dmg = ZGameManager.instance.player.GetComponent<IDamage>();
+            player_dmg.takeDamage(powerAttackDamage);
+        }
+    }
+
+    IEnumerator removeCorpse()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null)
+            animator.SetTrigger("isDead");
+        // wait 2 seconds
+        yield return new WaitForSeconds(2);
+
+        Destroy(gameObject);
+    }
+
+    IEnumerator shootBlightBall()
+    {
+       
+        // set our bool for transition
+        animator.SetBool("canShootBlight", true);
+
+        // wait 1 second
+        yield return new WaitForSeconds(1);
+
+        // set our bool for transition
+        animator.SetBool("canShootBlight", false);
+
+        // possibly instantiate here
+        if (blightBall == null || !blightBall.activeInHierarchy)
+        {
+            Instantiate(blightBall, shootPosition.position, transform.rotation);
+        }
+        
+    }
+
+     public void takeDamage(int amount)
+    {
         if (currHealth > 0)
         {
             currHealth -= amount;
@@ -57,72 +104,21 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         }
     }
 
-    IEnumerator removeCorpse()
-    {
-        if (animator != null && animator.runtimeAnimatorController != null)
-            animator.SetTrigger("isDead");
-        // wait 2 seconds
-        yield return new WaitForSeconds(2);
-
-        Destroy(gameObject);
-       
-    }
-
-    IEnumerator swipeAttack()
-    {
-        if (animator != null && animator.runtimeAnimatorController != null)
-        {
-            animator.SetBool("canSwipe", true);
-       
-            // wait 1 second
-            yield return new WaitForSeconds(1);
-
-            animator.SetBool("canSwipe", false);
-
-            // assign damage to the player
-            IDamage player_dmg = ZGameManager.instance.player.GetComponent<IDamage>();
-            player_dmg.takeDamage(swipeDamage);
-        }
-            
-    }
-
-    IEnumerator biteAttack()
-    {
-        if(animator != null && animator.runtimeAnimatorController != null)
-        {
-            animator.SetBool("canBite", true);
-
-            // wait 1 second
-            yield return new WaitForSeconds(1);
-
-            animator.SetBool("canBite", false);
-
-            // assign damage to the player
-            IDamage player_dmg = ZGameManager.instance.player.GetComponent<IDamage>();
-            player_dmg.takeDamage(biteDamage);
-        }
-        
-    }
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
-
+        minShootDistance = agent.stoppingDistance + 20.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-
         if (currHealth >= 0)
         {
             if (playerInRange && canWeSeeThePlayer())
             {
-                swipeCounter++;
-                biteCounter++;
+                powerAttackCounter++;
+                blightBallCounter++;
 
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
@@ -133,40 +129,39 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
                     animator.SetBool("inMeleeRange", true);
 
                     // need to check for biteAttack 
-                    if (biteCounter >= biteRate)
+                    if (powerAttackCounter >= powerAttackRate)
                     {
                         // reset the counter
-                        biteCounter = 0;
+                        powerAttackCounter = 0;
 
                         // animate the bite
-                        StartCoroutine(biteAttack());
-
-                        
+                        StartCoroutine(powerAttack());
                     }
 
-                    // need to check for swipeAttack 
-                    if (swipeCounter >= swipeRate)
-                    {
-                        // reset the counter
-                        swipeCounter = 0;
-
-                        // animate the swipe
-                        StartCoroutine(swipeAttack());
-
-                        
-
-                    }
-                   
                 }
                 else
                 {
                     animator.SetBool("inMeleeRange", false);
                 }
+
+                // check if we are beyond minimum shoot distance
+                if(agent.remainingDistance <= minShootDistance)
+                {
+                    // we are in range but not in melee range
+                    if (blightBallCounter >= blightBallRate)
+                    {
+                        // reset our counter
+                        blightBallCounter = 0;
+
+                        // animate the blight ball
+                        StartCoroutine(shootBlightBall());
+
+                    }
+                }
+                
             }
         }
-        
     }
-
 
     private void OnTriggerEnter(Collider other)
     {
@@ -209,10 +204,10 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         // make our Raycast to the player. If it hits the player, we have line of sight. 
         RaycastHit hit_player;
 
-        if(Physics.Raycast(headPos.position, playerDirection, out hit_player))
+        if (Physics.Raycast(headPos.position, playerDirection, out hit_player))
         {
             // check if its the player we hit
-            if(angle_to_player <= field_of_view && hit_player.collider.CompareTag("Player"))
+            if (angle_to_player <= field_of_view && hit_player.collider.CompareTag("Player"))
             {
                 // we hit the player with the raycast and he is in our field of view
                 // agent.SetDestination(GameManager.instance.player.transform.position);
@@ -221,7 +216,9 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
 
                 if (animator != null && animator.runtimeAnimatorController != null)
                     animator.SetBool("isWalking", true);
-                
+
+            
+
                 // face the target
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {

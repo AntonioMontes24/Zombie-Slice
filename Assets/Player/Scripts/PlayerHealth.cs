@@ -47,10 +47,11 @@ public class PlayerHealth : MonoBehaviour, IDamage
         }
         else
         {
-            if (!isTakingDotDamage)
+            if (hurtSound && audioSource)
             {
-                isTakingDotDamage = true;
-                damageSoundRoutine = StartCoroutine(LoopHurtSound());
+                audioSource.PlayOneShot(hurtSound);
+                // isTakingDotDamage = true;
+                // damageSoundRoutine = StartCoroutine(LoopHurtSound());
             }
         }
 

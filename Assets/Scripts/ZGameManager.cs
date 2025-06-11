@@ -6,7 +6,7 @@ public class ZGameManager : MonoBehaviour
 
     [SerializeField] public GameObject player;
 
-    //public PlayerController playerScript;
+    public PlayerController playerScript;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -14,7 +14,7 @@ public class ZGameManager : MonoBehaviour
     {
         instance = this;
         player = GameObject.FindWithTag("Player");
-        //playerScript = player.GetComponent<PlayerController>();
+        playerScript = player.GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
