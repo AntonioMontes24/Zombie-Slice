@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
 
     float timeScaleOrig;
 
-    public float gameTimer = 30f;
     //int gameScore;
     
 
