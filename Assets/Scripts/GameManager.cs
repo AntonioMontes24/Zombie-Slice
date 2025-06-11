@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     //public GameObject playerDamageScreen;
     //public Image playerHealthBar;
 
+    public Image playerHPBar;
     public GameObject player;
     public PlayerController playerScript;
 
@@ -74,6 +75,7 @@ public class GameManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(remainingTime / 60);
         int seconds = Mathf.FloorToInt(remainingTime % 60);
         gameTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
 
     }
 
