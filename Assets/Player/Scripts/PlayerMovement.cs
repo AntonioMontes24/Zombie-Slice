@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
         float currentSpeed = isSprinting ? walkSpeed * sprintMultiplier : walkSpeed;
         controller.Move(moveDir * currentSpeed * Time.deltaTime);
 
-        if(animator != null)
+        if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
             animator.SetBool("isWalking", moveDir.magnitude > 0.1f);
 
 
@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonUp("Sprint"))
             isSprinting = false;
 
-        if (animator != null && animator.runtimeAnimatorController != null)
+        if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
             animator.SetBool("isRunning", isSprinting && moveDir.magnitude > 0.1f);
     }
 

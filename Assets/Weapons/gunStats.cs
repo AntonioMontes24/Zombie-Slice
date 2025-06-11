@@ -12,6 +12,7 @@ public class GunStats : ScriptableObject
     [SerializeField] public int ammoCur, ammoMax;
     [SerializeField] public float reloadTime;
     [SerializeField] public int ammoReserve;
+    [SerializeField] public int maxAmmoReserve;
 
     [Header("Weapon Fire Type")]
     [SerializeField] public bool canSwitchFireMode;
@@ -29,4 +30,5 @@ public class GunStats : ScriptableObject
     [SerializeField] public AudioClip emptySound;
     [SerializeField] public float shootVol;
     [SerializeField] public AudioClip fireModeSwitchSound;
+    [SerializeField] public AudioClip reloadFreakingZombie;
 }
