@@ -13,12 +13,13 @@ public class Lights : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-        if (targetLight != null) {
+        if (targetLight != null)
+        {
 
             targetLight.enabled = true;
-        
+
         }
-        
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -32,7 +33,8 @@ public class Lights : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && flashCoroutine != null) {
+        if (other.CompareTag("Player") && flashCoroutine != null)
+        {
             StopCoroutine(flashCoroutine);
             flashCoroutine = null;
             targetLight.enabled = true;
