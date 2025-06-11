@@ -1,30 +1,34 @@
 using System;
 using System.Collections;
-using JetBrains.Annotations;
-using Unity.VisualScripting;
+//using JetBrains.Annotations;
+//using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class enemyAI : MonoBehaviour
+public class enemyAI : MonoBehaviour, IDamage
 {
     [SerializeField] Renderer model;
     [SerializeField] NavMeshAgent agent;
     [SerializeField] int HP; //Enemy HP variable
     [SerializeField] int facePlayerSpeed;
-    int zHP;
+    // int zHP;
+    [SerializeField] int z1Dmg;
     public Animator anim; //Animator controller
+
     Color colorOrig; //Original color for hit feedback
 
     bool playerInRange; //Will check to see if player in range for attack
     Vector3 playerDir; //Will be used to direct towards player
-    
+
     public GameObject playerObject;
+    public GameObject playerTarget;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         colorOrig = model.material.color;
         anim = GetComponent<Animator>();
+
         //How will the enemy affect the gamemanger to keep track of the number of enemies left for the goal of the game?
     }
 
@@ -42,7 +46,7 @@ public class enemyAI : MonoBehaviour
             if (agent.remainingDistance <= agent.stoppingDistance)
             {
                 FacePlayer();
-                
+
             }
             //Check if enemy is within melee attack range
             if (dist <= 1.75)
@@ -54,7 +58,7 @@ public class enemyAI : MonoBehaviour
                 anim.SetBool("AttackRange", false);//Trigger animator attack to stop until back in range
                 agent.isStopped = false;
             }
-          
+
         }
         else
         {
@@ -78,6 +82,7 @@ public class enemyAI : MonoBehaviour
             agent.isStopped = false;
             anim.SetBool("playerInRange", true);//Trigger walk animation
         }
+
     }
 
     private void OnTriggerExit(Collider other)
@@ -90,15 +95,59 @@ public class enemyAI : MonoBehaviour
         }
     }
 
+    private void OntriggerEnter(Collider collider)
+    {
+        if (collider.CompareTag("Player"))
+        {
+            if (collider.gameObject.tag == "Enemy_LeftHand" || collider.gameObject.tag == "Enemy_RightHand")
+            {
+                IDamage pDmg = GameManager.instance.GetComponent<IDamage>();
+                pDmg.takeDamage(z1Dmg);
+            }
+        }
+    }
 
 
     /*DAMAGE*/
-    public void takeDamge(int amount)
+    //Flash red when hit
+    IEnumerator flashRed()
+    {
+        model.material.color = Color.red;
+        anim.SetTrigger("Hit");//Trigger hit animation
+        agent.isStopped = true;
+        yield return new WaitForSeconds(1.0f);
+        model.material.color = colorOrig;
+        agent.isStopped = false;
+    }
+    //Play hit animation when taking damage
+    IEnumerator deathAnim()
+    {
+        anim.SetTrigger("isDead");
+        agent.isStopped = true;
+        playerInRange = false;
+        yield return new WaitForSeconds(4.25f);//Play death animation then remove from area (destroy object) after 3 seconds. Could remove this if we want to have bodies remain
+        zDead();
+    }
+    //Intention is to set the distance parameter in the animator to 0 to trigger attack animation
+    private void zDead()
+    {
+
+        Destroy(gameObject);
+    }
+    private void z1Attack()
+    {
+        agent.isStopped = true;
+        anim.SetBool("AttackRange", true);
+    }
+
+
+
+    public void takeDamage(int amount)
     {
         HP -= amount; //Reduce enemy HP by amount of damage taken from player/weapon
-        zHP = HP;
+
         anim.SetTrigger("Hit");
-        anim.SetInteger("HP", zHP);
+        anim.SetInteger("HP", HP);
 
         if (HP <= 0)
         {
@@ -110,29 +159,13 @@ public class enemyAI : MonoBehaviour
             StartCoroutine(flashRed());
         }
     }
-    //Flash red when hit
-    IEnumerator flashRed()
-    {
-        model.material.color = Color.red;
-        anim.SetTrigger("Hit");//Trigger hit animation
-        yield return new WaitForSeconds(0.1f);
-        model.material.color = colorOrig;
-    }
-    //Play hit animation when taking damage
-    IEnumerator deathAnim()
-    {
-        anim.SetBool("isDead", true);
-        yield return new WaitForSeconds(3.0f);//Play death animation then remove from area (destroy object) after 3 seconds. Could remove this if we want to have bodies remain
-        Destroy(gameObject);
-    }
-    //Intention is to set the distance parameter in the animator to 0 to trigger attack animation
-    private void z1Attack()
-    {
-        agent.isStopped = true;
-        anim.SetBool("AttackRange", true);
-    }
 
-   
+    
+    
+
+
+
+
 
     //Future possibility is to slow the enemy down with each hit
 
