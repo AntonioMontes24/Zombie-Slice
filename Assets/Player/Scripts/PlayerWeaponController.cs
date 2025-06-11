@@ -57,10 +57,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
     private void Start()
     {
-        //if(gunModel != null) Will be added if adding more guns
-        //{
-            //initialGunPosition = gunModel.transform.localPosition;
-        //}    
+
         if (gunModel != null)
         {
             initialGunPosition = gunModel.transform.localPosition;
@@ -166,7 +163,6 @@ public class PlayerWeaponManager : MonoBehaviour
             if (currentGun.hitEffect != null)
             {
                 var i = Instantiate(currentGun.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
-                Destroy(i, 2f);
             }
 
             if (currentGun.bulletHolePrefab != null)
@@ -227,6 +223,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
 
         if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound, 0.8f);
+        if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie, 0.8f);
         yield return new WaitForSeconds(gun.reloadTime);
 
         int needed = gun.ammoMax - gun.ammoCur;
@@ -251,6 +248,7 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         var gun = gunList[gunList.Count - 1];
         gun.ammoReserve += ammoCount;
+        gun.ammoReserve = Mathf.Min(gun.ammoReserve + ammoCount, gun.maxAmmoReserve);
     }
 
     public void GetGunStats(GunStats gun)//---Gets gun and gunstats
@@ -348,6 +346,6 @@ public class PlayerWeaponManager : MonoBehaviour
         style.normal.textColor = Color.blueViolet;
 
         GUI.Label(new Rect(300, 10, 300, 40), "Ammo: " + currentGun.ammoCur + " / " + currentGun.ammoMax, style);
-        GUI.Label(new Rect(1000,10,300,40), "Ammo Reserve: " + currentGun.ammoReserve,style);
+        GUI.Label(new Rect(600,10,300,40), "Ammo Reserve: " + currentGun.ammoReserve + "/" + currentGun.maxAmmoReserve,style);
     }
 }
