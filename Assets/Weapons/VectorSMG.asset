@@ -16,10 +16,11 @@ MonoBehaviour:
   shootDamage: 5
   shootRate: 0.1
   shootRange: 90
-  ammoCur: 30
+  ammoCur: 0
   ammoMax: 30
   reloadTime: 1.2
-  ammoReserve: 368
+  ammoReserve: 0
+  maxAmmoReserve: 200
   canSwitchFireMode: 1
   isAutomaticDefault: 0
   autoFireRate: 0.08
@@ -31,3 +32,4 @@ MonoBehaviour:
   emptySound: {fileID: 8300000, guid: 16a8e60d462c0a94db09e9bc39557be0, type: 3}
   shootVol: 1
   fireModeSwitchSound: {fileID: 8300000, guid: e4401dc0d0f420346950f2d8d71d4e51, type: 3}
+  reloadFreakingZombie: {fileID: 8300000, guid: 291e7aab756fc474cb1085be543bed9d, type: 3}
