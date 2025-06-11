@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] TMP_Text gameTimerText;
+    [SerializeField] float remainingTime;
     //[SerializeField] TMP_Text gameScoreText;
 
 
@@ -27,7 +28,7 @@ public class GameManager : MonoBehaviour
 
     public float gameTimer = 30f;
     //int gameScore;
-    private TimeSpan timeRemaining;
+    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -38,7 +39,7 @@ public class GameManager : MonoBehaviour
         playerScript = player.GetComponent<PlayerController>();
         timeScaleOrig = Time.timeScale;
 
-        timeRemaining = TimeSpan.FromSeconds(gameTimer);
+        
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -61,16 +62,19 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (timeRemaining.TotalSeconds > 0)
+        if(remainingTime > 0)
         {
-            timeRemaining -= TimeSpan.FromSeconds(Time.deltaTime);
+            remainingTime -= Time.deltaTime;
+        } 
+        else if (remainingTime < 0)
+        {
+            remainingTime = 0;
+            youWin();
+        }
 
-            gameTimerText.text = string.Format("{0:D2}:{1:D2}", timeRemaining.Minutes, timeRemaining.Seconds);
-        }
-        else
-        {
-            gameTimerText.text = "00:00";
-        }
+        int minutes = Mathf.FloorToInt(remainingTime / 60);
+        int seconds = Mathf.FloorToInt(remainingTime % 60);
+        gameTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
     }
 
@@ -99,11 +103,13 @@ public class GameManager : MonoBehaviour
         menuActive.SetActive(true);
     }
 
-    //public void updateGameScore(int amount)
-    //{
-    //    gameScore += amount;
-    //    gameScoreText.text = gameScore.ToString("F0");
-    //}
+    public void youWin()
+    {
+        statePause();
+        menuActive = menuWin;
+        menuActive.SetActive(true);
+    }
+
 
 
 }
