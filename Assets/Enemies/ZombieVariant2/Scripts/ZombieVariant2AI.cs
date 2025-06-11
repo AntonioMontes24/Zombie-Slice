@@ -15,9 +15,11 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     [SerializeField] NavMeshAgent agent;                    // NavMeshAgent to traverse our navmesh
 
 
-    bool playerInRange;                                     // is our player in range to be chased
+    [SerializeField] bool playerInRange;                    // is our player in range to be chased
     Vector3 playerDirection;                                // Direction of our player
-    Color originalColor;                                    // the original color of the enemy. Used when calling flash red.
+    [SerializeField] int field_of_view;                     // the number of degrees our of enemy can see
+    [SerializeField] Transform headPos;                     // for raycast to player. Can he see where we are at
+    float angle_to_player;                                  // the angle to the player 
 
     // for IDamage
     public void takeDamage(int amount)
@@ -28,16 +30,16 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
 
         currHealth -= amount;
 
-        if(currHealth <= 0)
+        // we took damage so we need to head towards the player
+        // set our navmesh agent towards the players position
+        // agent.SetDestination(GameManager.instance.player.transform.position);
+        agent.SetDestination(ZGameManager.instance.player.transform.position);
+
+        if (currHealth <= 0)
         {
             // we are dead now
             Destroy(gameObject);
-        }
-        else
-        {
-            // we still hit the target but it is still alive. 
-            flashRed();
-        }
+        }  
 
     }
 
@@ -45,46 +47,28 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // get our original color initialized
-        originalColor = model.material.color;
 
 
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        // we need to grab the player direction
-        // if the player is in our range (sphere collider) turn to face him and send him towards the player
-        // we want to make him stop before he collides with the player
-
-        // take the players current position from the game manager and subtract our position
-        playerDirection = GameManager.instance.player.transform.position - transform.position;
-        // playerDirection = ZGameManager.instance.player.transform.position - transform.position;
-
-        if (playerInRange)
+       
+        if (playerInRange && canWeSeeThePlayer())
         {
-            // set our navmesh agent towards the players position
-            agent.SetDestination(GameManager.instance.player.transform.position);
-            // agent.SetDestination(ZGameManager.instance.player.transform.position);
-
-            if(agent.remainingDistance <= agent.stoppingDistance)
+            
+           
+            if (agent.remainingDistance <= agent.stoppingDistance)
             {
                 // we need to face the player
                 faceTarget();
             }
         }
 
-        
+
     }
-    
-    IEnumerator flashRed()
-    {
-        model.material.color = Color.red;                   // set the material color to red to show a hit
-        yield return new WaitForSeconds(0.1f);              // wait for 1 tenth of a second to make sure we have a chance to see it
-        model.material.color = originalColor;               // set our material color back to original
-    }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -114,5 +98,46 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         Quaternion rotate_val = (Quaternion.LookRotation(new Vector3(playerDirection.x, 0, playerDirection.z)));
         transform.rotation = Quaternion.Lerp(transform.rotation, rotate_val, Time.deltaTime * faceTargetSpeed);
 
+    }
+
+    bool canWeSeeThePlayer()
+    {
+        // take the players current position from the game manager and subtract our position
+        playerDirection = ZGameManager.instance.player.transform.position - headPos.position;
+
+        // get our angle to the player
+        angle_to_player = Vector3.Angle(playerDirection, transform.forward);
+
+        // make our Raycast to the player. If it hits the player, we have line of sight. 
+        RaycastHit hit_player;
+
+        if(Physics.Raycast(headPos.position, playerDirection, out hit_player))
+        {
+            // check if its the player we hit
+            if(angle_to_player <= field_of_view && hit_player.collider.CompareTag("Player"))
+            {
+                // we hit the player with the raycast and he is in our field of view
+                // agent.SetDestination(GameManager.instance.player.transform.position);
+                agent.SetDestination(ZGameManager.instance.player.transform.position);
+
+                // update any attack countdown 
+
+                // check our attackcountdown to the attack rate here
+
+                // face the target
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    faceTarget();
+                }
+
+                // we need to return true since we found the player
+                return true;
+            }
+
+
+        }
+
+        // we did not hit the player
+        return false;
     }
 }
