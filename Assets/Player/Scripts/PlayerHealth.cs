@@ -6,7 +6,6 @@ public class PlayerHealth : MonoBehaviour, IDamage
     [Header("Player Health")]
     [SerializeField] int maxHealth;
     [SerializeField] int currentHealth;
-    public int HPOrig;
 
     [Header("VFX")]
     public GameObject deathEffect;//If we want like a bloody screen or something
@@ -60,7 +59,12 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
     public void Heal(int amount)//Handles healing waiting on health pick up to test
     {
-        currentHealth += Mathf.Min(currentHealth + amount, maxHealth);
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+    }
+
+    public bool CanHeal()
+    {
+        return maxHealth != currentHealth;
     }
 
     void Die()//Handles death/VFX/SFX
@@ -78,11 +82,6 @@ public class PlayerHealth : MonoBehaviour, IDamage
         Cursor.visible = true;
 
         Debug.Log("Player died!");
-    }
-
-    public void updateOrigHP()//Updates Health
-    {
-        HPOrig = currentHealth;
     }
 
     IEnumerator LoopHurtSound()//Hurt sound flag to avoid span

@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -6,7 +8,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerWeaponManager weaponManager;
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] public GameObject armsModel;
+    [SerializeField] private Animator animator;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip freakingZombie;
 
+    private bool hasPlayedPickup = false;
 
     // Update is called once per frame
     void Update()
@@ -16,9 +22,9 @@ public class PlayerController : MonoBehaviour
         playerMovement.HandleLanding();// updates landing handling
         weaponManager.HandleShooting();// updates shooting
 
-        if(armsModel != null)
+        if (weaponManager.HasGun() && !hasPlayedPickup)
         {
-            armsModel.SetActive(weaponManager.HasGun());
+            StartCoroutine(PlayPickupAndEnableArms());
         }
 
         if (Input.GetButtonDown("FireMode"))//Handles Firemode switch
@@ -27,5 +33,22 @@ public class PlayerController : MonoBehaviour
         }
         weaponManager.HandleADS();// handles ads
         weaponManager.SetAiming(Input.GetButtonDown("Fire2"));// handles aiming
+    }
+
+    private IEnumerator PlayPickupAndEnableArms()
+    {
+        hasPlayedPickup = true;
+        if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
+            animator.SetBool("HasGun", true);
+        Debug.Log("Setting Has Gun = true");
+
+        if (freakingZombie != null && audioSource != null)
+            audioSource.PlayOneShot(freakingZombie, 0.8f);
+
+        yield return new WaitForSeconds(0.1f);
+        if (armsModel != null)
+        {
+            armsModel.SetActive(true);
+        }
     }
 }

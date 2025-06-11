@@ -5,17 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public GameObject mainMenu;
-    public string level = "Main";
-
-
-    public void PlayeGame()
+    public void PlayGame(string level)
     {
-        if (mainMenu != null)
-        {
-            mainMenu.SetActive(true);
-        }
-
         SceneManager.LoadScene(level);
 
 
