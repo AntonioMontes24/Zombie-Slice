@@ -63,6 +63,9 @@ public class BossAI : MonoBehaviour, IDamage
         yield return new WaitForSeconds(2);
 
         Destroy(gameObject);
+
+        // update the number of zombies left in stage
+        GameManager.instance.updateGameGoal(-1);
     }
 
     IEnumerator shootBlightBall()
@@ -108,6 +111,8 @@ public class BossAI : MonoBehaviour, IDamage
     void Start()
     {
         minShootDistance = agent.stoppingDistance + 20.0f;
+        // increase the number of zombies left in stage
+        GameManager.instance.updateGameGoal(1);
     }
 
     // Update is called once per frame

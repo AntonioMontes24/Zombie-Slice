@@ -56,6 +56,9 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
 
         Destroy(gameObject);
 
+        // update the number of zombies left in stage
+        GameManager.instance.updateGameGoal(-1);
+
     }
 
     IEnumerator attack()
@@ -78,7 +81,8 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        // increase the number of zombies left in stage
+        GameManager.instance.updateGameGoal(1);
     }
 
     // Update is called once per frame

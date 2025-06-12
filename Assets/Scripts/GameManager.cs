@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     //[SerializeField] TMP_Text gameScoreText;
     [SerializeField] AudioClip musicGame;
 
+    [SerializeField] TMP_Text zombieCountText;            // keep track of our current objective
+    int zombieCount;                                      // how many zombie in the scene
 
     //public GameObject playerDamageScreen;
     //public Image playerHealthBar;
@@ -115,6 +117,25 @@ public class GameManager : MonoBehaviour
         menuActive.SetActive(true);
     }
 
+    public void updateGameGoal(int amount)
+    {
+        // positive number adds a enemy or item
+        // negative number reduces it
+        zombieCount += amount;
+        zombieCountText.text = zombieCount.ToString("F0");  
 
+
+        if (zombieCount <= 0)
+        {
+            // we win! 
+            // pause the game
+            statePause();
+            // set our active menu to the win menu
+            menuActive = menuWin;
+            // turn on the menu (check the box)
+            menuActive.SetActive(true);
+
+        }
+    }
 
 }

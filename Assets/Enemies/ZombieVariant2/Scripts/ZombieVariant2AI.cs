@@ -65,7 +65,9 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         yield return new WaitForSeconds(2);
 
         Destroy(gameObject);
-       
+
+        // update the number of zombies left in stage
+        GameManager.instance.updateGameGoal(-1);
     }
 
     IEnumerator swipeAttack()
@@ -104,7 +106,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        // increase the number of zombies left in stage
+        GameManager.instance.updateGameGoal(1);
 
     }
 
