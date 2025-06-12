@@ -13,16 +13,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] TMP_Text gameTimerText;
     [SerializeField] float remainingTime;
-    //[SerializeField] TMP_Text gameScoreText;
     [SerializeField] AudioClip musicGame;
 
     [SerializeField] TMP_Text zombieCountText;            // keep track of our current objective
     int zombieCount;                                      // how many zombie in the scene
-
-    
-
-    //public GameObject playerDamageScreen;
-    //public Image playerHealthBar;
 
     public Image playerHPBar;
     public GameObject player;
@@ -148,13 +142,7 @@ public class GameManager : MonoBehaviour
         if (zombieCount <= 0)
         {
             // we win! 
-            // pause the game
-            statePause();
-            // set our active menu to the win menu
-            menuActive = menuWin;
-            // turn on the menu (check the box)
-            menuActive.SetActive(true);
-
+            youWin();
         }
     }
 

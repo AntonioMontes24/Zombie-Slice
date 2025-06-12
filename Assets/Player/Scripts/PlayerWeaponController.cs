@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using System.Linq;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerWeaponManager : MonoBehaviour
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
     [SerializeField] float adsSpeed;
     [SerializeField] GameObject gunModel;
+    [SerializeField] TMPro.TextMeshProUGUI ammoText;
 
     [Header("Weapon Components")]
     [SerializeField] AudioSource aud;
@@ -48,6 +50,8 @@ public class PlayerWeaponManager : MonoBehaviour
     Coroutine reloadCoroutine;
     float shootCooldown;
     bool isAiming;
+
+
     private Vector3 initialGunPosition;
     private Vector3 currentGunOffset;
     private Vector3 initialLeftHandPos;
@@ -72,6 +76,8 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             initialRightHandPos = rightHandGrip.localPosition;
         }
+        
+        ammoText.SetText("00");
     }
 
     public void HandleShooting()//Handles Shooting
@@ -91,6 +97,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 shootCooldown = isAutomaticMode ? currentGun.autoFireRate : currentGun.semiFireRate;
                 Shoot();
                 currentGun.ammoCur--;
+                ammoText.SetText(currentGun.ammoCur.ToString() + " / " + currentGun.ammoReserve.ToString() );
                 playedEmptySound = false;
 
                 if (currentGun.ammoCur <= 0 && currentGun.ammoReserve > 0)
@@ -122,6 +129,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
         {
             reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));// Starts Reload
+            //ammoText.SetText(currentGun.ammoCur.ToString());
         }
     }
 
@@ -233,6 +241,7 @@ public class PlayerWeaponManager : MonoBehaviour
             //----- Apply hand recoil
             currentLeftHandOffset.z -= handRecoilKick;
             currentRightHandOffset.z -= handRecoilKick;
+
         }
     }
 
@@ -247,6 +256,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound, 0.8f);
         if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie, 0.8f);
         yield return new WaitForSeconds(gun.reloadTime);
+
 
         int needed = gun.ammoMax - gun.ammoCur;
 
@@ -284,6 +294,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         currentHipPosition = gunModel.transform.Find("HipPosition");
         currentAdsPosition = gunModel.transform.Find("ADSPosition");
+        ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
     }
 
     public void SetAiming(bool aim)//Sets aiming bool
@@ -372,6 +383,7 @@ public class PlayerWeaponManager : MonoBehaviour
     IEnumerator AmmoFlash()
     {
         GameManager.instance.flashAmmoPickUp.SetActive(true);
+        CurrentGun.ammoReserve += 30;
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.flashAmmoPickUp.SetActive(false);
     }
