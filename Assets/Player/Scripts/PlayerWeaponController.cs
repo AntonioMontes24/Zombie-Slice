@@ -157,15 +157,36 @@ public class PlayerWeaponManager : MonoBehaviour
 
         Debug.DrawRay(ray.origin, ray.direction * currentGun.shootRange, Color.red, 1f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, currentGun.shootRange, ~ignoreLayer))
+        // RaycastAll returns all hits along the ray, including triggers
+        RaycastHit[] hits = Physics.RaycastAll(ray, currentGun.shootRange, ~ignoreLayer, QueryTriggerInteraction.Collide);
+
+        // Sort hits by distance so we check closest first
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+        RaycastHit? validHit = null;
+
+        foreach (var hit in hits)
         {
-            Debug.Log("Hit: " + hit.collider.name);// Debug screen message to check what was hit
+            // Skip detection zones and lights zones by tag
+            if (!hit.collider.CompareTag("DetectionZone") && !hit.collider.CompareTag("Lights"))
+            {
+                validHit = hit;
+                break;
+            }
+        }
+
+        if (validHit.HasValue)
+        {
+            RaycastHit hit = validHit.Value;
+
+            Debug.Log("Hit: " + hit.collider.name);
+
             if (currentGun.hitEffect != null)
             {
                 var i = Instantiate(currentGun.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
             }
 
-            if (!hit.collider.CompareTag("Enemy")&& currentGun.bulletHolePrefab != null)
+            if (!hit.collider.CompareTag("Enemy") && currentGun.bulletHolePrefab != null)
             {
                 var bulletHole = Instantiate(
                     currentGun.bulletHolePrefab,
@@ -206,6 +227,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 }
                 Destroy(shell, 3f);
             }
+
             currentGunOffset.y -= weaponRecoilKick;
 
             //----- Apply hand recoil
@@ -336,16 +358,16 @@ public class PlayerWeaponManager : MonoBehaviour
         muzzleFlashPrefab.SetActive(false);
     }
 
-    void OnGUI()//---- TEMP UI 
-    {
-        if (gunList.Count == 0) return;
-        GunStats currentGun = gunList[gunList.Count - 1];
+    //void OnGUI()//---- TEMP UI 
+    //{
+    //    if (gunList.Count == 0) return;
+    //    GunStats currentGun = gunList[gunList.Count - 1];
 
-        GUIStyle style = new GUIStyle(GUI.skin.label);
-        style.fontSize = 24;
-        style.normal.textColor = Color.blueViolet;
+    //    GUIStyle style = new GUIStyle(GUI.skin.label);
+    //    style.fontSize = 24;
+    //    style.normal.textColor = Color.blueViolet;
 
-        GUI.Label(new Rect(300, 10, 300, 40), "Ammo: " + currentGun.ammoCur + " / " + currentGun.ammoMax, style);
-        GUI.Label(new Rect(600,10,300,40), "Ammo Reserve: " + currentGun.ammoReserve + "/" + currentGun.maxAmmoReserve,style);
-    }
+    //    GUI.Label(new Rect(300, 10, 300, 40), "Ammo: " + currentGun.ammoCur + " / " + currentGun.ammoMax, style);
+    //    GUI.Label(new Rect(600,10,300,40), "Ammo Reserve: " + currentGun.ammoReserve + "/" + currentGun.maxAmmoReserve,style);
+    //}
 }

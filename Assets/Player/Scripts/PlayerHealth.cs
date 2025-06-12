@@ -112,15 +112,15 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
 
     //Temporary Debug Info
-    void OnGUI()
-    {
-        GUIStyle style = new GUIStyle(GUI.skin.label);
-        style.fontSize = 24;
-        style.normal.textColor = Color.red;
-
-        GUI.Label(new Rect(10,10,300,40), "Health: " + currentHealth,style);
-    }
-
+    //void OnGUI()
+    //{
+    //    GUIStyle style = new GUIStyle(GUI.skin.label);
+    //    style.fontSize = 24;
+    //    style.normal.textColor = Color.red;
+    //
+    //    GUI.Label(new Rect(10,10,300,40), "Health: " + currentHealth,style);
+    //}
+    //
     void updatePlayerUI()
     {
         GameManager.instance.playerHPBar.fillAmount = (float)currentHealth/maxHealth;
