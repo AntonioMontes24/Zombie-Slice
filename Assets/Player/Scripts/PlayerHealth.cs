@@ -67,6 +67,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
     public void Heal(int amount)//Handles healing waiting on health pick up to test
     {
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        updatePlayerUI();
     }
 
     public bool CanHeal()

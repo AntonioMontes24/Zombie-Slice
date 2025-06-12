@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text gameTimerText;
     [SerializeField] float remainingTime;
     //[SerializeField] TMP_Text gameScoreText;
+    [SerializeField] AudioClip musicGame;
 
 
     //public GameObject playerDamageScreen;
@@ -75,7 +76,6 @@ public class GameManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(remainingTime / 60);
         int seconds = Mathf.FloorToInt(remainingTime % 60);
         gameTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
 
     }
 
