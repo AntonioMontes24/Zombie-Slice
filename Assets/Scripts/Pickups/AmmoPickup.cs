@@ -10,6 +10,9 @@ public class AmmoPickup : PickupBase
         var weapon = other.GetComponent<PlayerWeaponManager>();
         if (weapon == null)
             return;
+
+        if(weapon.CurrentGun.ammoReserve >= weapon.CurrentGun.maxAmmoReserve)
+            return;
         weapon.AddAmmoToReserve(bullets);
         Destroy(transform.gameObject);
     }

@@ -126,7 +126,24 @@ public class PlayerHealth : MonoBehaviour, IDamage
     //
     void updatePlayerUI()
     {
-        GameManager.instance.playerHPBar.fillAmount = (float)currentHealth/maxHealth;
+        float healthPercent = (float)currentHealth / maxHealth;
+
+        // Update fill amount
+        GameManager.instance.playerHPBar.fillAmount = healthPercent;
+
+        // Update color
+        if (healthPercent >= 0.5f)
+        {
+            GameManager.instance.playerHPBar.color = Color.green;
+        }
+        else if (healthPercent >= 0.25f)
+        {
+            GameManager.instance.playerHPBar.color = Color.yellow;
+        }
+        else
+        {
+            GameManager.instance.playerHPBar.color = Color.red;
+        }
     }
 
     IEnumerator damageFlash()

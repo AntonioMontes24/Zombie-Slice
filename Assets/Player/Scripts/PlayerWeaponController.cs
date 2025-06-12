@@ -201,7 +201,7 @@ public class PlayerWeaponManager : MonoBehaviour
             if (dmg != null)
                 dmg.takeDamage(currentGun.shootDamage);
 
-            if (tracerPrefab != null)//-----Tracer Prefab
+            if (!hit.collider.CompareTag("Enemy") && tracerPrefab != null)//-----Tracer Prefab
             {
                 Vector3 tracerStart = barrelTip.position;
                 GameObject tracer = Instantiate(tracerPrefab, tracerStart, Quaternion.identity);
@@ -358,6 +358,15 @@ public class PlayerWeaponManager : MonoBehaviour
         muzzleFlashPrefab.SetActive(false);
     }
 
+    public GunStats CurrentGun
+    {
+        get
+        {
+            if (gunList == null || gunList.Count == 0)
+                return null;
+            return gunList[gunList.Count - 1];
+        }
+    }
     //void OnGUI()//---- TEMP UI 
     //{
     //    if (gunList.Count == 0) return;

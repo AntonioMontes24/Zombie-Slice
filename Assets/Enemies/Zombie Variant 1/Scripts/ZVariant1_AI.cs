@@ -37,7 +37,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
             // agent.SetDestination(GameManager.instance.player.transform.position);
-            agent.SetDestination(ZGameManager.instance.player.transform.position);
+            agent.SetDestination(GameManager.instance.player.transform.position);
 
             if (currHealth <= 0)
             {
@@ -70,7 +70,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
             animator.SetBool("canAttack", false);
 
             // assign damage to the player
-            IDamage player_dmg = ZGameManager.instance.player.GetComponent<IDamage>();
+            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
             player_dmg.takeDamage(attackDamage);
         }
 
@@ -148,7 +148,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
     bool canWeSeeThePlayer()
     {
         // take the players current position from the game manager and subtract our position
-        playerDirection = ZGameManager.instance.player.transform.position - headPos.position;
+        playerDirection = GameManager.instance.player.transform.position - headPos.position;
 
         // get our angle to the player
         angle_to_player = Vector3.Angle(playerDirection, transform.forward);
@@ -164,7 +164,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
                 // we hit the player with the raycast and he is in our field of view
                 // agent.SetDestination(GameManager.instance.player.transform.position);
 
-                agent.SetDestination(ZGameManager.instance.player.transform.position);
+                agent.SetDestination(GameManager.instance.player.transform.position);
 
                 if (animator != null && animator.runtimeAnimatorController != null)
                     animator.SetBool("isWalking", true);

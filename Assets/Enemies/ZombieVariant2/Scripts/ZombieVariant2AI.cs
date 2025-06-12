@@ -47,7 +47,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
             // agent.SetDestination(GameManager.instance.player.transform.position);
-            agent.SetDestination(ZGameManager.instance.player.transform.position);
+            agent.SetDestination(GameManager.instance.player.transform.position);
 
             if (currHealth <= 0)
             {
@@ -78,6 +78,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
             yield return new WaitForSeconds(1);
 
             animator.SetBool("canSwipe", false);
+            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+            player_dmg.takeDamage(swipeDamage);
         }
             
     }
@@ -92,6 +94,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
             yield return new WaitForSeconds(1);
 
             animator.SetBool("canBite", false);
+            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+            player_dmg.takeDamage(biteDamage);
         }
         
     }
@@ -133,8 +137,6 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
                         // animate the bite
                         StartCoroutine(biteAttack());
 
-                        // assign damage to the player
-
                     }
 
                     // need to check for swipeAttack 
@@ -146,8 +148,6 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
                         // animate the swipe
                         StartCoroutine(swipeAttack());
 
-                        // assign damage to the player
-                        
                     }
                    
                 }
@@ -194,7 +194,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     bool canWeSeeThePlayer()
     {
         // take the players current position from the game manager and subtract our position
-        playerDirection = ZGameManager.instance.player.transform.position - headPos.position;
+        playerDirection = GameManager.instance.player.transform.position - headPos.position;
 
         // get our angle to the player
         angle_to_player = Vector3.Angle(playerDirection, transform.forward);
@@ -210,7 +210,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
                 // we hit the player with the raycast and he is in our field of view
                 // agent.SetDestination(GameManager.instance.player.transform.position);
 
-                agent.SetDestination(ZGameManager.instance.player.transform.position);
+                agent.SetDestination(GameManager.instance.player.transform.position);
 
                 if (animator != null && animator.runtimeAnimatorController != null)
                     animator.SetBool("isWalking", true);
