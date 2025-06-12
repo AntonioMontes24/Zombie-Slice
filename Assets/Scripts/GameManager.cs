@@ -29,6 +29,9 @@ public class GameManager : MonoBehaviour
     public GameObject flashHealScreen;
     public GameObject flashAmmoPickUp;
 
+    AudioSource musicSource;
+    public float musicVolume;
+
     public bool isPaused;
 
     float timeScaleOrig;
@@ -45,7 +48,12 @@ public class GameManager : MonoBehaviour
         playerScript = player.GetComponent<PlayerController>();
         timeScaleOrig = Time.timeScale;
 
-        
+        musicSource = gameObject.AddComponent<AudioSource>();
+        musicSource.volume = musicVolume;
+        musicSource.clip = musicGame;
+        musicSource.loop = true;
+        musicSource.playOnAwake = false;
+        musicSource.Play();
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -82,6 +90,14 @@ public class GameManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(remainingTime % 60);
         gameTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
+        if (isPaused && musicSource.isPlaying)
+        {
+            musicSource.Pause();
+        }
+        else if (!isPaused && !musicSource.isPlaying)
+        {
+            musicSource.UnPause();
+        }
     }
 
     public void statePause()
@@ -108,6 +124,7 @@ public class GameManager : MonoBehaviour
         menuActive = menuLose;
         menuActive.SetActive(true);
         flashDamageScreen.SetActive(false);
+        musicSource.Stop();
     }
 
     public void youWin()
@@ -115,6 +132,7 @@ public class GameManager : MonoBehaviour
         statePause();
         menuActive = menuWin;
         menuActive.SetActive(true);
+        musicSource.Stop();
     }
 
     public void updateGameGoal(int amount)
