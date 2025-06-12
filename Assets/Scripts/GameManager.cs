@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text zombieCountText;            // keep track of our current objective
     int zombieCount;                                      // how many zombie in the scene
 
+    
+
     //public GameObject playerDamageScreen;
     //public Image playerHealthBar;
 
@@ -155,5 +157,7 @@ public class GameManager : MonoBehaviour
 
         }
     }
+
+    
 
 }
