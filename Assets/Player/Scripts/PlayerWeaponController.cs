@@ -166,7 +166,7 @@ public class PlayerWeaponManager : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * currentGun.shootRange, Color.red, 1f);
 
         // RaycastAll returns all hits along the ray, including triggers
-        RaycastHit[] hits = Physics.RaycastAll(ray, currentGun.shootRange, ~ignoreLayer, QueryTriggerInteraction.Collide);
+        RaycastHit[] hits = Physics.RaycastAll(ray, currentGun.shootRange, ~ignoreLayer, QueryTriggerInteraction.Ignore);
 
         // Sort hits by distance so we check closest first
         System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
