@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
     public Image playerHPBar;
     public GameObject player;
     public PlayerController playerScript;
+    public GameObject flashDamageScreen;
+    public GameObject flashHealScreen;
+    public GameObject flashAmmoPickUp;
 
     public bool isPaused;
 
@@ -102,6 +105,7 @@ public class GameManager : MonoBehaviour
         statePause();
         menuActive = menuLose;
         menuActive.SetActive(true);
+        flashDamageScreen.SetActive(false);
     }
 
     public void youWin()

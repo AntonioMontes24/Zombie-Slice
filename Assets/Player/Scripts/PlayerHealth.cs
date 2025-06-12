@@ -68,6 +68,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
     {
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         updatePlayerUI();
+        StartCoroutine(HealFlash());
     }
 
     public bool CanHeal()
@@ -85,10 +86,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
         var weapon = GetComponent<PlayerWeaponManager>();
         if (weapon != null) weapon.enabled = false;
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
+        GameManager.instance.youLose();
         Debug.Log("Player died!");
     }
 
@@ -114,17 +112,6 @@ public class PlayerHealth : MonoBehaviour, IDamage
         //playedHurtSound = false;
     }
 
-
-    //Temporary Debug Info
-    //void OnGUI()
-    //{
-    //    GUIStyle style = new GUIStyle(GUI.skin.label);
-    //    style.fontSize = 24;
-    //    style.normal.textColor = Color.red;
-    //
-    //    GUI.Label(new Rect(10,10,300,40), "Health: " + currentHealth,style);
-    //}
-    //
     void updatePlayerUI()
     {
         float healthPercent = (float)currentHealth / maxHealth;
@@ -149,9 +136,16 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
     IEnumerator damageFlash()
     {
-        ZGameManager.instance.FlashDamage.SetActive(true);
+        GameManager.instance.flashDamageScreen.SetActive(true);
         yield return new WaitForSeconds(0.1f);
-        ZGameManager.instance.FlashDamage.SetActive(false);
+        GameManager.instance.flashDamageScreen.SetActive(false);
     }
 
+
+    IEnumerator HealFlash()
+    {
+        GameManager.instance.flashHealScreen.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.flashHealScreen.SetActive(false);
+    }
 }

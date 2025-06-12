@@ -271,6 +271,7 @@ public class PlayerWeaponManager : MonoBehaviour
         var gun = gunList[gunList.Count - 1];
         gun.ammoReserve += ammoCount;
         gun.ammoReserve = Mathf.Min(gun.ammoReserve + ammoCount, gun.maxAmmoReserve);
+        StartCoroutine(AmmoFlash());
     }
 
     public void GetGunStats(GunStats gun)//---Gets gun and gunstats
@@ -367,16 +368,12 @@ public class PlayerWeaponManager : MonoBehaviour
             return gunList[gunList.Count - 1];
         }
     }
-    //void OnGUI()//---- TEMP UI 
-    //{
-    //    if (gunList.Count == 0) return;
-    //    GunStats currentGun = gunList[gunList.Count - 1];
 
-    //    GUIStyle style = new GUIStyle(GUI.skin.label);
-    //    style.fontSize = 24;
-    //    style.normal.textColor = Color.blueViolet;
+    IEnumerator AmmoFlash()
+    {
+        GameManager.instance.flashAmmoPickUp.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.flashAmmoPickUp.SetActive(false);
+    }
 
-    //    GUI.Label(new Rect(300, 10, 300, 40), "Ammo: " + currentGun.ammoCur + " / " + currentGun.ammoMax, style);
-    //    GUI.Label(new Rect(600,10,300,40), "Ammo Reserve: " + currentGun.ammoReserve + "/" + currentGun.maxAmmoReserve,style);
-    //}
 }
