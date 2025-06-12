@@ -8,6 +8,8 @@ public class ZGameManager : MonoBehaviour
 
     public PlayerController playerScript;
 
+    public GameObject FlashDamage;         // UI for damage flash
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()

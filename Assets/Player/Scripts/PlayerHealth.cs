@@ -31,6 +31,9 @@ public class PlayerHealth : MonoBehaviour, IDamage
     {
         if (hasDied) return;
 
+        // flash the damage on the screen
+        StartCoroutine(damageFlash());
+
         currentHealth -= amount;
         updatePlayerUI();
 
@@ -124,6 +127,13 @@ public class PlayerHealth : MonoBehaviour, IDamage
     void updatePlayerUI()
     {
         GameManager.instance.playerHPBar.fillAmount = (float)currentHealth/maxHealth;
+    }
+
+    IEnumerator damageFlash()
+    {
+        ZGameManager.instance.FlashDamage.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        ZGameManager.instance.FlashDamage.SetActive(false);
     }
 
 }
