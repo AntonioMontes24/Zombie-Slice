@@ -30,6 +30,9 @@ public class PlayerHealth : MonoBehaviour, IDamage
     {
         if (hasDied) return;
 
+        // flash the damage on the screen
+        StartCoroutine(damageFlash());
+
         currentHealth -= amount;
 
         if (currentHealth <= 0)
@@ -116,6 +119,13 @@ public class PlayerHealth : MonoBehaviour, IDamage
         style.normal.textColor = Color.red;
 
         GUI.Label(new Rect(10,10,300,40), "Health: " + currentHealth,style);
+    }
+
+    IEnumerator damageFlash()
+    {
+        ZGameManager.instance.FlashDamage.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        ZGameManager.instance.FlashDamage.SetActive(false);
     }
 
 }

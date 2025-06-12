@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
 
     float timeScaleOrig;
 
+    public GameObject FlashDamage;
+
     //public float gameTimer = 300f;
     //int gameScore;
     //private TimeSpan timeRemaining;
