@@ -1,9 +1,5 @@
-using System;
 using System.Collections;
 using System.Diagnostics;
-using Unity.VisualScripting;
-using UnityEditor.UI;
-
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,70 +10,64 @@ public class enemyAI : MonoBehaviour, IDamage
     [SerializeField] int HP; //Enemy HP variable
     [SerializeField] int facePlayerSpeed;
     [SerializeField] Transform zHeadPOS; //Zombie 
-     int zHP;
-    //[SerializeField] int z1Dmg;
+
     [SerializeField] int FOV; //Field of view
     [SerializeField] LayerMask playerLayer;
-    [SerializeField] float hearingRange;
-    public Animator anim; //Animator controller
 
+    public Animator anim; //Animator controller
+    int hitCount; //Counts number of hits to zombie
     Color colorOrig; //Original color for hit feedback
 
     bool playerInRange; //Will check to see if player in range for attack
-    bool playerInRangeFar;
+
     Vector3 playerDir; //Will be used to direct towards player
+
     float angleToTarget;
+    public GameObject playerObject;
     
 
-    public GameObject playerObject;
-    //public GameObject playerTarget;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         colorOrig = model.material.color;
         anim = GetComponent<Animator>();
-        //zHP = HP;
         if (playerObject == null)
         {
             playerObject = GameObject.FindWithTag("Player");
         }
-        //How will the enemy affect the gamemanger to keep track of the number of enemies left for the goal of the game?
     }
 
     // Update is called once per frame
     void Update()
     {
-        // anim.SetInteger("HP", zHP);
-        
-        if (zHP > 0)
+        if (HP >= 1)
         {
-            float dist = Vector3.Distance(transform.position, playerObject.transform.position);
-            if (playerInRange)
+            //float dist = Vector3.Distance(transform.position, playerObject.transform.position);
+            if (playerInRange && PlayerChase())
             {
-                bool seesplayer = PlayerChase();
-                if (!seesplayer)
+                if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     FacePlayer();
+                    StartCoroutine(zombieAttack());
+                    z1Attack();
+
                 }
-                //Check if enemy is within melee attack range
-                if( dist <2)
-                {
-                    z1Attack();//Trigger attack animation
-                }
-                else if (dist >2)
-                {
-                    anim.SetBool("AttackRange", false);//Trigger animator attack to stop until back in range
-                    agent.isStopped = false;
-                }
+                // //Check if enemy is within melee attack range - not working
+                // if (dist < 2)
+                // {
+                //     z1Attack();//Trigger attack animation
+                // }
+                // else if (dist > 2)
+                // {
+                //     anim.SetBool("AttackRange", false);//Trigger animator attack to stop until back in range
+                //     agent.isStopped = false;
+                // }
                 else
                 {
                     anim.SetBool("AttackRange", false);
                 }
-                if (agent.remainingDistance <= agent.stoppingDistance)
-                {
-                    FacePlayer();
-                }
+
             }
         }
     }
@@ -86,36 +76,25 @@ public class enemyAI : MonoBehaviour, IDamage
     /*MOVEMENT*/
     bool PlayerChase()
     {
-        if (playerObject == null)
-        {
-            return false;
-        }
-        playerDir = GameManager.instance.player.transform.position - zHeadPOS.position; //Track player - calling zGameManager - created to test movement
+
+        playerDir = GameManager.instance.player.transform.position - zHeadPOS.position;
         angleToTarget = Vector3.Angle(playerDir, transform.forward);
-        //Debug.DrawRay(zHeadPOS.position, playerDir.normalized * 10, Color.red);
+        UnityEngine.Debug.DrawRay(zHeadPOS.position, playerDir);
         RaycastHit hit;
-        if (Physics.Raycast(zHeadPOS.position, playerDir, out hit, Mathf.Infinity, playerLayer))
+        if (Physics.Raycast(zHeadPOS.position, playerDir, out hit))
+
         {
-            if (hit.collider.CompareTag("Player") && angleToTarget < FOV)
+            if (angleToTarget <= FOV && hit.collider.CompareTag("Player"))
             {
-                agent.SetDestination(playerObject.transform.position);
-                anim.SetBool("playerInRange", true);
+                //agent.SetDestination(GameManager.instance.player.transform.position);
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    FacePlayer();
+                    //StartCoroutine(targetSighted());
+                }
                 return true;
             }
         }
-        // if (playerInRange)
-        // {
-        //     agent.SetDestination(playerObject.transform.position);
-        //     anim.SetBool("playerInRange", true);
-        //     return true;
-        // }
-        if (playerInRangeFar)
-        {
-            //agent.SetDestination(playerObject.transform.position);
-            anim.SetBool("playerInRange", true);
-            return true;
-        }
-        anim.SetBool("playerInRange", false);
         return false;
     }
     void FacePlayer()
@@ -124,53 +103,116 @@ public class enemyAI : MonoBehaviour, IDamage
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * facePlayerSpeed);
     }
 
-    
-
+    //bool zMoving;
+    bool isDead;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            playerInRangeFar = true;
-            //agent.isStopped = false;
-            anim.SetBool("playerInRangeClose", true);//Trigger walk animation
-
-
+            playerInRange = true;
+            StartCoroutine(zIdle());
         }
     }
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         playerInRangeFar = true;
+    //         //agent.isStopped = false;
+    //         anim.SetBool("playerInRangeClose", true);//Trigger walk animation
+
+
+    //     }
+    // }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            playerInRangeFar = false;
+            playerInRange = false;
             //agent.isStopped = true;
-            anim.SetBool("playerInRangeClose", false);//Trigger idle animation
+            StartCoroutine(zIdle());
         }
     }
 
-    
-    /*DAMAGE*/
+
+    /*CoRoutines for animation*/
+    //Start movement
+    IEnumerator zIdle()
+    {
+        anim.SetBool("isMoving", false);
+        yield return new WaitForSeconds(0.1f);
+        agent.isStopped = true;
+
+    }
+    IEnumerator zombieAttack()
+    {
+        anim.SetBool("AttackRange", true);
+        yield return new WaitForSeconds(0.1f);
+    }
     //Flash red when hit
     IEnumerator flashRed()
     {
         model.material.color = Color.red;
-        anim.SetTrigger("Hit");//Trigger hit animation
-        agent.isStopped = true;
+        anim.SetTrigger("Hit");
+        FacePlayer();
         yield return new WaitForSeconds(0.1f);
+        // agent.SetDestination(GameManager.instance.player.transform.position);
         model.material.color = colorOrig;
-        agent.isStopped = false;
+        agent.isStopped = true;
+
+        yield return StartCoroutine(zombieDamaged());
     }
     //Play hit animation when taking damage
     IEnumerator deathAnim()
     {
         anim.SetInteger("isDead", 1);
-        agent.isStopped = true;
-        agent.SetDestination(agent.transform.position);
-        
-        
+        agent.speed = 0;//failsafe to make sure zombie stops moving
+        GetComponent<Collider>().enabled = false;//Prevent shooting dead target
+        //agent.SetDestination(agent.transform.position);
         //playerInRange = false;
-        yield return new WaitForSeconds(4.25f);//Play death animation then remove from area (destroy object) after 3 seconds. Could remove this if we want to have bodies remain
+        yield return new WaitForSeconds(3.0f);//Play death animation then remove from area (destroy object) after 3 seconds. Could remove this if we want to have bodies remain
         zDead();
+    }
+
+   
+
+    IEnumerator targetSighted()//Will move if target is sighted. 
+    {
+        anim.SetBool("isMoving", true);
+        yield return new WaitForSeconds(0.1f);
+        anim.SetBool("isMoving", true);
+    }
+
+    IEnumerator zombieDamaged()
+    {
+        if (!isDead)
+        {
+
+            anim.SetBool("isMoving", false);
+            agent.isStopped = true;
+            yield return new WaitForSeconds(0.1f);
+            anim.SetInteger("HP", HP);
+            if (hitCount > 1)
+            {
+                anim.SetBool("isMoving", false);
+                anim.SetBool("isRunning", true);
+            }
+            else
+            {
+                anim.SetBool("isRunning", false);
+                anim.SetBool("isMoving", true);
+            }
+            agent.isStopped = false;
+            agent.SetDestination(gameObject.transform.position);
+        }
+        if (isDead)
+        {
+            anim.SetBool("isMoving", false);
+            yield return StartCoroutine(deathAnim());
+            zDead();
+
+        }
     }
     //Intention is to set the distance parameter in the animator to 0 to trigger attack animation
     private void zDead()
@@ -186,30 +228,29 @@ public class enemyAI : MonoBehaviour, IDamage
 
     public void takeDamage(int amount)
     {
-        // if (zHP < 0)
-        // {
-        //     return;
-        // }
+
         HP -= amount; //Reduce enemy HP by amount of damage taken from player/weapon
-        zHP = HP;
-        if (HP < 0)
-        {
-            StartCoroutine(flashRed());
-            anim.SetTrigger("Hit");
-            anim.SetInteger("HP", HP);
-            StartCoroutine(deathAnim());
-            
-        }
-        else if (HP > 0)
-        {
-            StartCoroutine(flashRed());
-            anim.SetBool("isMoving", true);
-            anim.SetTrigger("Hit");
-            anim.SetInteger("HP", HP);
-            agent.SetDestination(playerObject.transform.position);
-        }
+        hitCount++;
+        anim.SetInteger("hitCount", hitCount);
+        agent.SetDestination(GameManager.instance.player.transform.position);
+        statusCheck(HP);//Check current HP value and toggle isDead bool
+
+        StartCoroutine(flashRed());
     }
 
+    private void statusCheck(int HP)
+    {
+        if (HP <= 0)
+        {
+            isDead = true;
+            anim.SetInteger("isDead", 1);
+        }
+        else if (HP > 1)
+        {
+            isDead = false;
+            anim.SetInteger("isDead", 0);
+        }
+    }
     //Future possibility is to slow the enemy down with each hit
 
 }

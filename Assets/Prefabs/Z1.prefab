@@ -3495,7 +3495,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 641abae435c2e5e459e266fc4c3f6693, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -3525,6 +3525,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 512
+  hearingRange: 0
   anim: {fileID: 7890433592576994043}
   playerObject: {fileID: 0}
 --- !u!195 &5092836724994004376
