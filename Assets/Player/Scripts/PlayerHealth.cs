@@ -23,6 +23,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
     private void Start()
     {
         currentHealth = maxHealth;
+        updatePlayerUI();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -30,7 +31,11 @@ public class PlayerHealth : MonoBehaviour, IDamage
     {
         if (hasDied) return;
 
+        // flash the damage on the screen
+        StartCoroutine(damageFlash());
+
         currentHealth -= amount;
+        updatePlayerUI();
 
         if (currentHealth <= 0)
         {
@@ -40,6 +45,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
                 if (deathSound && audioSource)
                     audioSource.PlayOneShot(deathSound);
                 Die();
+                GameManager.instance.youLose();
 
                 if (damageSoundRoutine != null)
                     StopCoroutine(damageSoundRoutine);
@@ -47,10 +53,11 @@ public class PlayerHealth : MonoBehaviour, IDamage
         }
         else
         {
-            if (!isTakingDotDamage)
+            if (hurtSound && audioSource)
             {
-                isTakingDotDamage = true;
-                damageSoundRoutine = StartCoroutine(LoopHurtSound());
+                audioSource.PlayOneShot(hurtSound);
+                // isTakingDotDamage = true;
+                // damageSoundRoutine = StartCoroutine(LoopHurtSound());
             }
         }
 
@@ -60,6 +67,8 @@ public class PlayerHealth : MonoBehaviour, IDamage
     public void Heal(int amount)//Handles healing waiting on health pick up to test
     {
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        updatePlayerUI();
+        StartCoroutine(HealFlash());
     }
 
     public bool CanHeal()
@@ -77,10 +86,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
         var weapon = GetComponent<PlayerWeaponManager>();
         if (weapon != null) weapon.enabled = false;
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
+        GameManager.instance.youLose();
         Debug.Log("Player died!");
     }
 
@@ -106,15 +112,40 @@ public class PlayerHealth : MonoBehaviour, IDamage
         //playedHurtSound = false;
     }
 
-
-    //Temporary Debug Info
-    void OnGUI()
+    void updatePlayerUI()
     {
-        GUIStyle style = new GUIStyle(GUI.skin.label);
-        style.fontSize = 24;
-        style.normal.textColor = Color.red;
+        float healthPercent = (float)currentHealth / maxHealth;
 
-        GUI.Label(new Rect(10,10,300,40), "Health: " + currentHealth,style);
+        // Update fill amount
+        GameManager.instance.playerHPBar.fillAmount = healthPercent;
+
+        // Update color
+        if (healthPercent >= 0.5f)
+        {
+            GameManager.instance.playerHPBar.color = Color.green;
+        }
+        else if (healthPercent >= 0.25f)
+        {
+            GameManager.instance.playerHPBar.color = Color.yellow;
+        }
+        else
+        {
+            GameManager.instance.playerHPBar.color = Color.red;
+        }
     }
 
+    IEnumerator damageFlash()
+    {
+        GameManager.instance.flashDamageScreen.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.flashDamageScreen.SetActive(false);
+    }
+
+
+    IEnumerator HealFlash()
+    {
+        GameManager.instance.flashHealScreen.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.flashHealScreen.SetActive(false);
+    }
 }

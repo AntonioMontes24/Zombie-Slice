@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using System.Linq;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerWeaponManager : MonoBehaviour
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
     [SerializeField] float adsSpeed;
     [SerializeField] GameObject gunModel;
+    [SerializeField] TMPro.TextMeshProUGUI ammoText;
 
     [Header("Weapon Components")]
     [SerializeField] AudioSource aud;
@@ -48,6 +50,8 @@ public class PlayerWeaponManager : MonoBehaviour
     Coroutine reloadCoroutine;
     float shootCooldown;
     bool isAiming;
+
+
     private Vector3 initialGunPosition;
     private Vector3 currentGunOffset;
     private Vector3 initialLeftHandPos;
@@ -72,6 +76,8 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             initialRightHandPos = rightHandGrip.localPosition;
         }
+        
+        ammoText.SetText("00");
     }
 
     public void HandleShooting()//Handles Shooting
@@ -91,6 +97,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 shootCooldown = isAutomaticMode ? currentGun.autoFireRate : currentGun.semiFireRate;
                 Shoot();
                 currentGun.ammoCur--;
+                ammoText.SetText(currentGun.ammoCur.ToString() + " / " + currentGun.ammoReserve.ToString() );
                 playedEmptySound = false;
 
                 if (currentGun.ammoCur <= 0 && currentGun.ammoReserve > 0)
@@ -122,6 +129,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
         {
             reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));// Starts Reload
+            //ammoText.SetText(currentGun.ammoCur.ToString());
         }
     }
 
@@ -157,15 +165,36 @@ public class PlayerWeaponManager : MonoBehaviour
 
         Debug.DrawRay(ray.origin, ray.direction * currentGun.shootRange, Color.red, 1f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, currentGun.shootRange, ~ignoreLayer))
+        // RaycastAll returns all hits along the ray, including triggers
+        RaycastHit[] hits = Physics.RaycastAll(ray, currentGun.shootRange, ~ignoreLayer, QueryTriggerInteraction.Ignore);
+
+        // Sort hits by distance so we check closest first
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+        RaycastHit? validHit = null;
+
+        foreach (var hit in hits)
         {
-            Debug.Log("Hit: " + hit.collider.name);// Debug screen message to check what was hit
+            // Skip detection zones and lights zones by tag
+            if (!hit.collider.CompareTag("DetectionZone") && !hit.collider.CompareTag("Lights"))
+            {
+                validHit = hit;
+                break;
+            }
+        }
+
+        if (validHit.HasValue)
+        {
+            RaycastHit hit = validHit.Value;
+
+            Debug.Log("Hit: " + hit.collider.name);
+
             if (currentGun.hitEffect != null)
             {
                 var i = Instantiate(currentGun.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
             }
 
-            if (currentGun.bulletHolePrefab != null)
+            if (!hit.collider.CompareTag("Enemy") && currentGun.bulletHolePrefab != null)
             {
                 var bulletHole = Instantiate(
                     currentGun.bulletHolePrefab,
@@ -180,7 +209,7 @@ public class PlayerWeaponManager : MonoBehaviour
             if (dmg != null)
                 dmg.takeDamage(currentGun.shootDamage);
 
-            if (tracerPrefab != null)//-----Tracer Prefab
+            if (!hit.collider.CompareTag("Enemy") && tracerPrefab != null)//-----Tracer Prefab
             {
                 Vector3 tracerStart = barrelTip.position;
                 GameObject tracer = Instantiate(tracerPrefab, tracerStart, Quaternion.identity);
@@ -206,11 +235,13 @@ public class PlayerWeaponManager : MonoBehaviour
                 }
                 Destroy(shell, 3f);
             }
+
             currentGunOffset.y -= weaponRecoilKick;
 
             //----- Apply hand recoil
             currentLeftHandOffset.z -= handRecoilKick;
             currentRightHandOffset.z -= handRecoilKick;
+
         }
     }
 
@@ -225,6 +256,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound, 0.8f);
         if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie, 0.8f);
         yield return new WaitForSeconds(gun.reloadTime);
+
 
         int needed = gun.ammoMax - gun.ammoCur;
 
@@ -249,6 +281,7 @@ public class PlayerWeaponManager : MonoBehaviour
         var gun = gunList[gunList.Count - 1];
         gun.ammoReserve += ammoCount;
         gun.ammoReserve = Mathf.Min(gun.ammoReserve + ammoCount, gun.maxAmmoReserve);
+        StartCoroutine(AmmoFlash());
     }
 
     public void GetGunStats(GunStats gun)//---Gets gun and gunstats
@@ -261,6 +294,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         currentHipPosition = gunModel.transform.Find("HipPosition");
         currentAdsPosition = gunModel.transform.Find("ADSPosition");
+        ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
     }
 
     public void SetAiming(bool aim)//Sets aiming bool
@@ -336,16 +370,22 @@ public class PlayerWeaponManager : MonoBehaviour
         muzzleFlashPrefab.SetActive(false);
     }
 
-    void OnGUI()//---- TEMP UI 
+    public GunStats CurrentGun
     {
-        if (gunList.Count == 0) return;
-        GunStats currentGun = gunList[gunList.Count - 1];
-
-        GUIStyle style = new GUIStyle(GUI.skin.label);
-        style.fontSize = 24;
-        style.normal.textColor = Color.blueViolet;
-
-        GUI.Label(new Rect(300, 10, 300, 40), "Ammo: " + currentGun.ammoCur + " / " + currentGun.ammoMax, style);
-        GUI.Label(new Rect(600,10,300,40), "Ammo Reserve: " + currentGun.ammoReserve + "/" + currentGun.maxAmmoReserve,style);
+        get
+        {
+            if (gunList == null || gunList.Count == 0)
+                return null;
+            return gunList[gunList.Count - 1];
+        }
     }
+
+    IEnumerator AmmoFlash()
+    {
+        GameManager.instance.flashAmmoPickUp.SetActive(true);
+        CurrentGun.ammoReserve += 30;
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.flashAmmoPickUp.SetActive(false);
+    }
+
 }
