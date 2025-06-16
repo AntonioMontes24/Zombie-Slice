@@ -3453,10 +3453,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8763268851430555139}
   - component: {fileID: 7890433592576994043}
-  - component: {fileID: 272251848660840064}
   - component: {fileID: 5092836724994004376}
   - component: {fileID: 1041751380132224892}
   - component: {fileID: 8119178265014828549}
+  - component: {fileID: 5387969560005915911}
   m_Layer: 6
   m_Name: Z1
   m_TagString: Untagged
@@ -3504,30 +3504,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &272251848660840064
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5562514547367160947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34819e4b3a5799a48bcd0e817f86f65e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  model: {fileID: 8089156461411802997}
-  agent: {fileID: 5092836724994004376}
-  HP: 15
-  facePlayerSpeed: 8
-  zHeadPOS: {fileID: 2539755034127706802}
-  FOV: 90
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  hearingRange: 0
-  anim: {fileID: 7890433592576994043}
-  playerObject: {fileID: 0}
 --- !u!195 &5092836724994004376
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3594,6 +3570,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 15
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5387969560005915911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562514547367160947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c90908275c8ee3849a11bbd12ce76358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolPoints: []
+  speed: 2
+  stopDist: 0.5
+  moveWait: 2
+  facePlayer: 6
+  waitTimer: 0
+  playerObj: {fileID: 0}
 --- !u!1 &5641808250004788527
 GameObject:
   m_ObjectHideFlags: 0
