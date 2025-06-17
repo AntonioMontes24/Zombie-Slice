@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using System.Linq;
+using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
@@ -188,6 +190,14 @@ public class PlayerWeaponManager : MonoBehaviour
             RaycastHit hit = validHit.Value;
 
             Debug.Log("Hit: " + hit.collider.name);
+
+            // If enemy is hit, show enemy ui panel + enemy name
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                GameManager.instance.enemyInfoPanel.SetActive(true);
+                GameManager.instance.enemyNameText.text = hit.collider.name;
+
+            }
 
             if (currentGun.hitEffect != null)
             {
