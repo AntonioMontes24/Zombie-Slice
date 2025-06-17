@@ -18,12 +18,15 @@ public class PlayerHealth : MonoBehaviour, IDamage
     bool isTakingDotDamage;
     bool hasDied;
 
+    public int playerHP;
     private AudioSource audioSource;
 
     private void Start()
     {
         currentHealth = maxHealth;
         updatePlayerUI();
+        playerHP = currentHealth;
+        Debug.Log(playerHP);
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -118,6 +121,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
         // Update fill amount
         GameManager.instance.playerHPBar.fillAmount = healthPercent;
+        GameManager.instance.playerHPText.text = currentHealth.ToString();
 
         // Update color
         if (healthPercent >= 0.5f)
@@ -132,6 +136,8 @@ public class PlayerHealth : MonoBehaviour, IDamage
         {
             GameManager.instance.playerHPBar.color = Color.red;
         }
+
+        
     }
 
     IEnumerator damageFlash()

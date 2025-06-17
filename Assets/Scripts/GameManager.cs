@@ -15,12 +15,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] float remainingTime;
     [SerializeField] AudioClip musicGame;
 
+    public TMP_Text playerHPText;
+    public Image playerHPBar;
+
     [SerializeField] TMP_Text zombieCountText;            // keep track of our current objective
     int zombieCount;                                      // how many zombie in the scene
-
-    public Image playerHPBar;
+    
+    
     public GameObject player;
     public PlayerController playerScript;
+    public PlayerHealth playerHealth;
     public GameObject flashDamageScreen;
     public GameObject flashHealScreen;
     public GameObject flashAmmoPickUp;
@@ -146,6 +150,5 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
 
 }

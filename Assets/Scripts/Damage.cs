@@ -6,18 +6,12 @@ using UnityEngine;
 public class damage : MonoBehaviour
 {
     enum damageType { moving, stationary, DOT, homing }
-    [SerializeField]
-    damageType type;
-    [SerializeField]
-    Rigidbody rb;
-    [SerializeField]
-    int damageAmount;
-    [SerializeField]
-    float dammgeRate;
-    [SerializeField]
-    int speed;
-    [SerializeField]
-    int destroyTime;
+    [SerializeField] damageType type;
+    [SerializeField] Rigidbody rb;
+    [SerializeField] int damageAmount;
+    [SerializeField] float dammgeRate;
+    [SerializeField] int speed;
+    [SerializeField] int destroyTime;
 
     bool isDamaging;
 
