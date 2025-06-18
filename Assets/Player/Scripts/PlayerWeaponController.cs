@@ -53,7 +53,10 @@ public class PlayerWeaponManager : MonoBehaviour
     float shootCooldown;
     bool isAiming;
 
+    //AmmoUIUpdate
+    private IAmmoUi ammoUI;
 
+    //GunRecoil and position
     private Vector3 initialGunPosition;
     private Vector3 currentGunOffset;
     private Vector3 initialLeftHandPos;
@@ -398,4 +401,13 @@ public class PlayerWeaponManager : MonoBehaviour
         GameManager.instance.flashAmmoPickUp.SetActive(false);
     }
 
+
+    public void UpdateAmmoUi()// Helper to update Ammo UI
+    {
+        if (HasGun())
+        {
+            GunStats gun = CurrentGun;
+            ammoUI?.UpdateAmmo(gun.ammoCur, gun.ammoReserve);
+        }
+    }
 }
