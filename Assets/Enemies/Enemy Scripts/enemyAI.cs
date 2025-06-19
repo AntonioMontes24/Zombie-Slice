@@ -17,26 +17,34 @@ public class enemyAI : MonoBehaviour, IDamage
     [SerializeField] float hitRate;
     [SerializeField] int animSpeedTrans;
     [SerializeField] int FOV;
+    [SerializeField] int hit_Damage;
+    [SerializeField] int facePlayer;
     [SerializeField] Animator anim;
 
     Color colorOrig;
-
+    public GameObject playerObj;
+    private float origY;
     float hitTimer;
     float angleToPlayer;
     float roamTime;
     float stoppingDistOrig;
+    public float stopDistPlayer;
 
     bool playerInRange;
-
+    bool meleeRange;
+    bool isDead;
     Vector3 playerDir;
     Vector3 startingPos;
 
     void Start()
     {
+
         colorOrig = model.material.color;
         GameManager.instance.updateGameGoal(1);
         startingPos = transform.position;
+        playerObj = GameObject.FindWithTag("Player");
         stoppingDistOrig = agent.stoppingDistance;
+        origY = transform.position.y; // Grab Y
     }
 
     void Update()
@@ -46,13 +54,22 @@ public class enemyAI : MonoBehaviour, IDamage
         {
             roamTime += Time.deltaTime;
         }
-        if (playerInRange && seePlayer())
+        if (playerInRange)
         {
             roamCheck();
         }
         else if (!playerInRange)
         {
             roamCheck();
+        }
+        if (HP <= 0)
+        {
+            isDead = true;
+            deadEnemy();
+        }
+        else
+        {
+            isDead = false;
         }
     }
 
@@ -81,38 +98,44 @@ public class enemyAI : MonoBehaviour, IDamage
         agent.SetDestination(hit.position);
     }
 
-    bool seePlayer()
+    void seePlayer()
     {
-        playerDir = GameManager.instance.player.transform.position - headPOS.position;
-        angleToPlayer = Vector3.Angle(playerDir, transform.forward);
-        RaycastHit hit;
-        if (Physics.Raycast(headPOS.position, playerDir, out hit))
-        {
-            if (angleToPlayer < FOV && hit.collider.CompareTag("Player"))
-            {
-                hitTimer += Time.deltaTime;
-                if (hitTimer > hitRate)
-                {
-                    hitAttack();
-                }
+        if (playerObj == null) return;
 
-                if (agent.remainingDistance <= agent.stoppingDistance)
-                {
-                    faceTarget();
-                }
-                agent.stoppingDistance = stoppingDistOrig;
-                return true;
-            }
+        Vector3 playerGroundPOS = new Vector3(playerObj.transform.position.x, origY, playerObj.transform.position.z);
+        Vector3 directionPlayer = playerGroundPOS - transform.position;
+        Vector3 dirFlat = new Vector3(directionPlayer.x, 0, directionPlayer.z);//Was moving upwards as it got closer to the player
+
+        //Stop in front of player
+        if (directionPlayer.magnitude < stopDistPlayer)
+        {
+            hitAttack();
+            //attack animation
+
         }
-        agent.stoppingDistance = 0;
-        return false;
+        else
+        {
+            
+            //stop attack animation
+            transform.position = Vector3.MoveTowards(transform.position, playerGroundPOS, faceTargetSpeed * Time.deltaTime);
+        }
+        if (dirFlat != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(dirFlat);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * facePlayer);
+            //run animation
+        }
     }
 
-    void faceTarget()
+    void deadEnemy()
     {
-        Quaternion rot = Quaternion.LookRotation(new Vector3(playerDir.x, 0, playerDir.z));
-        transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
+        if (isDead)
+        {
+            //play dead animation
+            GameManager.instance.updateGameGoal(-1);
 
+            Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -135,13 +158,10 @@ public class enemyAI : MonoBehaviour, IDamage
     public void takeDamage(int amount)
     {
         HP -= amount;
-        agent.SetDestination(GameManager.instance.player.transform.position);
-
-        StartCoroutine(flashRed());
-        if (HP <= 0)
+        //play get hit animation
+        if (!isDead)
         {
-            GameManager.instance.updateGameGoal(-1);
-            Destroy(gameObject);
+            seePlayer();
         }
     }
 
@@ -154,7 +174,10 @@ public class enemyAI : MonoBehaviour, IDamage
 
     void hitAttack()
     {
-        hitTimer = 0;
-        //anim.SetTrigger("Attack");
+       
+        //play attack animation
+        IDamage player_hit = GameManager.instance.player.GetComponent<IDamage>();
+        player_hit.takeDamage(hit_Damage);
     }
+    
 }

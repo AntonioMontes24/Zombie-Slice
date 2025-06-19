@@ -1,43 +1,55 @@
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class newEnemyAI : MonoBehaviour, IDamage
 {
-    public Transform[] patrolPoints;
-    [SerializeField] public float speed = 2f;
-    [SerializeField] public float stopDist = 0.5f;
+    //public Transform[] patrolPoints;
+    //[SerializeField] public float speed = 2f;
+    //[SerializeField] public float stopDist = 0.5f;
     [SerializeField] public float stopDistPlayer = 1.0f;
-    [SerializeField] float moveWait = 2f;
+    // [SerializeField] float moveWait = 2f;
     [SerializeField] int facePlayer = 6;
     [SerializeField] int HP;
     [SerializeField] Renderer model;
-    int currentPointIndex = 0;
+    [SerializeField] NavMeshAgent agent;
+    [SerializeField] int roamDist;
+    [SerializeField] int roamStopTime;
     
+    //int currentPointIndex = 0;
+    float origStopDist;
+    float roamTime;
     private float YOrig;
-    [SerializeField] float waitTimer = 0f;
-    bool isWaiting = false;
+    //[SerializeField] float waitTimer = 0f;
+    // bool isWaiting = false;
     bool inRange = false;
     bool meleeRange = false;
     bool isDead = false;
     public GameObject playerObj;
     Color originalColor;
-
-    Vector3 directionPlayer;
+    Vector3 startingPos;
     public Animator anim;
     void Start()
     {
         originalColor = model.material.color;
         YOrig = transform.position.y;
-        ShufflePoints();
-        playerObj = GameObject.FindWithTag("Player");
-        anim = GetComponent<Animator>();
+        GameManager.instance.updateGameGoal(1);
+        origStopDist = agent.stoppingDistance;
+        //ShufflePoints();
+
+
     }
 
     void Update()
     {
+        if (agent.remainingDistance < 0.01f)
+        {
+            roamTime += Time.deltaTime;
+        }
         if (!inRange)
-            patrolNextArea();
+            //patrolNextArea();
+            roamCheck();
         else
             ChasePlayer();
         if (HP <= 0)
@@ -49,53 +61,55 @@ public class newEnemyAI : MonoBehaviour, IDamage
         {
             isDead = false;
         }
+        
     }
 
-    void patrolNextArea()
-    {
+   
+    // void patrolNextArea()
+    // {
 
-        if (patrolPoints.Length == 0)
-            return;
+    //     if (patrolPoints.Length == 0)
+    //         return;
 
 
-        StartCoroutine(walkAnim());
-        //Shuffler Fisher-Yates
-        if (isWaiting)
-        {
-            StartCoroutine(idleAnim());
-            waitTimer -= Time.deltaTime;
-            if (waitTimer <= 0f)
-            {
-                isWaiting = false;
-                //currentPointIndex = Random.Range(0, patrolPoints.Length);
-                currentPointIndex++;
-                if (currentPointIndex >= patrolPoints.Length)
-                {
-                    currentPointIndex = 0;
-                    ShufflePoints();
-                }
-            }
-        }
-        else
-        {
-            Transform target = patrolPoints[currentPointIndex];
-            transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
-            Vector3 direction = target.position - transform.position;
-            if (direction != Vector3.zero)
-            {
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                // transform.rotation = lookRotation * Quaternion.Euler(0, 180, 0);
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
-            }
+    //     StartCoroutine(walkAnim());
+    //     //Shuffler Fisher-Yates
+    //     if (isWaiting)
+    //     {
+    //         StartCoroutine(idleAnim());
+    //         waitTimer -= Time.deltaTime;
+    //         if (waitTimer <= 0f)
+    //         {
+    //             isWaiting = false;
+    //             //currentPointIndex = Random.Range(0, patrolPoints.Length);
+    //             currentPointIndex++;
+    //             if (currentPointIndex >= patrolPoints.Length)
+    //             {
+    //                 currentPointIndex = 0;
+    //                 ShufflePoints();
+    //             }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Transform target = patrolPoints[currentPointIndex];
+    //         transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+    //         Vector3 direction = target.position - transform.position;
+    //         if (direction != Vector3.zero)
+    //         {
+    //             Quaternion lookRotation = Quaternion.LookRotation(direction);
+    //             // transform.rotation = lookRotation * Quaternion.Euler(0, 180, 0);
+    //             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+    //         }
 
-            if (Vector3.Distance(transform.position, target.position) <= stopDist)
-            {
-                isWaiting = true;
-                waitTimer = moveWait;
-            }
-        }
+    //         if (Vector3.Distance(transform.position, target.position) <= stopDist)
+    //         {
+    //             isWaiting = true;
+    //             waitTimer = moveWait;
+    //         }
+    //     }
 
-    }
+    // }
 
     void OnTriggerEnter(Collider other)
     {
@@ -115,15 +129,35 @@ public class newEnemyAI : MonoBehaviour, IDamage
         Debug.Log("Player out of range");
     }
 
-    void ShufflePoints()
+    // void ShufflePoints()
+    // {
+    //     for (int i = 0; i < patrolPoints.Length; i++)
+    //     {
+    //         int randIndex = Random.Range(i, patrolPoints.Length);
+    //         Transform temp = patrolPoints[i];
+    //         patrolPoints[i] = patrolPoints[randIndex];
+    //         patrolPoints[randIndex] = temp;
+    //     }
+    // }
+    void roamCheck()
     {
-        for (int i = 0; i < patrolPoints.Length; i++)
+        if (roamTime >= roamStopTime && agent.remainingDistance < 0.01f)
         {
-            int randIndex = Random.Range(i, patrolPoints.Length);
-            Transform temp = patrolPoints[i];
-            patrolPoints[i] = patrolPoints[randIndex];
-            patrolPoints[randIndex] = temp;
+            roam();
         }
+    }
+    void roam()
+    {
+        roamTime = 0;
+        agent.stoppingDistance = 0;
+
+        Vector3 randPos = Random.insideUnitSphere * roamDist;
+
+        randPos += startingPos;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randPos, out hit, roamDist, 1);
+        agent.SetDestination(hit.position);
+        agent.speed = 1.85f;
     }
     void ChasePlayer()
     {
@@ -139,19 +173,21 @@ public class newEnemyAI : MonoBehaviour, IDamage
             meleeRange = true;
             StartCoroutine(attackAnim());
             //Error Check
-            Debug.Log("meleeRange bool true");
         }
         else
         {
             meleeRange = false;
             StartCoroutine(stopAttackAnim());
-            transform.position = Vector3.MoveTowards(transform.position, playerGroundPOS, speed * Time.deltaTime);
+            //transform.position = Vector3.MoveTowards(transform.position, playerGroundPOS, speed * Time.deltaTime);
+            agent.stoppingDistance = stopDistPlayer;
+            agent.SetDestination(playerGroundPOS);
         }
         if (dirFlat != Vector3.zero)
         {
             Quaternion lookRotation = Quaternion.LookRotation(dirFlat);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * facePlayer);
             StartCoroutine(runAnim());
+            agent.speed = 6f;
         }
         // transform.position = Vector3.MoveTowards(transform.position, playerGroundPOS, speed * Time.deltaTime);
     }
@@ -160,6 +196,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
     {
         if (isDead)
             StartCoroutine(isDeadAnim());
+        agent.speed = 0f;
     }
 
     //Animation Coroutines
@@ -196,7 +233,17 @@ public class newEnemyAI : MonoBehaviour, IDamage
     //Attack
     IEnumerator attackAnim()
     {
+        foreach (var hitbox in GetComponentsInChildren<zombieHitBox>())
+        {
+            hitbox.activeHit();
+            
+        }
         anim.SetBool("MeleeRange", true);
+        yield return new WaitForSeconds(0.5f);
+        foreach (var hitbox in GetComponentsInChildren<zombieHitBox>())
+        {
+            hitbox.notActiveHit();
+        }
         yield return StartCoroutine(stopAnim());
         yield return !meleeRange;
     }
@@ -237,4 +284,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
         ChasePlayer();
 
     }
+
+    
+    
 }
