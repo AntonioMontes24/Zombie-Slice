@@ -112,6 +112,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 if (currentGun.ammoReserve > 0 && reloadCoroutine == null) // Checks ammo Reserve
                 {
                     reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));
+                    
                     playedEmptySound = false;
                 }
                 else if (currentGun.emptySound != null && !playedEmptySound)// Flag to avoid empty sound spam 
@@ -267,7 +268,6 @@ public class PlayerWeaponManager : MonoBehaviour
         if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie, 0.8f);
         yield return new WaitForSeconds(gun.reloadTime);
 
-
         int needed = gun.ammoMax - gun.ammoCur;
 
         if(gun.ammoReserve >= needed)
@@ -282,7 +282,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
         isReloading = false;
         reloadCoroutine = null;
-
+        ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
 
     }
 
