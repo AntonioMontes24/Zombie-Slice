@@ -178,7 +178,7 @@ public class PlayerWeaponManager : MonoBehaviour
         foreach (var hit in hits)
         {
             // Skip detection zones and lights zones by tag
-            if (!hit.collider.CompareTag("DetectionZone") && !hit.collider.CompareTag("Lights"))
+            if (!hit.collider.CompareTag("Lights"))
             {
                 validHit = hit;
                 break;
