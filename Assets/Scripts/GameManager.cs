@@ -19,6 +19,11 @@ public class GameManager : MonoBehaviour
     public TMP_Text playerHPText;
     public Image playerHPBar;
 
+    // Player Stamina Bar info
+    public TMP_Text playerStaminaText;
+    public Image playerStaminaBar;
+
+
     // Enemy HP Bar info
     public GameObject enemyInfoPanel;
     public TMP_Text enemyHPText;
