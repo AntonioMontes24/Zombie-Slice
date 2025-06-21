@@ -396,6 +396,7 @@ public class PlayerWeaponManager : MonoBehaviour
         CurrentGun.ammoReserve += 30;
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.flashAmmoPickUp.SetActive(false);
+        ammoText.SetText(CurrentGun.ammoCur.ToString() + " / " + CurrentGun.ammoReserve.ToString());
     }
 
 }
