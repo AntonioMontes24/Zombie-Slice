@@ -3568,12 +3568,8 @@ MonoBehaviour:
   agent: {fileID: 5092836724994004376}
   roamDist: 10
   roamStopTime: 1
-  hitDmg: 10
-  hitRate: 2
-  hitTimer: 0
   playerObj: {fileID: 0}
   z1Collide: {fileID: 8119178265014828549}
-  ZombitHitBox: {fileID: 1041751380132224892}
   anim: {fileID: 7890433592576994043}
 --- !u!54 &8356208763977885527
 Rigidbody:
@@ -6072,6 +6068,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8372834558779965363}
+  - component: {fileID: 8878449451133639057}
+  - component: {fileID: 4674116387805302487}
   m_Layer: 9
   m_Name: Zombie_RightHand
   m_TagString: Untagged
@@ -6099,3 +6097,37 @@ Transform:
   - {fileID: 5522981841785530867}
   m_Father: {fileID: 3715406405003944199}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &8878449451133639057
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9169886079933986229}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.25
+  m_Center: {x: 0, y: -0.15, z: 0}
+--- !u!114 &4674116387805302487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9169886079933986229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be4481d7a6588448a346962043cdf2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitDmg: 10

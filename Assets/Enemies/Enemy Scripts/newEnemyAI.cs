@@ -5,38 +5,27 @@ using UnityEngine.AI;
 
 public class newEnemyAI : MonoBehaviour, IDamage
 {
-    //public Transform[] patrolPoints;
-    //[SerializeField] public float speed = 2f;
-    //[SerializeField] public float stopDist = 0.5f;
+
     [SerializeField] public float stopDistPlayer = 1.0f;
-    // [SerializeField] float moveWait = 2f;
+
     [SerializeField] int facePlayer = 6;
     [SerializeField] int HP;
     [SerializeField] Renderer model;
     [SerializeField] NavMeshAgent agent;
     [SerializeField] int roamDist;
     [SerializeField] int roamStopTime;
-    [SerializeField] int hitDmg;
-    //int hitcount;
-    [SerializeField] int hitRate;
-    [SerializeField] float hitTimer;
+    //[SerializeField] int hitDmg;
+ 
     float startSpeed;
-    // [SerializeField] int hitRate;
-    //int hitCounter;
-    //int currentPointIndex = 0;
-    //float origStopDist;
+
     float roamTime;
     private float YOrig;
-   // bool playerHit;
-    //[SerializeField] float waitTimer = 0f;
-    // bool isWaiting = false;
+  
     bool inRange = false;
     bool meleeRange = false;
     bool isDead = false;
-    //bool isRunning;
     public GameObject playerObj;
     public Collider z1Collide;
-    public Collider ZombitHitBox;
     Color originalColor;
     Vector3 startingPos;
     public Animator anim;
@@ -45,12 +34,9 @@ public class newEnemyAI : MonoBehaviour, IDamage
         originalColor = model.material.color;
         YOrig = transform.position.y;
         GameManager.instance.updateGameGoal(1);
-        //origStopDist = agent.stoppingDistance;
-        //ShufflePoints();
-        //hitcount = 0;
         z1Collide = GetComponent<Collider>();
         startSpeed = agent.speed;
-        ZombitHitBox = GetComponent<Collider>();
+       
     }
 
     void Update()
@@ -60,7 +46,6 @@ public class newEnemyAI : MonoBehaviour, IDamage
             roamTime += Time.deltaTime;
         }
         if (!inRange)
-            //patrolNextArea();
             roamCheck();
         else
             ChasePlayer();
@@ -74,65 +59,9 @@ public class newEnemyAI : MonoBehaviour, IDamage
             isDead = false;
         }
 
-        // if (meleeRange && !isDead)
-        // {
-        //     hitTimer += Time.deltaTime;
-        //     if (hitTimer >= hitRate)
-        //     {
-        //         attackTarget();
-        //         hitTimer = 0f;
-        //     }
-        // }
-        
-
     }
 
 
-    // void patrolNextArea()
-    // {
-
-    //     if (patrolPoints.Length == 0)
-    //         return;
-
-
-    //     StartCoroutine(walkAnim());
-    //     //Shuffler Fisher-Yates
-    //     if (isWaiting)
-    //     {
-    //         StartCoroutine(idleAnim());
-    //         waitTimer -= Time.deltaTime;
-    //         if (waitTimer <= 0f)
-    //         {
-    //             isWaiting = false;
-    //             //currentPointIndex = Random.Range(0, patrolPoints.Length);
-    //             currentPointIndex++;
-    //             if (currentPointIndex >= patrolPoints.Length)
-    //             {
-    //                 currentPointIndex = 0;
-    //                 ShufflePoints();
-    //             }
-    //         }
-    //     }
-    //     else
-    //     {
-    //         Transform target = patrolPoints[currentPointIndex];
-    //         transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
-    //         Vector3 direction = target.position - transform.position;
-    //         if (direction != Vector3.zero)
-    //         {
-    //             Quaternion lookRotation = Quaternion.LookRotation(direction);
-    //             // transform.rotation = lookRotation * Quaternion.Euler(0, 180, 0);
-    //             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
-    //         }
-
-    //         if (Vector3.Distance(transform.position, target.position) <= stopDist)
-    //         {
-    //             isWaiting = true;
-    //             waitTimer = moveWait;
-    //         }
-    //     }
-
-    // }
 
     void OnTriggerEnter(Collider other)
     {
@@ -148,22 +77,11 @@ public class newEnemyAI : MonoBehaviour, IDamage
         {
             inRange = false;
         }
-        //Error check
-        //Debug.Log("Player out of range");
+   
     }
 
-    
 
-    // void ShufflePoints()
-    // {
-    //     for (int i = 0; i < patrolPoints.Length; i++)
-    //     {
-    //         int randIndex = Random.Range(i, patrolPoints.Length);
-    //         Transform temp = patrolPoints[i];
-    //         patrolPoints[i] = patrolPoints[randIndex];
-    //         patrolPoints[randIndex] = temp;
-    //     }
-    // }
+
     void roamCheck()
     {
         if (roamTime >= roamStopTime && agent.remainingDistance < 0.01f)
@@ -202,7 +120,6 @@ public class newEnemyAI : MonoBehaviour, IDamage
         {
             meleeRange = false;
             StartCoroutine(stopAttackAnim());
-            //transform.position = Vector3.MoveTowards(transform.position, playerGroundPOS, speed * Time.deltaTime);
             agent.stoppingDistance = stopDistPlayer;
             agent.SetDestination(playerGroundPOS);
         }
@@ -213,7 +130,6 @@ public class newEnemyAI : MonoBehaviour, IDamage
             StartCoroutine(runAnim());
             agent.speed = 6f;
         }
-        // transform.position = Vector3.MoveTowards(transform.position, playerGroundPOS, speed * Time.deltaTime);
     }
 
     void deadEnemy()
@@ -242,13 +158,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
         anim.SetBool("isRunning", false);
     }
     //Idle
-    IEnumerator idleAnim()
-    {
-        anim.SetInteger("Motion", 3);
-        if (!inRange)
-            anim.SetBool("isRunning", false);
-        yield return !inRange;
-    }
+
     //Run
     IEnumerator runAnim()
     {
@@ -258,20 +168,42 @@ public class newEnemyAI : MonoBehaviour, IDamage
     }
     //Attack
     IEnumerator attackAnim()
+{
+    // Activate hitbox
+    foreach (var hitbox in GetComponentsInChildren<zombieHitBox>())
     {
-        anim.SetBool("MeleeRange", true);
-        // playerHit = true;
-        // hitcount = 1;
-        // attackTarget();
-        yield return new WaitForSeconds(1f);
-        
-        // yield return !meleeRange;
+        hitbox.Activate();
     }
+
+    anim.SetBool("MeleeRange", true);
+
+    // Wait for the swing duration (adjust as needed)
+    yield return new WaitForSeconds(0.5f);
+
+    // Deactivate hitbox after attack
+    foreach (var hitbox in GetComponentsInChildren<zombieHitBox>())
+    {
+        hitbox.Deactivate();
+    }
+
+    yield return !meleeRange;
+}
+
+
+    // IEnumerator attackAnim()
+    // {
+    //     anim.SetBool("MeleeRange", true);
+    //     yield return new WaitForSeconds(1f);
+    //     anim.SetBool("MeleeRange", false);
+        
+        
+    // }
     IEnumerator stopAttackAnim()
     {
-        anim.SetBool("MeleeRange", false);
-        yield return StartCoroutine(stopAnim());
-        yield return StartCoroutine(walkAnim());
+        anim.SetInteger("Motion", 3);
+        yield return new WaitForSeconds(2.0f);
+        anim.SetInteger("Motion", 0);
+        roamCheck();
     }
     //Get hit
     IEnumerator getHitAnim()
@@ -282,21 +214,14 @@ public class newEnemyAI : MonoBehaviour, IDamage
         yield return new WaitForSeconds(0.3f);
         agent.isStopped = false;
         model.material.color = originalColor;
-        
-        // if (isDead)
-        // {
-        //     yield return new WaitForSeconds(0.1f);
-        //     anim.SetTrigger("Dead");
-        // }
-        // else
-        //     yield return new WaitForSeconds(0.1f);
     }
     //Die
     IEnumerator isDeadAnim()
     {
         z1Collide.enabled = false;
         anim.SetBool("isDead", true);
-        agent.speed = 0f;
+        agent.isStopped = true;
+        agent.speed = 0;
         yield return new WaitForSeconds(2.5f);
         anim.enabled = false;
         agent.enabled = false;
@@ -309,7 +234,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
         HP -= amount;
         StartCoroutine(getHitAnim());
         inRange = true;
-        ChasePlayer();
+        //ChasePlayer();
         if (HP <= 0)
         {
             isDead = true;
@@ -317,16 +242,5 @@ public class newEnemyAI : MonoBehaviour, IDamage
         agent.isStopped = true;
     }
 
-    // void attackTarget()
-    // {
-    //     IDamage dmg = GameManager.instance.player.GetComponent<IDamage>();
-    //     if (meleeRange)
-    //     {
-    //         if (meleeRange && dmg != null)
-    //         {
-    //             dmg.takeDamage(hitDmg);
-    //         }
-    //     }
-    // }
     
 }
