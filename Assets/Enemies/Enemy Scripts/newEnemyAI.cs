@@ -16,17 +16,27 @@ public class newEnemyAI : MonoBehaviour, IDamage
     [SerializeField] NavMeshAgent agent;
     [SerializeField] int roamDist;
     [SerializeField] int roamStopTime;
-    
+    [SerializeField] int hitDmg;
+    //int hitcount;
+    [SerializeField] int hitRate;
+    [SerializeField] float hitTimer;
+    float startSpeed;
+    // [SerializeField] int hitRate;
+    //int hitCounter;
     //int currentPointIndex = 0;
-    float origStopDist;
+    //float origStopDist;
     float roamTime;
     private float YOrig;
+   // bool playerHit;
     //[SerializeField] float waitTimer = 0f;
     // bool isWaiting = false;
     bool inRange = false;
     bool meleeRange = false;
     bool isDead = false;
+    //bool isRunning;
     public GameObject playerObj;
+    public Collider z1Collide;
+    public Collider ZombitHitBox;
     Color originalColor;
     Vector3 startingPos;
     public Animator anim;
@@ -35,10 +45,12 @@ public class newEnemyAI : MonoBehaviour, IDamage
         originalColor = model.material.color;
         YOrig = transform.position.y;
         GameManager.instance.updateGameGoal(1);
-        origStopDist = agent.stoppingDistance;
+        //origStopDist = agent.stoppingDistance;
         //ShufflePoints();
-
-
+        //hitcount = 0;
+        z1Collide = GetComponent<Collider>();
+        startSpeed = agent.speed;
+        ZombitHitBox = GetComponent<Collider>();
     }
 
     void Update()
@@ -61,10 +73,21 @@ public class newEnemyAI : MonoBehaviour, IDamage
         {
             isDead = false;
         }
+
+        // if (meleeRange && !isDead)
+        // {
+        //     hitTimer += Time.deltaTime;
+        //     if (hitTimer >= hitRate)
+        //     {
+        //         attackTarget();
+        //         hitTimer = 0f;
+        //     }
+        // }
         
+
     }
 
-   
+
     // void patrolNextArea()
     // {
 
@@ -126,8 +149,10 @@ public class newEnemyAI : MonoBehaviour, IDamage
             inRange = false;
         }
         //Error check
-        Debug.Log("Player out of range");
+        //Debug.Log("Player out of range");
     }
+
+    
 
     // void ShufflePoints()
     // {
@@ -161,8 +186,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
     }
     void ChasePlayer()
     {
-        if (playerObj == null) return;
-
+        if (playerObj == null || isDead) return;
         Vector3 playerGroundPOS = new Vector3(playerObj.transform.position.x, YOrig, playerObj.transform.position.z);
         Vector3 directionPlayer = playerGroundPOS - transform.position;
         Vector3 dirFlat = new Vector3(directionPlayer.x, 0, directionPlayer.z);//Was moving upwards as it got closer to the player
@@ -194,9 +218,11 @@ public class newEnemyAI : MonoBehaviour, IDamage
 
     void deadEnemy()
     {
-        if (isDead)
+        if (!isDead) return;
+        if (!anim.GetBool("isDead"))
             StartCoroutine(isDeadAnim());
-        agent.speed = 0f;
+        
+        
     }
 
     //Animation Coroutines
@@ -233,19 +259,13 @@ public class newEnemyAI : MonoBehaviour, IDamage
     //Attack
     IEnumerator attackAnim()
     {
-        foreach (var hitbox in GetComponentsInChildren<zombieHitBox>())
-        {
-            hitbox.activeHit();
-            
-        }
         anim.SetBool("MeleeRange", true);
-        yield return new WaitForSeconds(0.5f);
-        foreach (var hitbox in GetComponentsInChildren<zombieHitBox>())
-        {
-            hitbox.notActiveHit();
-        }
-        yield return StartCoroutine(stopAnim());
-        yield return !meleeRange;
+        // playerHit = true;
+        // hitcount = 1;
+        // attackTarget();
+        yield return new WaitForSeconds(1f);
+        
+        // yield return !meleeRange;
     }
     IEnumerator stopAttackAnim()
     {
@@ -257,34 +277,56 @@ public class newEnemyAI : MonoBehaviour, IDamage
     IEnumerator getHitAnim()
     {
         model.material.color = Color.red;
-        yield return new WaitForSeconds(0.1f);
-        model.material.color = originalColor;
+        agent.isStopped = true;
         anim.SetTrigger("Hit");
-        if (isDead)
-        {
-            yield return new WaitForSeconds(0.1f);
-            anim.SetTrigger("Dead");
-        }
-        else
-            yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.3f);
+        agent.isStopped = false;
+        model.material.color = originalColor;
+        
+        // if (isDead)
+        // {
+        //     yield return new WaitForSeconds(0.1f);
+        //     anim.SetTrigger("Dead");
+        // }
+        // else
+        //     yield return new WaitForSeconds(0.1f);
     }
     //Die
     IEnumerator isDeadAnim()
     {
+        z1Collide.enabled = false;
         anim.SetBool("isDead", true);
-        yield return new WaitForSeconds(3.5f);
+        agent.speed = 0f;
+        yield return new WaitForSeconds(2.5f);
+        anim.enabled = false;
+        agent.enabled = false;
         Destroy(gameObject);
     }
 
     public void takeDamage(int amount)
     {
+        if (isDead) return;
         HP -= amount;
         StartCoroutine(getHitAnim());
         inRange = true;
         ChasePlayer();
-
+        if (HP <= 0)
+        {
+            isDead = true;
+        }
+        agent.isStopped = true;
     }
 
-    
+    // void attackTarget()
+    // {
+    //     IDamage dmg = GameManager.instance.player.GetComponent<IDamage>();
+    //     if (meleeRange)
+    //     {
+    //         if (meleeRange && dmg != null)
+    //         {
+    //             dmg.takeDamage(hitDmg);
+    //         }
+    //     }
+    // }
     
 }

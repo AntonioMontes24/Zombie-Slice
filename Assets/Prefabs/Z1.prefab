@@ -493,7 +493,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6998222982041489765}
-  - component: {fileID: 3175963963178340089}
   m_Layer: 8
   m_Name: Zombie_LeftHand
   m_TagString: Untagged
@@ -521,27 +520,6 @@ Transform:
   - {fileID: 3999684555670681884}
   m_Father: {fileID: 8372540906553705770}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &3175963963178340089
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963426201508945243}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.14
-  m_Center: {x: -0.09, y: -0.1, z: 0}
 --- !u!1 &1030612980872414903
 GameObject:
   m_ObjectHideFlags: 0
@@ -3457,7 +3435,8 @@ GameObject:
   - component: {fileID: 1041751380132224892}
   - component: {fileID: 8119178265014828549}
   - component: {fileID: 5387969560005915911}
-  m_Layer: 6
+  - component: {fileID: 8356208763977885527}
+  m_Layer: 9
   m_Name: Z1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3492,7 +3471,7 @@ Animator:
   m_GameObject: {fileID: 5562514547367160947}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 9776c2c565280054689a67587800f1d9, type: 3}
-  m_Controller: {fileID: 9100000, guid: 641abae435c2e5e459e266fc4c3f6693, type: 2}
+  m_Controller: {fileID: 9100000, guid: bc14621e6e2f27f49abc10e479407ad9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -3514,11 +3493,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 1
+  m_Speed: 1.75
   m_Acceleration: 32
   avoidancePriority: 50
   m_AngularSpeed: 600
-  m_StoppingDistance: 1
+  m_StoppingDistance: 2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
   m_AutoRepath: 1
@@ -3545,7 +3524,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.26
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -3582,13 +3561,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90908275c8ee3849a11bbd12ce76358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolPoints: []
-  speed: 2
-  stopDist: 0.5
-  moveWait: 2
+  stopDistPlayer: 1.5
   facePlayer: 6
-  waitTimer: 0
+  HP: 25
+  model: {fileID: 8089156461411802997}
+  agent: {fileID: 5092836724994004376}
+  roamDist: 10
+  roamStopTime: 1
+  hitDmg: 10
+  hitRate: 2
+  hitTimer: 0
   playerObj: {fileID: 0}
+  z1Collide: {fileID: 8119178265014828549}
+  ZombitHitBox: {fileID: 1041751380132224892}
+  anim: {fileID: 7890433592576994043}
+--- !u!54 &8356208763977885527
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562514547367160947}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5641808250004788527
 GameObject:
   m_ObjectHideFlags: 0
@@ -6059,7 +6072,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8372834558779965363}
-  - component: {fileID: 8635285125155544899}
   m_Layer: 9
   m_Name: Zombie_RightHand
   m_TagString: Untagged
@@ -6087,24 +6099,3 @@ Transform:
   - {fileID: 5522981841785530867}
   m_Father: {fileID: 3715406405003944199}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8635285125155544899
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9169886079933986229}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.14
-  m_Center: {x: 0.09, y: -0.1, z: 0}

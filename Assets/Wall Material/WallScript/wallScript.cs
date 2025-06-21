@@ -20,6 +20,7 @@ public class wallScript : MonoBehaviour
     {
         // if (!isSliding)
         //     currentPosition = startPosition;
+        //trigger activation when gamegoal met
     }
 
     public void OpenDoor()
