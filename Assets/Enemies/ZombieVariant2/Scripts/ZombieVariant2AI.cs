@@ -3,12 +3,14 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
-
+using TMPro;
+using UnityEngine.UI;
 
 public class ZombieVariant2AI : MonoBehaviour, IDamage
 {
     // create some serialized variables
     [SerializeField] int currHealth;                        // the current health 
+    [SerializeField] int maxHealth;                         // the maximum or starting health of the enemy
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -34,6 +36,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     [SerializeField] int biteRate;                          // our bite cooldown
     [SerializeField] int biteDamage;                        // how much damage does a bite do?
 
+    [SerializeField] EnemyHealthBar healthBar;
+
     // for IDamage
     public void takeDamage(int amount)
     {
@@ -43,6 +47,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         if (currHealth >= 0)
         {
             currHealth -= amount;
+
+            healthBar.updateHealthBar(currHealth, maxHealth);
 
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
@@ -75,13 +81,14 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         if (animator != null && animator.runtimeAnimatorController != null)
         {
             animator.SetBool("canSwipe", true);
-       
+                
             // wait 1 second
             yield return new WaitForSeconds(1);
 
             animator.SetBool("canSwipe", false);
             IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
             player_dmg.takeDamage(swipeDamage);
+         
         }
             
     }
@@ -102,12 +109,23 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         
     }
 
+    private void Awake()
+    {
+        healthBar = GetComponentInChildren<EnemyHealthBar>();
+    }
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // increase the number of zombies left in stage
         GameManager.instance.updateGameGoal(1);
+
+        // set our HP variables for the health bar
+        currHealth = maxHealth;
+        healthBar.updateHealthBar(currHealth, maxHealth);
+        // update the enemy UI / Healthbar
+        updateEnemyUI();
 
     }
 
@@ -238,5 +256,10 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         // we did not hit the player
         animator.SetBool("isWalking", false);
         return false;
+    }
+
+    void updateEnemyUI()
+    {
+
     }
 }
