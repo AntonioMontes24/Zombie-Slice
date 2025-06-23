@@ -5,19 +5,25 @@ public class wallScript : MonoBehaviour
 {
     public Vector3 startPosition;
     public Vector3 endPosition;
+    public Vector3 originalStartPos;
     //public Vector3 currentPosition;
     [SerializeField] float slideSpeed;
     [SerializeField] float slideTime;
+    [SerializeField] GameObject doorModel;
+    
+    bool isOpen;
     bool isSliding;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         startPosition = transform.position;
+        originalStartPos = startPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
+       
         // if (!isSliding)
         //     currentPosition = startPosition;
         //trigger activation when gamegoal met
@@ -31,6 +37,24 @@ public class wallScript : MonoBehaviour
             startPosition = transform.position;
             slideTime = 0f;
             StartCoroutine(slideDoor());
+            isOpen = true;
+        }
+    }
+    public void CloseDoor()
+    {
+        if (!isSliding)
+        {
+            isSliding = true;
+            isOpen = false;
+            endPosition = originalStartPos;
+            startPosition = transform.position;
+            slideTime = 0f;
+            StartCoroutine(slideDoor());
+            Collider col = GetComponent<Collider>();
+            if (col != null)
+                col.enabled = false;
+            
+            
         }
     }
 
@@ -44,16 +68,43 @@ public class wallScript : MonoBehaviour
         }
         transform.position = endPosition;
         isSliding = false;
+        yield return new WaitForSeconds(1.0f);
+        if (!isOpen && doorModel != null)
+        {
+            doorModel.SetActive(false);
+        }
+
     }
 
-    //Replace collision trigger to activate door when all regular enemies are dead.
+    //New Code
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        IOpen open = other.GetComponent<IOpen>();
+        if (open != null)
         {
+            
             OpenDoor();
         }
     }
+
+    void OnTriggerExit(Collider other)
+    {
+        IOpen open = other.GetComponent<IOpen>();
+        if (open != null)
+        {
+            
+            CloseDoor();
+        }    
+    }
+    //Old Code
+    //Replace collision trigger to activate door when all regular enemies are dead.
+    // void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         OpenDoor();
+    //     }
+    // }
     //Psuedo - player enters into krypt to face boss
     /*
     bool bossFight = true;
@@ -69,26 +120,14 @@ public class wallScript : MonoBehaviour
     Either option will trigger a gameover screen
     */
     //After player has entered the krypt close the door behind them. - no escape 
-    void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            CloseDoor();
+    // void OnTriggerExit(Collider other)
+    // {
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         CloseDoor();
            
-        }
-    }
-    public void CloseDoor()
-    {
-        if (!isSliding)
-        {
-            isSliding = true;
-            startPosition = transform.position;
-            slideTime = 0f;
-
-            endPosition = startPosition == endPosition ? this.startPosition : this.startPosition;
-
-            StartCoroutine(slideDoor());
-        }
-    }
+    //     }
+    // }
+    
 
 }

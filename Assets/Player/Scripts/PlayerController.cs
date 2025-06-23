@@ -2,7 +2,7 @@ using System.Collections;
 //using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IOpen//Added open interface for crypt door
 {
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private PlayerWeaponManager weaponManager;

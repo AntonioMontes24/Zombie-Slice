@@ -1,26 +1,63 @@
+using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class flyingEnemyAI : MonoBehaviour
+public class flyingEnemyAI : MonoBehaviour, IDamage
 {
     public Transform[] patrolPoints;
     [SerializeField] public float speed = 2f;
     [SerializeField] public float stopDist = 0.5f;
+    [SerializeField] float playerStopDistance;
     [SerializeField] float moveWait = 2f;
+    [SerializeField] float fireRate;
+    [SerializeField] NavMeshAgent agent;
+    //[SerializeField] Renderer model;
+    [SerializeField] int facePlayerSpeed;
+    [SerializeField] int health;
+    [SerializeField] GameObject blightBomb;
+    [SerializeField] Transform firePos;
+    [SerializeField] int animSpeedTrans;
+    [SerializeField] float downAngle;
+    Vector3 dropPoint;
+    Vector3 lastPos;
+    [SerializeField] int blightBombDamage;
+    public GameObject playerObj;
+    public Animator anim;
+    float playerAngle;
+    float fireTimer;
     int currentPointIndex = 0;
+    private float flightPos;
 
     [SerializeField] float waitTimer = 0f;
     bool isWaiting = false;
-
+    bool inRange;
+    bool isDead;
     void Start()
     {
         ShufflePoints();
+        GameManager.instance.updateGameGoal(1);
+        flightPos = transform.position.y;
+        lastPos = transform.position;
     }
 
     void Update()
     {
-        patrolNextArea();
+        setAnimations();
+        if (!inRange)
+            patrolNextArea();
+        else
+            chasePlayer();
     }
 
+    void setAnimations()
+    {
+        float moveSpeed = (transform.position - lastPos).magnitude / Time.deltaTime;
+        lastPos = transform.position;
+        float animSpeedCur = anim.GetFloat("Speed");
+        anim.SetFloat("Speed", Mathf.Lerp(animSpeedCur, moveSpeed, Time.deltaTime * animSpeedTrans));
+        
+    }
     void patrolNextArea()
     {
         if (patrolPoints.Length == 0)
@@ -30,11 +67,12 @@ public class flyingEnemyAI : MonoBehaviour
 
         if (isWaiting)
         {
+            bomberAttack();
             waitTimer -= Time.deltaTime;
             if (waitTimer <= 0f)
             {
                 isWaiting = false;
-                //currentPointIndex = Random.Range(0, patrolPoints.Length);
+
                 currentPointIndex++;
                 if (currentPointIndex >= patrolPoints.Length)
                 {
@@ -61,6 +99,36 @@ public class flyingEnemyAI : MonoBehaviour
                 waitTimer = moveWait;
             }
         }
+        
+    }
+
+    void chasePlayer()
+    {
+        if (playerObj == null || isDead) return;
+        Vector3 playerGroundPOS = new Vector3(playerObj.transform.position.x, flightPos, playerObj.transform.position.z);
+        Vector3 directionPlayer = playerGroundPOS - transform.position;
+        Vector3 dirFlat = new Vector3(directionPlayer.x, flightPos, directionPlayer.z);//Was moving upwards as it got closer to the player
+        Vector3 direction = playerGroundPOS - transform.position;
+        float distance = direction.magnitude;
+        //Stop in front of player
+        if (distance < playerStopDistance)
+        {
+            bomberAttack();
+            //animate
+        }
+        else
+        {
+            Vector3 moveTo = transform.position + direction.normalized * (distance - playerStopDistance);
+            agent.stoppingDistance = stopDist;
+            agent.SetDestination(moveTo);
+        }
+        if (dirFlat != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(dirFlat);
+            transform.rotation = lookRotation * Quaternion.Euler(0, 180, 0);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * facePlayerSpeed);
+            
+        }
     }
 
     void ShufflePoints()
@@ -74,5 +142,77 @@ public class flyingEnemyAI : MonoBehaviour
         }
     }
 
- 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            inRange = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            inRange = false;
+        }
+    }
+
+    public void playerInRange(bool status)
+    {
+        inRange = status;
+    }
+    public void takeDamage(int amount)
+    {
+        if (health > 0)
+        {
+            health -= amount;
+            agent.SetDestination(GameManager.instance.player.transform.position);
+        }
+    }
+
+    void bomberAttack()
+    {
+        fireTimer = 0;
+        anim.SetTrigger("Fire");
+    }
+
+    public void createBlight()
+    {
+        if (playerObj == null) return;
+        Vector3 target = playerObj.transform.position; //Target player location
+
+        target.y = 0f; //Target ground
+        if (!inRange)
+        {
+            //Create
+            GameObject bomb = Instantiate(blightBomb, firePos.position, firePos.rotation);
+            Rigidbody rb = bomb.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                Vector3 direction = (Quaternion.Euler(downAngle, 0, 0) * firePos.forward).normalized;
+                rb.linearVelocity = direction * 10f;
+            }
+            float radAngle = Mathf.Deg2Rad * downAngle;
+            Quaternion downwardRot = Quaternion.Euler(downAngle, -45, 0);
+        }
+        else if (inRange)
+        {
+            GameObject bomb = Instantiate(blightBomb, firePos.position, firePos.rotation);
+            Rigidbody rb = bomb.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                Vector3 direction = (Quaternion.Euler(downAngle, target.y, 0) * firePos.forward).normalized;
+                rb.linearVelocity = direction * 10f;
+            }
+            float radAngle = Mathf.Deg2Rad * downAngle;
+            Quaternion downwardRot = Quaternion.Euler(downAngle, -45, 0);
+        }
+     
+        
+    }
+
+
+
+   
 }
