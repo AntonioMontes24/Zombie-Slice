@@ -13562,7 +13562,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6973162472369273341}
-  m_Father: {fileID: 6235196058564954183}
+  - {fileID: 8556497053819131195}
+  m_Father: {fileID: 1100445913067735605}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &791948155
 PrefabInstance:
@@ -44545,7 +44546,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 787007908}
   m_Father: {fileID: 6235196058564954183}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1120907628620217565
@@ -45566,6 +45568,7 @@ MonoBehaviour:
   leanAngle: 15
   leanSpeed: 5
   cameraHolder: {fileID: 787007908}
+  leanRoot: {fileID: 1100445913067735605}
 --- !u!4 &4127251949801926470
 Transform:
   m_ObjectHideFlags: 0
@@ -45789,6 +45792,7 @@ MonoBehaviour:
   lockVertMax: 90
   invertY: 0
   playerBody: {fileID: 6235196058564954183}
+  pitchTarget: {fileID: 787007908}
 --- !u!4 &4663278831535763891
 Transform:
   m_ObjectHideFlags: 0
@@ -46400,8 +46404,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 787007908}
-  - {fileID: 8556497053819131195}
   - {fileID: 1100445913067735605}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -91.973, z: 0}
@@ -47364,7 +47366,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5761204272903278890}
-  m_Father: {fileID: 6235196058564954183}
+  m_Father: {fileID: 787007908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &8568208390666786615
 Transform:
