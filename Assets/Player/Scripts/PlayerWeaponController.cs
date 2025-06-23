@@ -115,6 +115,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 if (currentGun.ammoReserve > 0 && reloadCoroutine == null) // Checks ammo Reserve
                 {
                     reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));
+                    
                     playedEmptySound = false;
                 }
                 else if (currentGun.emptySound != null && !playedEmptySound)// Flag to avoid empty sound spam 
@@ -181,7 +182,7 @@ public class PlayerWeaponManager : MonoBehaviour
         foreach (var hit in hits)
         {
             // Skip detection zones and lights zones by tag
-            if (!hit.collider.CompareTag("DetectionZone") && !hit.collider.CompareTag("Lights"))
+            if (!hit.collider.CompareTag("Lights"))
             {
                 validHit = hit;
                 break;
@@ -270,7 +271,6 @@ public class PlayerWeaponManager : MonoBehaviour
         if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie, 0.8f);
         yield return new WaitForSeconds(gun.reloadTime);
 
-
         int needed = gun.ammoMax - gun.ammoCur;
 
         if(gun.ammoReserve >= needed)
@@ -285,7 +285,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
         isReloading = false;
         reloadCoroutine = null;
-
+        ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
 
     }
 
@@ -399,6 +399,7 @@ public class PlayerWeaponManager : MonoBehaviour
         CurrentGun.ammoReserve += 30;
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.flashAmmoPickUp.SetActive(false);
+        ammoText.SetText(CurrentGun.ammoCur.ToString() + " / " + CurrentGun.ammoReserve.ToString());
     }
 
 

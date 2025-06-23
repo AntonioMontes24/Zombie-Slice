@@ -12,6 +12,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip freakingZombie;
 
+    [SerializeField] private float leanAngle;
+    [SerializeField] private float leanSpeed = 5f;
+    [SerializeField] private Transform cameraHolder; //used to tilt camera with lean
+
+    private float currentLean = 0;
+    private float targetLean = 0f;
+
     private bool hasPlayedPickup = false;
 
     // Update is called once per frame
@@ -33,7 +40,31 @@ public class PlayerController : MonoBehaviour
         }
         weaponManager.HandleADS();// handles ads
         weaponManager.SetAiming(Input.GetButtonDown("Fire2"));// handles aiming
+
+        HandleLean();
     }
+
+    private void HandleLean()
+    {
+        if (Input.GetKey(KeyCode.Q))
+            targetLean = leanAngle;
+        else if (Input.GetKey(KeyCode.E))
+            targetLean = -leanAngle;
+        else
+            targetLean = 0f;
+
+        currentLean = Mathf.Lerp(currentLean, targetLean, Time.deltaTime * leanSpeed);
+
+        Quaternion leanRotation = Quaternion.Euler(0f, 0f, currentLean);
+
+        if (armsModel != null)
+            armsModel.transform.localRotation = leanRotation;
+
+        if (cameraHolder != null)
+            cameraHolder.localRotation = leanRotation;
+    }
+
+
 
     private IEnumerator PlayPickupAndEnableArms()
     {

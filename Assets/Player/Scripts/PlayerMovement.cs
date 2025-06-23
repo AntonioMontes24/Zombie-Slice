@@ -19,6 +19,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] public float audioLandVol;
     [SerializeField] public Animator animator;
 
+    [Header("Stamina Settings")]
+    [SerializeField] public float maxStamina;
+    [SerializeField] private float staminaDrainRate;
+    [SerializeField] private float staminaRegenRate;
+    [SerializeField] private float staminaRegenDelay;
+    [SerializeField] private UnityEngine.UI.Slider staminaSlider;
+
+    public float currentStamina;
+    private float regenTimer;
+    public bool canSprint => currentStamina > 0;
+
+
     Vector3 moveDir;
     Vector3 playerVel;
     bool isSprinting;
@@ -55,14 +67,32 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleSprint()//Sprint
     {
-        if (Input.GetButtonDown("Sprint"))
-            isSprinting = true;
+        bool sprintInput = Input.GetButton("Sprint") && moveDir.magnitude > 0.1f;
 
-        if (Input.GetButtonUp("Sprint"))
+        if (sprintInput && canSprint)
+        {
+            isSprinting = true;
+            currentStamina -= staminaDrainRate * Time.deltaTime;
+            regenTimer = 0f;
+            currentStamina = Mathf.Max(currentStamina, 0f); // Clamp to 0
+        }
+        else
+        {
             isSprinting = false;
+            regenTimer += Time.deltaTime;
+
+            if (regenTimer >= staminaRegenDelay)
+            {
+                currentStamina += staminaRegenRate * Time.deltaTime;
+                currentStamina = Mathf.Min(currentStamina, maxStamina); // Clamp to max
+            }
+        }
 
         if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
             animator.SetBool("isRunning", isSprinting && moveDir.magnitude > 0.1f);
+
+        if (staminaSlider != null)
+            staminaSlider.value = currentStamina;
     }
 
 
