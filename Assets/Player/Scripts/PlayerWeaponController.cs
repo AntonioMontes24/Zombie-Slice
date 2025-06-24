@@ -230,8 +230,14 @@ public class PlayerWeaponManager : MonoBehaviour
                 bulletHole.transform.SetParent(hit.transform);
                 Destroy(bulletHole, 10f);
             }
+            else if (hit.collider.CompareTag("Enemy") && currentGun.zombieBloodHit != null)
+            {
+                var bloodEffect = Instantiate(currentGun.zombieBloodHit, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal));
+                bloodEffect.transform.SetParent(hit.transform);
+                Destroy(bloodEffect, 0.50f);
+            }
 
-            IDamage dmg = hit.collider.GetComponent<IDamage>(); //------Damage
+                IDamage dmg = hit.collider.GetComponent<IDamage>(); //------Damage
             if (dmg != null)
                 dmg.takeDamage(currentGun.shootDamage);
 

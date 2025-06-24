@@ -23,6 +23,7 @@ public class GunStats : ScriptableObject
     [Header("VFX")]
     [SerializeField] public GameObject bulletHolePrefab;
     [SerializeField] public ParticleSystem hitEffect;
+    [SerializeField] public GameObject zombieBloodHit;
 
     [Header("SFX")]
     [SerializeField] public AudioClip shootSound;
