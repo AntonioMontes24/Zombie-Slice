@@ -193,12 +193,12 @@ public class PlayerWeaponManager : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            // Skip detection zones and lights zones by tag
-            if (!hit.collider.CompareTag("Lights"))
-            {
-                validHit = hit;
-                break;
-            }
+            //Flag to avoid any light collision and player collider
+            if (!hit.collider.CompareTag("Lights") && hit.collider.CompareTag("Player"))
+                continue;
+
+            validHit = hit;
+            break;
         }
 
         if (validHit.HasValue)
