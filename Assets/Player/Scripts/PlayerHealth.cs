@@ -74,6 +74,14 @@ public class PlayerHealth : MonoBehaviour, IDamage
         StartCoroutine(HealFlash());
     }
 
+    // only call this when resetting gamestate
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        updatePlayerUI();
+        hasDied = false;
+    }
+
     public bool CanHeal()
     {
         return maxHealth != currentHealth;
@@ -83,12 +91,6 @@ public class PlayerHealth : MonoBehaviour, IDamage
     {
         if (deathEffect) Instantiate(deathEffect, transform.position, Quaternion.identity);
         if (deathSound && audioSource) audioSource.PlayOneShot(deathSound);
-
-        var controller = GetComponent<PlayerController>();
-        if (controller != null) controller.enabled = false;
-
-        var weapon = GetComponent<PlayerWeaponManager>();
-        if (weapon != null) weapon.enabled = false;
         GameManager.instance.youLose();
         Debug.Log("Player died!");
     }

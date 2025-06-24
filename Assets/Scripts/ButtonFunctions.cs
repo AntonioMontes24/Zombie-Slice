@@ -9,7 +9,8 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameManager.instance.respawnHook?.Invoke();
+        GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
         GameManager.instance.stateUnpause();
     }
     public void options()
