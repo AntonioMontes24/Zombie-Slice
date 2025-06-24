@@ -19,6 +19,11 @@ public class GameManager : MonoBehaviour
     public TMP_Text playerHPText;
     public Image playerHPBar;
 
+    // Player Stamina Bar info
+    public TMP_Text playerStaminaText;
+    public Image playerStaminaBar;
+
+
     // Enemy HP Bar info
     public GameObject enemyInfoPanel;
     public TMP_Text enemyHPText;
@@ -87,10 +92,10 @@ public class GameManager : MonoBehaviour
         {
             remainingTime -= Time.deltaTime;
         } 
-        else if (remainingTime < 0)
+        else if (remainingTime <= 0)
         {
             remainingTime = 0;
-            youWin();
+            // youWin();
         }
 
         int minutes = Mathf.FloorToInt(remainingTime / 60);
