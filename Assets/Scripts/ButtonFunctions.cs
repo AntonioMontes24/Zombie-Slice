@@ -12,6 +12,11 @@ public class ButtonFunctions : MonoBehaviour
         GameManager.instance.respawnHook?.Invoke();
         GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
         GameManager.instance.stateUnpause();
+
+        if(KillManager.instance != null)
+        {
+            KillManager.instance.ResetKills();
+        }
     }
     public void options()
     {

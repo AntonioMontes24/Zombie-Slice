@@ -3,7 +3,9 @@ using UnityEngine;
 public class KillManager : MonoBehaviour
 {
 
-    public int killCount = 0;
+    private int killCount = 0;
+
+    public int KillCount => killCount;
 
     public static KillManager instance;
 
@@ -12,6 +14,7 @@ public class KillManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -26,8 +29,9 @@ public class KillManager : MonoBehaviour
 
     }
 
-    public int getKillCount()
+    public void ResetKills()
     {
-        return killCount; 
+        killCount = 0;
+        Debug.Log("Kill count reset to zero.");
     }
 }
