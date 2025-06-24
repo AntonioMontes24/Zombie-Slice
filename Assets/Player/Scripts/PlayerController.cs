@@ -15,8 +15,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float leanAngle;
     [SerializeField] private float leanSpeed = 5f;
     [SerializeField] private Transform cameraHolder; //used to tilt camera with lean
+    [SerializeField] private Transform leanRoot;
 
-    private float currentLean = 0;
+    private float currentLean = 0f;
     private float targetLean = 0f;
 
     private bool hasPlayedPickup = false;
@@ -55,16 +56,10 @@ public class PlayerController : MonoBehaviour
 
         currentLean = Mathf.Lerp(currentLean, targetLean, Time.deltaTime * leanSpeed);
 
-        Quaternion leanRotation = Quaternion.Euler(0f, 0f, currentLean);
-
-        if (armsModel != null)
-            armsModel.transform.localRotation = leanRotation;
-
-        if (cameraHolder != null)
-            cameraHolder.localRotation = leanRotation;
+        Quaternion leanRot = Quaternion.Euler(0f, 0f, currentLean);
+        if (leanRoot != null)
+            leanRoot.localRotation = leanRot;
     }
-
-
 
     private IEnumerator PlayPickupAndEnableArms()
     {

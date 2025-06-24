@@ -8,6 +8,8 @@ public class CameraController : MonoBehaviour
     public bool invertY = false;
     public Transform playerBody;
 
+    [SerializeField] private Transform pitchTarget;
+
     //rotate on X axis looks up and down on Y axis, weird thing but REMEMBER THIS!!!
     float rotX = 0f;
 
@@ -30,13 +32,17 @@ public class CameraController : MonoBehaviour
             rotX += mouseY;
         else
             rotX -= mouseY;
-        //clamp camera on the x-axis 
+
+        // clamp camera on the x-axis 
         rotX = Mathf.Clamp(rotX, lockVertMin, lockVertMax);
 
-        //rotate camera on x-axis to look up and down
-        transform.localRotation = Quaternion.Euler(rotX, 0, 0);
+        // rotate camera on x-axis to look up and down
+        // we now rotate pitchTarget (CameraHolder) instead of this object directly
+        if (pitchTarget != null)
+            pitchTarget.localRotation = Quaternion.Euler(rotX, 0, 0);
 
         // rotate player on y-axis to look left and right
         playerBody.Rotate(Vector3.up * mouseX);
     }
+
 }

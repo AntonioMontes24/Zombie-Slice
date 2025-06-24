@@ -54,6 +54,12 @@ public class PlayerWeaponManager : MonoBehaviour
     bool isAiming;
 
 
+    private PlayerMovement movement;
+
+    //AmmoUIUpdate
+    private IAmmoUi ammoUI;
+
+    //GunRecoil and position
     private Vector3 initialGunPosition;
     private Vector3 currentGunOffset;
     private Vector3 initialLeftHandPos;
@@ -80,10 +86,19 @@ public class PlayerWeaponManager : MonoBehaviour
         }
         
         ammoText.SetText("00");
+
+        movement = GetComponentInParent<PlayerMovement>();
+        if (movement == null)
+        {
+            Debug.LogWarning("Player movement not found in parent");
+        }
     }
 
     public void HandleShooting()//Handles Shooting
     {
+        if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
+            return;
+
         shootCooldown -= Time.deltaTime;
         if (gunList.Count == 0) return;
         GunStats currentGun = gunList[gunList.Count - 1];
@@ -112,6 +127,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 if (currentGun.ammoReserve > 0 && reloadCoroutine == null) // Checks ammo Reserve
                 {
                     reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));
+                    
                     playedEmptySound = false;
                 }
                 else if (currentGun.emptySound != null && !playedEmptySound)// Flag to avoid empty sound spam 
@@ -177,12 +193,12 @@ public class PlayerWeaponManager : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            // Skip detection zones and lights zones by tag
-            if (!hit.collider.CompareTag("Lights"))
-            {
-                validHit = hit;
-                break;
-            }
+            //Flag to avoid any light collision and player collider
+            if (!hit.collider.CompareTag("Lights") && hit.collider.CompareTag("Player"))
+                continue;
+
+            validHit = hit;
+            break;
         }
 
         if (validHit.HasValue)
@@ -267,7 +283,6 @@ public class PlayerWeaponManager : MonoBehaviour
         if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie, 0.8f);
         yield return new WaitForSeconds(gun.reloadTime);
 
-
         int needed = gun.ammoMax - gun.ammoCur;
 
         if(gun.ammoReserve >= needed)
@@ -282,7 +297,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
         isReloading = false;
         reloadCoroutine = null;
-
+        ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
 
     }
 
@@ -396,6 +411,16 @@ public class PlayerWeaponManager : MonoBehaviour
         CurrentGun.ammoReserve += 30;
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.flashAmmoPickUp.SetActive(false);
+        ammoText.SetText(CurrentGun.ammoCur.ToString() + " / " + CurrentGun.ammoReserve.ToString());
     }
 
+
+    public void UpdateAmmoUi()// Helper to update Ammo UI
+    {
+        if (HasGun())
+        {
+            GunStats gun = CurrentGun;
+            ammoUI?.UpdateAmmo(gun.ammoCur, gun.ammoReserve);
+        }
+    }
 }
