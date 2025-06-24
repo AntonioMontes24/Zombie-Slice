@@ -36,7 +36,13 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     [SerializeField] int biteRate;                          // our bite cooldown
     [SerializeField] int biteDamage;                        // how much damage does a bite do?
 
-    [SerializeField] EnemyHealthBar healthBar;
+    [SerializeField] EnemyHealthBar healthBar;              // healthbar to be shown above enemy
+
+    [SerializeField] int roamDistance;                      // max distance he can roam from start position
+    [SerializeField] int roamStopTimer;                     // how long before he roams again
+    Vector3 startingPostion;                                // where his spawn position is
+    float roamTime;                                         // counter to see if he can roam 
+    float stoppingDistanceOriginal;                         // cache off the original stopping distance
 
     // for IDamage
     public void takeDamage(int amount)
@@ -127,6 +133,11 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         // update the enemy UI / Healthbar
         updateEnemyUI();
 
+        // set our starting position so that we know how far we can roam. This is the point we will check from
+        startingPostion = transform.position; 
+        // set our stopping distance to the stopping distance in Unity
+        stoppingDistanceOriginal = agent.stoppingDistance;
+
     }
 
     // Update is called once per frame
@@ -136,6 +147,20 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
 
         if (currHealth >= 0)
         {
+            // check if we need to increment our roam or just roam
+            if(agent.remainingDistance < 0.01f)
+            {
+                roamTime += Time.deltaTime;
+            }
+            if (playerInRange && !canWeSeeThePlayer())
+            {
+                roamCheck();
+            }
+            else if (!playerInRange)
+            {
+                roamCheck();
+            }
+
             if (playerInRange && canWeSeeThePlayer())
             {
                 swipeCounter++;
@@ -181,6 +206,34 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         
     }
 
+    void roam()
+    {
+        // reset the timer
+        roamTime = 0;
+
+        // make sure he is able to get to the location and not stop short
+        agent.stoppingDistance = 0;
+
+        // grab a random spot in our sphere on the navmesh
+        Vector3 randPos = Random.insideUnitSphere * roamDistance;
+        randPos += startingPostion;
+
+        // check if the position is on the navmesh
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randPos, out hit, roamDistance, 1);
+
+        // move
+        agent.SetDestination(hit.position);
+    }
+
+    void roamCheck()
+    {
+        // can i roam and am I stopped. 
+        if (roamTime >= roamStopTimer && agent.remainingDistance < 0.1f)
+        {
+            roam();
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
