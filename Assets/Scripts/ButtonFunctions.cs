@@ -11,6 +11,11 @@ public class ButtonFunctions : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         GameManager.instance.stateUnpause();
+
+        if(KillManager.instance != null)
+        {
+            KillManager.instance.ResetKills();
+        }
     }
     public void options()
     {

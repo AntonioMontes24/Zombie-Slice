@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     public GameObject flashHealScreen;
     public GameObject flashAmmoPickUp;
 
+    private int lastZombieCount;
+
     AudioSource musicSource;
     public float musicVolume;
 
@@ -149,16 +151,34 @@ public class GameManager : MonoBehaviour
 
     public void updateGameGoal(int amount)
     {
+
+        
         // positive number adds a enemy or item
         // negative number reduces it
         zombieCount += amount;
-        zombieCountText.text = zombieCount.ToString("F0");  
+        zombieCountText.text = zombieCount.ToString("F0");
 
+        if (zombieCount < lastZombieCount && KillManager.instance != null)
+        {
+            KillManager.instance.registerKill();
+            Debug.Log("Kill registered — current count: " + KillManager.instance.KillCount);
+        }
+
+        lastZombieCount = zombieCount;
 
         if (zombieCount <= 0)
         {
             // we win! 
             youWin();
+        }
+    }
+
+    public void ResetBarriers()
+    {
+        ProgressionBarriers[] barriers = FindObjectsOfType<ProgressionBarriers>();
+        foreach (var barrier in barriers)
+        {
+            barrier.ResetBarrier();
         }
     }
 
