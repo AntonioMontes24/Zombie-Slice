@@ -57,20 +57,20 @@ public class LichAI : MonoBehaviour, IDamage
 
     }
 
-    public void shootBlightBall()
+    IEnumerator shootBlightBall()
     {
         // reset the timer set the animation
         blightBallCounter = 0;
-
+        yield return new WaitForSeconds(0.1f);
         animator.SetTrigger("shootBlightBall");
 
     }
 
-    public void shootBlightStorm()
+    IEnumerator shootBlightStorm()
     {
         // reset the timer set the animation
         blightStormCounter = 0;
-
+        yield return new WaitForSeconds(0.1f);
         animator.SetTrigger("shootBlightstorm");
 
     }
@@ -118,20 +118,20 @@ public class LichAI : MonoBehaviour, IDamage
             // we are alive to lets check if we can attack
 
             // we check blight storm before we check blight ball
-            if (canWeSeeThePlayer())
+            if (canWeSeeThePlayer() && playerInRange)
             {
                 // we can see the player
                 // can we blight storm
                 if (blightStormCounter >= blightStormRate)
                 {
                     // we can blight storm
-                    shootBlightStorm();
+                    StartCoroutine(shootBlightStorm());
                     
                 }
                 else if (blightBallCounter >= blightBallRate)
                 {
                     // we can blight ball
-                    shootBlightBall();
+                    StartCoroutine(shootBlightBall());
                     
                 }
                 else
@@ -178,7 +178,7 @@ public class LichAI : MonoBehaviour, IDamage
     bool canWeSeeThePlayer()
     {
         // take the players current position from the game manager and subtract our position
-        playerDirection = ZGameManager.instance.player.transform.position - headPos.position;
+        playerDirection = GameManager.instance.player.transform.position - headPos.position;
 
         // get our angle to the player
         angle_to_player = Vector3.Angle(playerDirection, transform.forward);
@@ -200,8 +200,6 @@ public class LichAI : MonoBehaviour, IDamage
 
         }
 
-        // we did not hit the player
-        animator.SetBool("isWalking", false);
         return false;
     }
 }

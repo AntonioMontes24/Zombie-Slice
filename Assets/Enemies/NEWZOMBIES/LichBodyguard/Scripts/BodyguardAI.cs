@@ -37,13 +37,15 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
     [SerializeField] int comboAttackRate;                   // how often we combo attack
     [SerializeField] int comboAttackDamage;                 // how much damage does a combo do   
 
-    [SerializeField] EnemyHealthBar healthBar;              // healthbar to be shown above enemy
+    
 
     [SerializeField] int roamDistance;                      // max distance he can roam from start position
     [SerializeField] int roamStopTimer;                     // how long before he roams again
     Vector3 startingPostion;                                // where his spawn position is
     float roamTime;                                         // counter to see if he can roam 
     float stoppingDistanceOriginal;                         // cache off the original stopping distance
+
+    [SerializeField] int animSpeedTransition;               // for the LERP on transitions
 
     // for IDamage
     public void takeDamage(int amount)
@@ -55,7 +57,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
         {
             currHealth -= amount;
 
-            healthBar.updateHealthBar(currHealth, maxHealth);
+            
 
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
@@ -126,7 +128,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
 
     private void Awake()
     {
-        healthBar = GetComponentInChildren<EnemyHealthBar>();
+        
     }
 
 
@@ -138,10 +140,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
 
         // set our HP variables for the health bar
         currHealth = maxHealth;
-        healthBar.updateHealthBar(currHealth, maxHealth);
-        // update the enemy UI / Healthbar
-        updateEnemyUI();
-
+        
         // set our starting position so that we know how far we can roam. This is the point we will check from
         startingPostion = transform.position;
         // set our stopping distance to the stopping distance in Unity
@@ -235,6 +234,13 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
         }
     }
 
+    void setAnimations()
+    {
+        float agentSpeedCurrent = agent.velocity.normalized.magnitude;
+        float animSpeedCurrent = animator.GetFloat("Run");
+        animator.SetFloat("Run", Mathf.Lerp(animSpeedCurrent, agentSpeedCurrent, animSpeedTransition));
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         // the other object in range is Player
@@ -303,8 +309,5 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
         return false;
     }
 
-    void updateEnemyUI()
-    {
-
-    }
+   
 }

@@ -36,8 +36,6 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     [SerializeField] int biteRate;                          // our bite cooldown
     [SerializeField] int biteDamage;                        // how much damage does a bite do?
 
-    [SerializeField] EnemyHealthBar healthBar;              // healthbar to be shown above enemy
-
     [SerializeField] int roamDistance;                      // max distance he can roam from start position
     [SerializeField] int roamStopTimer;                     // how long before he roams again
     Vector3 startingPostion;                                // where his spawn position is
@@ -50,11 +48,9 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         // we need to apply the damage.
         // check for death of the variant
         // and if we have a win condition to kill all enemies, update it
-        if (currHealth >= 0)
+        if (currHealth > 0)
         {
             currHealth -= amount;
-
-            healthBar.updateHealthBar(currHealth, maxHealth);
 
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
@@ -117,7 +113,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
 
     private void Awake()
     {
-        healthBar = GetComponentInChildren<EnemyHealthBar>();
+        
     }
 
 
@@ -129,10 +125,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
 
         // set our HP variables for the health bar
         currHealth = maxHealth;
-        healthBar.updateHealthBar(currHealth, maxHealth);
-        // update the enemy UI / Healthbar
-        updateEnemyUI();
-
+       
+        
         // set our starting position so that we know how far we can roam. This is the point we will check from
         startingPostion = transform.position; 
         // set our stopping distance to the stopping distance in Unity
@@ -163,8 +157,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
 
             if (playerInRange && canWeSeeThePlayer())
             {
-                swipeCounter++;
-                biteCounter++;
+                
 
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
@@ -184,9 +177,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
                         StartCoroutine(biteAttack());
 
                     }
-
                     // need to check for swipeAttack 
-                    if (swipeCounter >= swipeRate)
+                    else if (swipeCounter >= swipeRate)
                     {
                         // reset the counter
                         swipeCounter = 0;
@@ -199,6 +191,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
                 }
                 else
                 {
+                    swipeCounter++;
+                    biteCounter++;
                     animator.SetBool("inMeleeRange", false);
                 }
             }
@@ -311,8 +305,4 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         return false;
     }
 
-    void updateEnemyUI()
-    {
-
-    }
 }
