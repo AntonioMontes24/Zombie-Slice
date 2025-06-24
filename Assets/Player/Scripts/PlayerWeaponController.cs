@@ -53,6 +53,9 @@ public class PlayerWeaponManager : MonoBehaviour
     float shootCooldown;
     bool isAiming;
 
+
+    private PlayerMovement movement;
+
     //AmmoUIUpdate
     private IAmmoUi ammoUI;
 
@@ -83,10 +86,19 @@ public class PlayerWeaponManager : MonoBehaviour
         }
         
         ammoText.SetText("00");
+
+        movement = GetComponentInParent<PlayerMovement>();
+        if (movement == null)
+        {
+            Debug.LogWarning("Player movement not found in parent");
+        }
     }
 
     public void HandleShooting()//Handles Shooting
     {
+        if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
+            return;
+
         shootCooldown -= Time.deltaTime;
         if (gunList.Count == 0) return;
         GunStats currentGun = gunList[gunList.Count - 1];
