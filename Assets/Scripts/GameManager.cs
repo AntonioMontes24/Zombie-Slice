@@ -5,6 +5,10 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
+    public Vector3 playerSpawnPoint;
+
+    public Action respawnHook;
+
     public static GameManager instance;
 
     [SerializeField] GameObject menuActive;
@@ -56,6 +60,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+        playerSpawnPoint = GameObject.FindWithTag("Respawn").transform.position;
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
         timeScaleOrig = Time.timeScale;
@@ -114,7 +119,7 @@ public class GameManager : MonoBehaviour
 
     public void statePause()
     {
-        isPaused = !isPaused;
+        isPaused = true;
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -122,7 +127,7 @@ public class GameManager : MonoBehaviour
 
     public void stateUnpause()
     {
-        isPaused = !isPaused;
+        isPaused = false;
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

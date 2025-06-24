@@ -22,6 +22,15 @@ public class PlayerController : MonoBehaviour
 
     private bool hasPlayedPickup = false;
 
+
+    void Start() => SpawnPlayer();
+
+    public void SpawnPlayer()
+    {
+        playerMovement.controller.transform.position = GameManager.instance.playerSpawnPoint;
+        playerHealth.ResetHealth();
+    }
+
     // Update is called once per frame
     void Update()
     {
