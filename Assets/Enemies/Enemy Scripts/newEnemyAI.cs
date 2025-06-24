@@ -36,6 +36,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
         GameManager.instance.updateGameGoal(1);
         z1Collide = GetComponent<Collider>();
         startSpeed = agent.speed;
+        startingPos = transform.position;
        
     }
 
@@ -53,6 +54,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
         {
             isDead = true;
             deadEnemy();
+            
         }
         else
         {
@@ -225,6 +227,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
         yield return new WaitForSeconds(2.5f);
         anim.enabled = false;
         agent.enabled = false;
+        GameManager.instance.updateGameGoal(-1);
         Destroy(gameObject);
     }
 
@@ -234,7 +237,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
         HP -= amount;
         StartCoroutine(getHitAnim());
         inRange = true;
-        //ChasePlayer();
+        ChasePlayer();
         if (HP <= 0)
         {
             isDead = true;

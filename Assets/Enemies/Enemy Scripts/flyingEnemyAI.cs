@@ -19,13 +19,11 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
     [SerializeField] Transform firePos;
     [SerializeField] int animSpeedTrans;
     [SerializeField] float downAngle;
-    Vector3 dropPoint;
     Vector3 lastPos;
+    [SerializeField] Vector3 startingPos;
     [SerializeField] int blightBombDamage;
     public GameObject playerObj;
     public Animator anim;
-    float playerAngle;
-    float fireTimer;
     int currentPointIndex = 0;
     private float flightPos;
 
@@ -39,6 +37,7 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
         GameManager.instance.updateGameGoal(1);
         flightPos = transform.position.y;
         lastPos = transform.position;
+        
     }
 
     void Update()
@@ -48,6 +47,11 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
             patrolNextArea();
         else
             chasePlayer();
+        if (isDead)
+        {
+            //death animation
+            GameManager.instance.updateGameGoal(-1);
+        }
     }
 
     void setAnimations()
@@ -56,7 +60,11 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
         lastPos = transform.position;
         float animSpeedCur = anim.GetFloat("Speed");
         anim.SetFloat("Speed", Mathf.Lerp(animSpeedCur, moveSpeed, Time.deltaTime * animSpeedTrans));
-        
+        if (isDead)
+        {
+            anim.SetBool("isDead", true);
+            StartCoroutine(death());
+        }
     }
     void patrolNextArea()
     {
@@ -99,7 +107,7 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
                 waitTimer = moveWait;
             }
         }
-        
+
     }
 
     void chasePlayer()
@@ -127,7 +135,7 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
             Quaternion lookRotation = Quaternion.LookRotation(dirFlat);
             transform.rotation = lookRotation * Quaternion.Euler(0, 180, 0);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * facePlayerSpeed);
-            
+
         }
     }
 
@@ -173,7 +181,6 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
 
     void bomberAttack()
     {
-        fireTimer = 0;
         anim.SetTrigger("Fire");
     }
 
@@ -193,8 +200,7 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
                 Vector3 direction = (Quaternion.Euler(downAngle, 0, 0) * firePos.forward).normalized;
                 rb.linearVelocity = direction * 10f;
             }
-            float radAngle = Mathf.Deg2Rad * downAngle;
-            Quaternion downwardRot = Quaternion.Euler(downAngle, -45, 0);
+
         }
         else if (inRange)
         {
@@ -205,14 +211,19 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
                 Vector3 direction = (Quaternion.Euler(downAngle, target.y, 0) * firePos.forward).normalized;
                 rb.linearVelocity = direction * 10f;
             }
-            float radAngle = Mathf.Deg2Rad * downAngle;
-            Quaternion downwardRot = Quaternion.Euler(downAngle, -45, 0);
+
         }
-     
-        
+
+
     }
 
-
+    IEnumerator death()
+    {
+        anim.enabled = false;
+        Vector3 deathDrop = new Vector3(transform.position.x, 0, transform.position.z);
+        yield return new WaitForSeconds(3.0f);
+        Destroy(gameObject);
+    }
 
    
 }

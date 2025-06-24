@@ -16,7 +16,7 @@ public class zombieHitBox : MonoBehaviour
         {
             dmg.takeDamage(hitDmg);
             hitTarget = true;
-            Debug.Log($"{gameObject.name} hit {other.name} for {hitDmg} damage.");
+            
         }
     }
 
