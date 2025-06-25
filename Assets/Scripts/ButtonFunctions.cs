@@ -45,7 +45,7 @@ public class ButtonFunctions : MonoBehaviour
 
     private void Update()
     {
-        if (isPlayerNearDoor && GameManager.instance != null && ObjectiveManager.instance.GetZombieCount() == 0)
+        if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() == 0)
         {
             InteractText.gameObject.SetActive(true);
 
