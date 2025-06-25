@@ -1,15 +1,16 @@
 using System.Collections;
+//using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+using TMPro;
+using UnityEngine.UI;
 
-
-public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
+public class ZBodyguardAI : MonoBehaviour, IDamage
 {
     // create some serialized variables
     [SerializeField] int currHealth;                        // the current health 
-    [SerializeField] int _maxHealth;                         // the max health
+    [SerializeField] int maxHealth;                         // the maximum or starting health of the enemy
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -21,32 +22,42 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     Vector3 playerDirection;                                // Direction of our player
     [SerializeField] int field_of_view;                     // the number of degrees our of enemy can see
     [SerializeField] Transform headPos;                     // for raycast to player. Can he see where we are at
+    [SerializeField] Transform clawPos;                     // where are claws are for damage and hits
+    [SerializeField] Collider clawCollider;                 // collider for the claw
+
     float angle_to_player;                                  // the angle to the player 
 
-    // attack fields
-    bool canAttack;                                          // can we attack
-    int attackCounter;                                       // incremented until we hit the attackRate
-    [SerializeField] int attackRate;                         // our Attack is on cooldown
-    [SerializeField] int attackDamage;                       // how much damage do we do
+    // punch attack 
+    int punchCounter;                                       // keeps count until we can punch
+    [SerializeField] int punchRate;                         // how often we punch
+    [SerializeField] int punchDamage;                       // how hard we punch
 
-    public int CurrentHealth
-    {
-        get { return currHealth; }
-    }
+    // combo attack
+    int comboAttackCounter;                                 // keep count until we can combo
+    [SerializeField] int comboAttackRate;                   // how often we combo attack
+    [SerializeField] int comboAttackDamage;                 // how much damage does a combo do   
 
-    public int maxHealth
-    {
-        get { return _maxHealth; }
-    }
+    
 
+    [SerializeField] int roamDistance;                      // max distance he can roam from start position
+    [SerializeField] int roamStopTimer;                     // how long before he roams again
+    Vector3 startingPostion;                                // where his spawn position is
+    float roamTime;                                         // counter to see if he can roam 
+    float stoppingDistanceOriginal;                         // cache off the original stopping distance
 
+    [SerializeField] int animSpeedTransition;               // for the LERP on transitions
+
+    // for IDamage
     public void takeDamage(int amount)
     {
-        if (currHealth > 0)
+        // we need to apply the damage.
+        // check for death of the variant
+        // and if we have a win condition to kill all enemies, update it
+        if (currHealth >= 0)
         {
             currHealth -= amount;
 
-            GameManager.instance.UpdateEnemyHealthBar(this);
+            
 
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
@@ -57,7 +68,6 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
             {
                 // remove the corpse by destroying the gameObject
                 StartCoroutine(removeCorpse());
-                GameManager.instance.enemyInfoPanel.SetActive(false);
             }
         }
     }
@@ -72,44 +82,89 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         Destroy(gameObject);
 
         // update the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(-1);
-
+        GameManager.instance.updateGameGoal(-1);
     }
 
-    IEnumerator attack()
+    public void punchAttack()
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
-            animator.SetBool("canAttack", true);
+            punchCounter = 0;
 
-            // wait 1 second
-            yield return new WaitForSeconds(1);
+            animator.SetTrigger("punch");
 
-            animator.SetBool("canAttack", false);
-
-            // assign damage to the player
             IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
-            player_dmg.takeDamage(attackDamage);
+            player_dmg.takeDamage(punchDamage);
+
         }
 
     }
+
+    public void comboAttack()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            comboAttackCounter = 0;
+
+            animator.SetTrigger("ComboAttack");
+
+            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+            player_dmg.takeDamage(comboAttackDamage);
+        }
+
+    }
+
+    public void clawColliderOn()
+    {
+        if (clawCollider)
+            clawCollider.enabled = true;
+    }
+
+    public void clawColliderOff()
+    {
+        if (clawCollider)
+            clawCollider.enabled = false;
+    }
+
+    private void Awake()
+    {
+        
+    }
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currHealth = maxHealth;
         // increase the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(1);
+        GameManager.instance.updateGameGoal(1);
+
+        // set our HP variables for the health bar
+        currHealth = maxHealth;
+        
+        // set our starting position so that we know how far we can roam. This is the point we will check from
+        startingPostion = transform.position;
+        // set our stopping distance to the stopping distance in Unity
+        stoppingDistanceOriginal = agent.stoppingDistance;
+
+        // start with a disabled claw
+        clawCollider.enabled = false;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+
+        comboAttackCounter++;
+        punchCounter++;
+
         if (currHealth >= 0)
         {
+            
             if (playerInRange && canWeSeeThePlayer())
             {
-                
-      
+  
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     // we need to face the player
@@ -119,24 +174,29 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
                     animator.SetBool("inMeleeRange", true);
 
                     // need to check for biteAttack 
-                    if (attackCounter >= attackRate)
+                    if (punchCounter >= punchRate)
                     {
-                        // reset the counter
-                        attackCounter = 0;
 
                         // animate the bite
-                        StartCoroutine(attack());
+                        punchAttack();
+
+                    }
+
+                    // need to check for swipeAttack 
+                    if (comboAttackCounter >= comboAttackRate)
+                    {
+                        // animate the swipe
+                        comboAttack();
+
                     }
 
                 }
-                else
-                {
-                    attackCounter++;
-                    animator.SetBool("inMeleeRange", false);
-                }
+                
             }
         }
+
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -160,7 +220,9 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 
     void faceTarget()
     {
-     
+        // turn our enemy towards the player when he is not moving
+        // we need a direction not a position to rotate, example a position - a position
+
         Quaternion rotate_val = (Quaternion.LookRotation(new Vector3(playerDirection.x, 0, playerDirection.z)));
         transform.rotation = Quaternion.Lerp(transform.rotation, rotate_val, Time.deltaTime * faceTargetSpeed);
 
@@ -186,24 +248,25 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
                 // agent.SetDestination(GameManager.instance.player.transform.position);
 
                 agent.SetDestination(GameManager.instance.player.transform.position);
-
-                if (animator != null && animator.runtimeAnimatorController != null)
-                    animator.SetBool("isWalking", true);
+                animator.SetFloat("Speed", speed);
 
                 // face the target
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     faceTarget();
+                    animator.SetFloat("Speed", 0);
                 }
 
                 // we need to return true since we found the player
                 return true;
             }
 
-        }
 
-        // we did not hit the player
-        animator.SetBool("isWalking", false);
+        }
+        animator.SetFloat("Speed", 0);
+
         return false;
     }
+
+   
 }
