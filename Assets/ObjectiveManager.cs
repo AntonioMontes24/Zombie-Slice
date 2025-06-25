@@ -17,7 +17,7 @@ public class ObjectiveManager : MonoBehaviour
     [SerializeField] Objective[] objectives;
     int idx;
 
-    private void Start()
+    private void Awake()
     {
         instance = this;
         GameManager.instance.objectiveText.text = objectives[0].objectiveDescription;
