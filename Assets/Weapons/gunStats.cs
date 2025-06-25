@@ -32,4 +32,10 @@ public class GunStats : ScriptableObject
     [SerializeField] public float shootVol;
     [SerializeField] public AudioClip fireModeSwitchSound;
     [SerializeField] public AudioClip reloadFreakingZombie;
+
+    [Header("Gun Icon")]
+    [SerializeField] Sprite gunIcon;
+
+    [Header("Weapon Type")]
+    [SerializeField] public bool isPistol;
 }
