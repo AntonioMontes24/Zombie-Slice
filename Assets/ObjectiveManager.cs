@@ -51,4 +51,9 @@ public class ObjectiveManager : MonoBehaviour
             GameManager.instance.objectiveText.text = objectives[idx].objectiveDescription;
         }
     }
+
+    public int GetZombieCount()
+    {
+        return zombieCount;
+    }
 }
