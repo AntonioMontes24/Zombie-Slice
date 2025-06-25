@@ -41,6 +41,10 @@ public class LichAI : MonoBehaviour, IDamage
     [SerializeField] int blightStormCounter;                // increment to see if we can blight storm
     [SerializeField] int blightStormRate;                   // our rate of fire for blight storm
 
+    // new random attack info
+    int attackToUse;
+    int attackCounter;
+    [SerializeField] int attackRate;
 
     // the boss has two attacks. 
     // 1. Blightball 
@@ -59,6 +63,9 @@ public class LichAI : MonoBehaviour, IDamage
 
     IEnumerator shootBlightBall()
     {
+        // reset attack counter
+        attackCounter = 0;
+
         // reset the timer set the animation
         blightBallCounter = 0;
         yield return new WaitForSeconds(0.1f);
@@ -68,6 +75,9 @@ public class LichAI : MonoBehaviour, IDamage
 
     IEnumerator shootBlightStorm()
     {
+        // reset the attack counter
+        attackCounter = 0;
+
         // reset the timer set the animation
         blightStormCounter = 0;
         yield return new WaitForSeconds(0.1f);
@@ -89,6 +99,12 @@ public class LichAI : MonoBehaviour, IDamage
         Instantiate(blightBall, BS3Position.position, transform.rotation);
         Instantiate(blightBall, BS4Position.position, transform.rotation);
     }
+
+    public int chooseAttack()
+    {
+        return Random.Range(0, 10);
+
+    }  
 
     public void takeDamage(int amount)
     {
@@ -115,11 +131,27 @@ public class LichAI : MonoBehaviour, IDamage
     {
         if (currHealth > 0)
         {
+            attackCounter++;
             // we are alive to lets check if we can attack
 
             // we check blight storm before we check blight ball
-            if (canWeSeeThePlayer() && playerInRange)
+            if (canWeSeeThePlayer() && playerInRange && attackCounter >= attackRate)
             {
+                attackToUse = chooseAttack();
+
+                if(attackToUse > 2)
+                {
+                    // we can blight ball
+                    StartCoroutine(shootBlightBall());
+                }
+                else
+                {
+                    // we can blight storm
+                    StartCoroutine(shootBlightStorm());
+                }
+
+                
+                /*
                 // we can see the player
                 // can we blight storm
                 if (blightStormCounter >= blightStormRate)
@@ -140,6 +172,7 @@ public class LichAI : MonoBehaviour, IDamage
                     blightBallCounter++;
                     blightStormCounter++;
                 }
+                */
             }
 
         }

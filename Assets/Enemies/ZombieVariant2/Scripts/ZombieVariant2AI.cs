@@ -129,6 +129,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         
         // set our starting position so that we know how far we can roam. This is the point we will check from
         startingPostion = transform.position; 
+
         // set our stopping distance to the stopping distance in Unity
         stoppingDistanceOriginal = agent.stoppingDistance;
 
