@@ -38,4 +38,10 @@ public class GunStats : ScriptableObject
 
     [Header("Weapon Type")]
     [SerializeField] public bool isPistol;
+
+
+    public GunStats Clone()
+    {
+        return Instantiate(this);
+    }
 }
