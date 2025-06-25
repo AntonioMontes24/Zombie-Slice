@@ -21,7 +21,7 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void options()
     {
-        GameManager.instance.OptionsMenu();
+        // saving this for later
     }
 
     public void quit()
