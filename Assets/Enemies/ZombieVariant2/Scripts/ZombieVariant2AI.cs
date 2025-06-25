@@ -67,7 +67,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         Destroy(gameObject);
 
         // update the number of zombies left in stage
-        GameManager.instance.updateGameGoal(-1);
+        ObjectiveManager.instance.updateZombieCount(-1);
     }
 
     IEnumerator swipeAttack()
@@ -107,7 +107,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     void Start()
     {
         // increase the number of zombies left in stage
-        GameManager.instance.updateGameGoal(1);
+        ObjectiveManager.instance.updateZombieCount(1);
 
     }
 
