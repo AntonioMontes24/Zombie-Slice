@@ -400,8 +400,13 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         if (gunList.Count == 0) return;
 
-        currentWeaponIndex = (currentWeaponIndex + direction + gunList.Count) % gunList.Count;
-        EquipWeapon(currentWeaponIndex);
+        int newIndex = (currentWeaponIndex + direction + gunList.Count) % gunList.Count;
+
+        if (newIndex == currentWeaponIndex)
+            return; // Don't re-equip the same weapon
+
+        EquipWeapon(newIndex);
     }
+
 
 }
