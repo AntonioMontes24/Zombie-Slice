@@ -11,9 +11,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+    [SerializeField] GameObject menuOptions;
     [SerializeField] TMP_Text gameTimerText;
     [SerializeField] float remainingTime;
-    [SerializeField] AudioClip musicGame;
+    //[SerializeField] AudioClip musicGame;
 
     // Player HP Bar info
     public TMP_Text playerHPText;
@@ -41,8 +42,8 @@ public class GameManager : MonoBehaviour
     public GameObject flashHealScreen;
     public GameObject flashAmmoPickUp;
 
-    AudioSource musicSource;
-    public float musicVolume;
+    // AudioSource musicSource;
+    // public float musicVolume;
 
     public bool isPaused;
 
@@ -60,12 +61,12 @@ public class GameManager : MonoBehaviour
         playerScript = player.GetComponent<PlayerController>();
         timeScaleOrig = Time.timeScale;
 
-        musicSource = gameObject.AddComponent<AudioSource>();
-        musicSource.volume = musicVolume;
-        musicSource.clip = musicGame;
-        musicSource.loop = true;
-        musicSource.playOnAwake = false;
-        musicSource.Play();
+        //musicSource = gameObject.AddComponent<AudioSource>();
+        //musicSource.volume = musicVolume;
+        //musicSource.clip = musicGame;
+        //musicSource.loop = true;
+        //musicSource.playOnAwake = false;
+        //musicSource.Play();
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -102,14 +103,14 @@ public class GameManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(remainingTime % 60);
         gameTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
-        if (isPaused && musicSource.isPlaying)
-        {
-            musicSource.Pause();
-        }
-        else if (!isPaused && !musicSource.isPlaying)
-        {
-            musicSource.UnPause();
-        }
+        //if (isPaused && musicSource.isPlaying)
+        //{
+        //    musicSource.Pause();
+        //}
+        //else if (!isPaused && !musicSource.isPlaying)
+        //{
+        //    musicSource.UnPause();
+        //}
     }
 
     public void statePause()
@@ -130,13 +131,27 @@ public class GameManager : MonoBehaviour
         menuActive = null;
     }
 
+    public void OptionsMenu()
+    {
+        menuActive.SetActive(false);
+        menuActive = menuOptions;
+        menuActive.SetActive(true);
+    }
+
+    public void Back()
+    {
+        menuActive.SetActive(false);
+        menuActive = menuPause;
+        menuActive.SetActive(true);
+    }
+
     public void youLose()
     {
         statePause();
         menuActive = menuLose;
         menuActive.SetActive(true);
         flashDamageScreen.SetActive(false);
-        musicSource.Stop();
+        // musicSource.Stop();
     }
 
     public void youWin()
@@ -144,7 +159,7 @@ public class GameManager : MonoBehaviour
         statePause();
         menuActive = menuWin;
         menuActive.SetActive(true);
-        musicSource.Stop();
+        // musicSource.Stop();
     }
 
     public void updateGameGoal(int amount)
