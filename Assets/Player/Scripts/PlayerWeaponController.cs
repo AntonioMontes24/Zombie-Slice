@@ -12,6 +12,8 @@ public class PlayerWeaponManager : MonoBehaviour
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
     [SerializeField] float adsSpeed;
     [SerializeField] GameObject gunModel;
+    [SerializeField] Transform weaponHolder;
+    GameObject currentWeaponInstance;
     [SerializeField] TMPro.TextMeshProUGUI ammoText;
 
     [Header("Weapon Components")]
@@ -33,6 +35,8 @@ public class PlayerWeaponManager : MonoBehaviour
     [SerializeField] float shellEjectForce;
     [SerializeField] Transform leftHandGrip;
     [SerializeField] Transform rightHandGrip;
+    Transform leftHandIkTarget;
+    Transform rightHandIkTarget;
 
     [Header("Recoil Setup")]
     [SerializeField] private float weaponRecoilKick;
@@ -320,11 +324,28 @@ public class PlayerWeaponManager : MonoBehaviour
         gunList.Add(gun);
         isAutomaticMode = gun.isAutomaticDefault;
 
-        gunModel.GetComponent<MeshFilter>().sharedMesh = gun.gunModel.GetComponent<MeshFilter>().sharedMesh;
-        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gun.gunModel.GetComponent<MeshRenderer>().sharedMaterial;
+        // Destroy previous weapon
+        if (currentWeaponInstance != null)
+            Destroy(currentWeaponInstance);
 
-        currentHipPosition = gunModel.transform.Find("HipPosition");
-        currentAdsPosition = gunModel.transform.Find("ADSPosition");
+        // Instantiate new weapon
+        currentWeaponInstance = Instantiate(gun.gunModel, weaponHolder);
+        currentWeaponInstance.transform.localPosition = Vector3.zero;
+        currentWeaponInstance.transform.localRotation = Quaternion.identity;
+
+        leftHandIkTarget = currentWeaponInstance.transform.Find("LeftIk");
+        rightHandIkTarget = currentWeaponInstance.transform.Find("RightIk");
+
+        if (leftHandIkTarget != null || rightHandIkTarget != null)
+            Debug.LogWarning("missing IK" + gun.name);
+
+        // Set up weapon references
+        currentHipPosition = currentWeaponInstance.transform.Find("HipPosition");
+        currentAdsPosition = currentWeaponInstance.transform.Find("ADSPosition");
+
+        barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
+        shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
+
         ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
     }
 
@@ -396,10 +417,15 @@ public class PlayerWeaponManager : MonoBehaviour
 
     IEnumerator MuzzleFlashRoutine()//----Muzzle Flash vfx handler
     {
-        muzzleFlashPrefab.SetActive(true);
-        yield return new WaitForSeconds(muzzleFlashTime);
-        muzzleFlashPrefab.SetActive(false);
+        if (muzzleFlashPrefab != null && barrelTip != null)
+        {
+            GameObject flash = Instantiate(muzzleFlashPrefab, barrelTip.position, barrelTip.rotation, barrelTip);
+            Destroy(flash, muzzleFlashTime);
+        }
+
+        yield return null;
     }
+
 
     public GunStats CurrentGun
     {
@@ -429,4 +455,25 @@ public class PlayerWeaponManager : MonoBehaviour
             ammoUI?.UpdateAmmo(gun.ammoCur, gun.ammoReserve);
         }
     }
+    void OnAnimatorIK(int layerIndex)
+    {
+        if (animator == null) return;
+
+        if (leftHandIkTarget != null)
+        {
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
+            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandIkTarget.position);
+            animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandIkTarget.rotation);
+        }
+
+        if (rightHandIkTarget != null)
+        {
+            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
+            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
+            animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandIkTarget.position);
+            animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandIkTarget.rotation);
+        }
+    }
+
 }
