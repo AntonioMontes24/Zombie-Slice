@@ -57,7 +57,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
         Destroy(gameObject);
 
         // update the number of zombies left in stage
-        GameManager.instance.updateGameGoal(-1);
+        ObjectiveManager.instance.updateZombieCount(-1);
 
     }
 
@@ -82,7 +82,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
     void Start()
     {
         // increase the number of zombies left in stage
-        GameManager.instance.updateGameGoal(1);
+        ObjectiveManager.instance.updateZombieCount(1);
     }
 
     // Update is called once per frame
