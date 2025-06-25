@@ -92,7 +92,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
         {
             if (playerInRange && canWeSeeThePlayer())
             {
-                
+                attackCounter++;
       
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
@@ -115,7 +115,6 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
                 }
                 else
                 {
-                    attackCounter++;
                     animator.SetBool("inMeleeRange", false);
                 }
             }
