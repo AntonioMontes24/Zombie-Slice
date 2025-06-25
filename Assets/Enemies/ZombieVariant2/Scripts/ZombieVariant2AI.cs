@@ -3,12 +3,14 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
-
+using TMPro;
+using UnityEngine.UI;
 
 public class ZombieVariant2AI : MonoBehaviour, IDamage
 {
     // create some serialized variables
     [SerializeField] int currHealth;                        // the current health 
+    [SerializeField] int maxHealth;                         // the maximum or starting health of the enemy
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -34,13 +36,19 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     [SerializeField] int biteRate;                          // our bite cooldown
     [SerializeField] int biteDamage;                        // how much damage does a bite do?
 
+    [SerializeField] int roamDistance;                      // max distance he can roam from start position
+    [SerializeField] int roamStopTimer;                     // how long before he roams again
+    Vector3 startingPostion;                                // where his spawn position is
+    float roamTime;                                         // counter to see if he can roam 
+    float stoppingDistanceOriginal;                         // cache off the original stopping distance
+
     // for IDamage
     public void takeDamage(int amount)
     {
         // we need to apply the damage.
         // check for death of the variant
         // and if we have a win condition to kill all enemies, update it
-        if (currHealth >= 0)
+        if (currHealth > 0)
         {
             currHealth -= amount;
 
@@ -75,13 +83,14 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         if (animator != null && animator.runtimeAnimatorController != null)
         {
             animator.SetBool("canSwipe", true);
-       
+                
             // wait 1 second
             yield return new WaitForSeconds(1);
 
             animator.SetBool("canSwipe", false);
             IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
             player_dmg.takeDamage(swipeDamage);
+         
         }
             
     }
@@ -102,12 +111,27 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         
     }
 
+    private void Awake()
+    {
+        
+    }
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // increase the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(1);
+
+        // set our HP variables for the health bar
+        currHealth = maxHealth;
+       
+        
+        // set our starting position so that we know how far we can roam. This is the point we will check from
+        startingPostion = transform.position; 
+
+        // set our stopping distance to the stopping distance in Unity
+        stoppingDistanceOriginal = agent.stoppingDistance;
 
     }
 
@@ -118,10 +142,23 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
 
         if (currHealth >= 0)
         {
+            // check if we need to increment our roam or just roam
+            if(agent.remainingDistance < 0.01f)
+            {
+                roamTime += Time.deltaTime;
+            }
+            if (playerInRange && !canWeSeeThePlayer())
+            {
+                roamCheck();
+            }
+            else if (!playerInRange)
+            {
+                roamCheck();
+            }
+
             if (playerInRange && canWeSeeThePlayer())
             {
-                swipeCounter++;
-                biteCounter++;
+                
 
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
@@ -141,9 +178,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
                         StartCoroutine(biteAttack());
 
                     }
-
                     // need to check for swipeAttack 
-                    if (swipeCounter >= swipeRate)
+                    else if (swipeCounter >= swipeRate)
                     {
                         // reset the counter
                         swipeCounter = 0;
@@ -156,6 +192,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
                 }
                 else
                 {
+                    swipeCounter++;
+                    biteCounter++;
                     animator.SetBool("inMeleeRange", false);
                 }
             }
@@ -163,6 +201,34 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         
     }
 
+    void roam()
+    {
+        // reset the timer
+        roamTime = 0;
+
+        // make sure he is able to get to the location and not stop short
+        agent.stoppingDistance = 0;
+
+        // grab a random spot in our sphere on the navmesh
+        Vector3 randPos = Random.insideUnitSphere * roamDistance;
+        randPos += startingPostion;
+
+        // check if the position is on the navmesh
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randPos, out hit, roamDistance, 1);
+
+        // move
+        agent.SetDestination(hit.position);
+    }
+
+    void roamCheck()
+    {
+        // can i roam and am I stopped. 
+        if (roamTime >= roamStopTimer && agent.remainingDistance < 0.1f)
+        {
+            roam();
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -239,4 +305,5 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         animator.SetBool("isWalking", false);
         return false;
     }
+
 }
