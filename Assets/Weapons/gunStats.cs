@@ -23,6 +23,7 @@ public class GunStats : ScriptableObject
     [Header("VFX")]
     [SerializeField] public GameObject bulletHolePrefab;
     [SerializeField] public ParticleSystem hitEffect;
+    [SerializeField] public GameObject zombieBloodHit;
 
     [Header("SFX")]
     [SerializeField] public AudioClip shootSound;
@@ -31,4 +32,10 @@ public class GunStats : ScriptableObject
     [SerializeField] public float shootVol;
     [SerializeField] public AudioClip fireModeSwitchSound;
     [SerializeField] public AudioClip reloadFreakingZombie;
+
+    [Header("Gun Icon")]
+    [SerializeField] Sprite gunIcon;
+
+    [Header("Weapon Type")]
+    [SerializeField] public bool isPistol;
 }

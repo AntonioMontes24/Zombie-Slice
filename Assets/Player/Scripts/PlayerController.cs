@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip freakingZombie;
+    [SerializeField] private Transform leftArm;
 
     [SerializeField] private float leanAngle;
     [SerializeField] private float leanSpeed = 5f;
@@ -39,9 +40,20 @@ public class PlayerController : MonoBehaviour
         playerMovement.HandleLanding();// updates landing handling
         weaponManager.HandleShooting();// updates shooting
 
-        if (weaponManager.HasGun() && !hasPlayedPickup)
+        if (weaponManager.HasGun())
         {
-            StartCoroutine(PlayPickupAndEnableArms());
+            var currentGun = weaponManager.CurrentGun;
+
+            bool isPistol = currentGun.isPistol;
+            Debug.Log("Is Pistol: " + isPistol);
+
+            if (leftArm != null)
+                leftArm.localScale = isPistol ? Vector3.zero : Vector3.one;
+
+            if (!hasPlayedPickup)
+            {
+                StartCoroutine(PlayPickupAndEnableArms());
+            }
         }
 
         if (Input.GetButtonDown("FireMode"))//Handles Firemode switch
@@ -49,7 +61,7 @@ public class PlayerController : MonoBehaviour
             weaponManager.ToggleFireMode();
         }
         weaponManager.HandleADS();// handles ads
-        weaponManager.SetAiming(Input.GetButtonDown("Fire2"));// handles aiming
+        weaponManager.SetAiming(Input.GetButton("Fire2"));// handles aiming
 
         HandleLean();
     }
