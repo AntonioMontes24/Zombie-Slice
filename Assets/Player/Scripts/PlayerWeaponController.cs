@@ -82,7 +82,9 @@ public class PlayerWeaponManager : MonoBehaviour
     public void GetGunStats(GunStats gun)//---Gets gun and gunstats
     {
         // Add to inventory
-        gunList.Add(gun);
+        GunStats runtimeGun = gun.Clone();
+        gunList.Add(runtimeGun);
+        runtimeGun.ammoCur = runtimeGun.ammoMax;
         isAutomaticMode = gun.isAutomaticDefault;
 
         // Destroy previous weapon if exists
