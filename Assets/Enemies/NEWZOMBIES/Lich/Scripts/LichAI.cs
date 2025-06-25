@@ -57,8 +57,6 @@ public class LichAI : MonoBehaviour, IDamage
         // wait 2 seconds
         yield return new WaitForSeconds(2);
 
-        ObjectiveManager.instance.updateZombieCount(-1);
-
         Destroy(gameObject);
 
     }
@@ -125,7 +123,7 @@ public class LichAI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ObjectiveManager.instance.updateZombieCount(1);
+
     }
 
     // Update is called once per frame

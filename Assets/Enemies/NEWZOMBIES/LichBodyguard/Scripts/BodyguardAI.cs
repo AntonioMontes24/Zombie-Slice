@@ -82,7 +82,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
         Destroy(gameObject);
 
         // update the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(-1);
+        GameManager.instance.updateGameGoal(-1);
     }
 
     public void punchAttack()
@@ -136,7 +136,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
     void Start()
     {
         // increase the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(1);
+        GameManager.instance.updateGameGoal(1);
 
         // set our HP variables for the health bar
         currHealth = maxHealth;
