@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] GameManager gameManager;
+
     public void PlayGame(string level)
     {
         SceneManager.LoadScene(level);
@@ -14,7 +16,7 @@ public class MainMenu : MonoBehaviour
 
     public void OptionsMenu()
     {
-
+        SceneManager.LoadScene(2);
     }
 
     public void QuitGame()
