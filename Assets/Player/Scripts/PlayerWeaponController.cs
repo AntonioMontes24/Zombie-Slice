@@ -18,6 +18,8 @@ public class PlayerWeaponManager : MonoBehaviour
     [Header("Weapon Components")]
     [SerializeField] AudioSource aud;
     [SerializeField] Camera gameplayCamera;
+    [SerializeField] public List<Image> hotBarSlots = new List<Image>();
+    [SerializeField] int currentWeaponIndex;
 
     [Header("VFX Prefabs")]
     [SerializeField] GameObject muzzleFlashPrefab;
@@ -81,33 +83,13 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void GetGunStats(GunStats gun)//---Gets gun and gunstats
     {
-        // Add to inventory
         GunStats runtimeGun = gun.Clone();
-        gunList.Add(runtimeGun);
         runtimeGun.ammoCur = runtimeGun.ammoMax;
-        isAutomaticMode = gun.isAutomaticDefault;
+        gunList.Add(runtimeGun);
 
-        // Destroy previous weapon if exists
-        if (currentWeaponInstance != null)
-            Destroy(currentWeaponInstance);
+        int newIndex = gunList.Count - 1;
 
-        // Instantiate weapon prefab
-        currentWeaponInstance = Instantiate(gun.gunModel, weaponHolder);
-        currentWeaponInstance.transform.localPosition = Vector3.zero;
-        currentWeaponInstance.transform.localRotation = Quaternion.identity;
-
-        // Assign important weapon transforms
-        currentHipPosition = currentWeaponInstance.transform.Find("HipPosition");
-        currentAdsPosition = currentWeaponInstance.transform.Find("ADSPosition");
-        barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
-        shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
-
-        if (barrelTip == null)
-            Debug.LogWarning("BarrelTip not found in: " + gun.name);
-        if (currentHipPosition == null)
-            Debug.LogWarning("HipPosition not found in: " + gun.name);
-
-        ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+        EquipWeapon(newIndex);
     }
 
     public void HandleShooting()//Handles Shooting
@@ -117,7 +99,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         shootCooldown -= Time.deltaTime;
         if (gunList.Count == 0) return;
-        GunStats currentGun = gunList[gunList.Count - 1];
+        GunStats currentGun = gunList[currentWeaponIndex];
         if (isReloading) return;
 
         bool fireInput = isAutomaticMode ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1");
@@ -158,7 +140,7 @@ public class PlayerWeaponManager : MonoBehaviour
     void Shoot()//Handles damage/Ray cast/ and checks for current gun and gun stats
     {
         if (gunList.Count == 0 || gameplayCamera == null) return;
-        GunStats currentGun = gunList[gunList.Count - 1];
+        GunStats currentGun = gunList[currentWeaponIndex];
 
         if (currentGun.shootSound != null)
             aud.PlayOneShot(currentGun.shootSound, currentGun.shootVol);
@@ -331,7 +313,7 @@ public class PlayerWeaponManager : MonoBehaviour
     public void ToggleFireMode()//Sets Firemode
     {
         if (gunList.Count == 0) return;
-        GunStats currentGun = gunList[gunList.Count - 1];
+        GunStats currentGun = gunList[currentWeaponIndex];
 
         if (currentGun.canSwitchFireMode)
         {
@@ -352,7 +334,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             if (gunList == null || gunList.Count == 0)
                 return null;
-            return gunList[gunList.Count - 1];
+            return gunList[currentWeaponIndex];
         }
     }
 
@@ -380,4 +362,46 @@ public class PlayerWeaponManager : MonoBehaviour
             ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
         }
     }
+
+    public void EquipWeapon(int index)
+    {
+        if (index < 0 || index >= gunList.Count)
+        {
+            Debug.LogWarning("EquipWeapon: Invalid index");
+            return;
+        }
+
+        currentWeaponIndex = index;
+        GunStats gun = gunList[currentWeaponIndex];
+        isAutomaticMode = gun.isAutomaticDefault;
+
+        // Destroy previous weapon instance
+        if (currentWeaponInstance != null)
+            Destroy(currentWeaponInstance);
+
+        // Instantiate and set up new weapon
+        currentWeaponInstance = Instantiate(gun.gunModel, weaponHolder);
+        currentWeaponInstance.transform.localPosition = Vector3.zero;
+        currentWeaponInstance.transform.localRotation = Quaternion.identity;
+
+        // Get important transforms
+        currentHipPosition = currentWeaponInstance.transform.Find("HipPosition");
+        currentAdsPosition = currentWeaponInstance.transform.Find("ADSPosition");
+        barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
+        shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
+
+        if (barrelTip == null) Debug.LogWarning("BarrelTip not found in: " + gun.name);
+        if (currentHipPosition == null) Debug.LogWarning("HipPosition not found in: " + gun.name);
+
+        ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+    }
+
+    public void ScrollWeapon(int direction)
+    {
+        if (gunList.Count == 0) return;
+
+        currentWeaponIndex = (currentWeaponIndex + direction + gunList.Count) % gunList.Count;
+        EquipWeapon(currentWeaponIndex);
+    }
+
 }
