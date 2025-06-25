@@ -36,10 +36,10 @@ public class LichAI : MonoBehaviour, IDamage
     [SerializeField] Transform BS4Position;               // where does our blightball spawn from
 
     // we will check for blight storm then blight ball
-    [SerializeField] int blightBallCounter;                 // increment to see if we can attack
-    [SerializeField] int blightBallRate;                    // our rate of fire
-    [SerializeField] int blightStormCounter;                // increment to see if we can blight storm
-    [SerializeField] int blightStormRate;                   // our rate of fire for blight storm
+    // [SerializeField] int blightBallCounter;                 // increment to see if we can attack
+    // [SerializeField] int blightBallRate;                    // our rate of fire
+    // [SerializeField] int blightStormCounter;                // increment to see if we can blight storm
+    // [SerializeField] int blightStormRate;                   // our rate of fire for blight storm
 
     // new random attack info
     int attackToUse;
@@ -67,7 +67,7 @@ public class LichAI : MonoBehaviour, IDamage
         attackCounter = 0;
 
         // reset the timer set the animation
-        blightBallCounter = 0;
+        // blightBallCounter = 0;
         yield return new WaitForSeconds(0.1f);
         animator.SetTrigger("shootBlightBall");
 
@@ -79,7 +79,7 @@ public class LichAI : MonoBehaviour, IDamage
         attackCounter = 0;
 
         // reset the timer set the animation
-        blightStormCounter = 0;
+        // blightStormCounter = 0;
         yield return new WaitForSeconds(0.1f);
         animator.SetTrigger("shootBlightstorm");
 
@@ -102,7 +102,7 @@ public class LichAI : MonoBehaviour, IDamage
 
     public int chooseAttack()
     {
-        return Random.Range(0, 10);
+        return Random.Range(0, 5);
 
     }  
 
@@ -139,7 +139,7 @@ public class LichAI : MonoBehaviour, IDamage
             {
                 attackToUse = chooseAttack();
 
-                if(attackToUse > 2)
+                if(attackToUse >= 2)
                 {
                     // we can blight ball
                     StartCoroutine(shootBlightBall());

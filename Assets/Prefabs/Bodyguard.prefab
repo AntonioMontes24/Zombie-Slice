@@ -269,7 +269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currHealth: 20
   maxHealth: 20
-  speed: 8
+  speed: 1
   speedModifier: 1
   faceTargetSpeed: 12
   model: {fileID: 3430248097428042195}
@@ -280,11 +280,10 @@ MonoBehaviour:
   headPos: {fileID: 7494279771581173929}
   clawPos: {fileID: 8298778695499725801}
   clawCollider: {fileID: 0}
-  punchRate: 100
+  punchRate: 500
   punchDamage: 2
-  comboAttackRate: 450
+  comboAttackRate: 1200
   comboAttackDamage: 3
-  healthBar: {fileID: 0}
   roamDistance: 1
   roamStopTimer: 2
   animSpeedTransition: 0
@@ -324,7 +323,7 @@ NavMeshAgent:
   m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 20
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
