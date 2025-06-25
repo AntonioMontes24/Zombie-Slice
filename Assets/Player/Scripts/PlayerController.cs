@@ -103,9 +103,9 @@ public class PlayerController : MonoBehaviour
     void HandleWeaponSwitch()
     {
         // Number key selection
-        if (Input.GetKeyDown(KeyCode.Alpha1)) weaponManager.EquipWeapon(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) weaponManager.EquipWeapon(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) weaponManager.EquipWeapon(2);
+        if (Input.GetKeyDown(KeyCode.Alpha1)) weaponManager.TryEquipWeapon(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) weaponManager.TryEquipWeapon(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) weaponManager.TryEquipWeapon(2);
 
         // Mouse scroll selection
         float scroll = Input.mouseScrollDelta.y;

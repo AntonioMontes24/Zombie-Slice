@@ -408,5 +408,12 @@ public class PlayerWeaponManager : MonoBehaviour
         EquipWeapon(newIndex);
     }
 
+    public void TryEquipWeapon(int index)
+    {
+        if (index < 0 || index >= gunList.Count) return;
+        if (index == currentWeaponIndex) return;
+
+        EquipWeapon(index);
+    }
 
 }
