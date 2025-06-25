@@ -116,10 +116,12 @@ public class newEnemyAI : MonoBehaviour, IDamage
         {
             meleeRange = true;
             StartCoroutine(attackAnim());
+            agent.isStopped = true;
             //Error Check
         }
         else
         {
+            agent.isStopped = false;
             meleeRange = false;
             StartCoroutine(stopAttackAnim());
             agent.stoppingDistance = stopDistPlayer;
@@ -203,6 +205,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
     IEnumerator stopAttackAnim()
     {
         anim.SetInteger("Motion", 3);
+        anim.SetBool("MeleeRange", false);
         yield return new WaitForSeconds(2.0f);
         anim.SetInteger("Motion", 0);
         roamCheck();
