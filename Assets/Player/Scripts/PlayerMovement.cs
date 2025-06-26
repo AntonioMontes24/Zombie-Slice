@@ -12,11 +12,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float gravity;
     [SerializeField] AudioSource aud;
     [SerializeField] AudioClip[] audioSteps;
-    [SerializeField] public float audioStepsVol;
+    //[SerializeField] public float audioStepsVol;
     [SerializeField] AudioClip[] audioJump;
-    [SerializeField] public float audioJumpVol;
+    //[SerializeField] public float audioJumpVol;
     [SerializeField] AudioClip[] audioLand;
-    [SerializeField] public float audioLandVol;
+    //[SerializeField] public float audioLandVol;
     [SerializeField] public Animator animator;
 
     [Header("Stamina Settings")]
@@ -104,14 +104,14 @@ public class PlayerMovement : MonoBehaviour
             isJumped = true;
 
             if (audioJump != null && audioJump.Length > 0)
-                aud.PlayOneShot(audioJump[Random.Range(0, audioJump.Length)], audioJumpVol);
+                aud.PlayOneShot(audioJump[Random.Range(0, audioJump.Length)]/*, audioJumpVol*/);
         }
     }
 
     public void HandleLanding()//Landing
     {
         if (isJumped && controller.isGrounded && audioLand.Length > 0)
-            aud.PlayOneShot(audioLand[Random.Range(0, audioLand.Length)], audioLandVol);
+            aud.PlayOneShot(audioLand[Random.Range(0, audioLand.Length)]/*, audioLandVol*/);
 
         if (controller.isGrounded)
             isJumped = false;
@@ -120,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator PlaySteps()//Steps sfx
     {
         isPlayingStep = true;
-        aud.PlayOneShot(audioSteps[Random.Range(0, audioSteps.Length)], audioStepsVol);
+        aud.PlayOneShot(audioSteps[Random.Range(0, audioSteps.Length)]/*, audioStepsVol*/);
         if (!isSprinting)
             yield return new WaitForSeconds(0.5f);
         else

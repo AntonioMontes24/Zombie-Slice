@@ -23,8 +23,11 @@ public class PlayerController : MonoBehaviour
 
     private bool hasPlayedPickup = false;
 
-
-    void Start() => SpawnPlayer();
+    private void Start()
+    {
+        SpawnPlayer();
+    }
+    //void Start() => SpawnPlayer();
 
     public void SpawnPlayer()
     {
@@ -95,7 +98,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Setting Has Gun = true");
 
         if (freakingZombie != null && audioSource != null)
-            audioSource.PlayOneShot(freakingZombie, 0.8f);
+            audioSource.PlayOneShot(freakingZombie/*, 0.8f*/);
 
         yield return new WaitForSeconds(0.1f);
         if (armsModel != null)
