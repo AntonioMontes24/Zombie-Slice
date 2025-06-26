@@ -6,10 +6,11 @@ using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 
 
-public class LichAI : MonoBehaviour, IDamage
+public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 {
     // create some serialized variables
-    [SerializeField] int currHealth;                        // the current health 
+    [SerializeField] int currHealth;                        // the current health
+    [SerializeField] int _maxHealth;                        // max health of lich
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -49,6 +50,16 @@ public class LichAI : MonoBehaviour, IDamage
     // the boss has two attacks. 
     // 1. Blightball 
     // 2. Blight Storm
+
+    public int CurrentHealth
+    {
+        get { return currHealth; }
+    }
+
+    public int maxHealth
+    {
+        get { return _maxHealth; }
+    }
 
     IEnumerator removeCorpse()
     {
@@ -111,11 +122,13 @@ public class LichAI : MonoBehaviour, IDamage
         if (currHealth > 0)
         {
             currHealth -= amount;
+            GameManager.instance.UpdateEnemyHealthBar(this);
 
             if (currHealth <= 0)
             {
                 // remove the corpse by destroying the gameObject
                 StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
             }
         }
     }
@@ -123,6 +136,7 @@ public class LichAI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        currHealth = _maxHealth;
 
     }
 
