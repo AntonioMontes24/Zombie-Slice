@@ -4,10 +4,11 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class BossAI : MonoBehaviour, IDamage
+public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
 {
     // create some serialized variables
-    [SerializeField] int currHealth;                        // the current health 
+    [SerializeField] int currHealth;                        // the current health
+    [SerializeField] int _maxHealth;                        // max health
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -36,6 +37,17 @@ public class BossAI : MonoBehaviour, IDamage
     [SerializeField] int blightBallRate;                    // how often we can shoot our blight ball
     [SerializeField] int blightBallDamage;                  // how much damage does a blight ball do
     [SerializeField] float minShootDistance;                // minimum range to shoot blightball
+
+
+    public int CurrentHealth
+    {
+        get { return currHealth; }
+    }
+
+    public int maxHealth
+    {
+        get { return _maxHealth; }
+    }
 
     // coroutines 
     IEnumerator powerAttack()
@@ -94,6 +106,8 @@ public class BossAI : MonoBehaviour, IDamage
         {
             currHealth -= amount;
 
+            GameManager.instance.UpdateEnemyHealthBar(this);
+
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
             // agent.SetDestination(GameManager.instance.player.transform.position);
@@ -103,6 +117,7 @@ public class BossAI : MonoBehaviour, IDamage
             {
                 // remove the corpse by destroying the gameObject
                 StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
             }
         }
     }
@@ -110,6 +125,7 @@ public class BossAI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        currHealth = _maxHealth;
         minShootDistance = agent.stoppingDistance + 20.0f;
         // increase the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(1);
