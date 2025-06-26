@@ -22,7 +22,7 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
     Vector3 lastPos;
     [SerializeField] Vector3 startingPos;
     [SerializeField] int blightBombDamage;
-    public GameObject playerObj;
+    // public GameObject playerObj;
     public Animator anim;
     int currentPointIndex = 0;
     private float flightPos;
@@ -112,8 +112,8 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
 
     void chasePlayer()
     {
-        if (playerObj == null || isDead) return;
-        Vector3 playerGroundPOS = new Vector3(playerObj.transform.position.x, flightPos, playerObj.transform.position.z);
+        if (GameManager.instance.player.transform.position == null || isDead) return;
+        Vector3 playerGroundPOS = new Vector3(GameManager.instance.player.transform.position.x, flightPos, GameManager.instance.player.transform.position.z);
         Vector3 directionPlayer = playerGroundPOS - transform.position;
         Vector3 dirFlat = new Vector3(directionPlayer.x, flightPos, directionPlayer.z);//Was moving upwards as it got closer to the player
         Vector3 direction = playerGroundPOS - transform.position;
@@ -186,8 +186,8 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
 
     public void createBlight()
     {
-        if (playerObj == null) return;
-        Vector3 target = playerObj.transform.position; //Target player location
+        if (GameManager.instance.player.transform.position == null) return;
+        Vector3 target = GameManager.instance.player.transform.position; //Target player location
 
         target.y = 0f; //Target ground
         if (!inRange)

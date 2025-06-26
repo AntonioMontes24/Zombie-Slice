@@ -12,7 +12,7 @@ public class v2Mover : MonoBehaviour
     [SerializeField] float facePlayerSpeed;
     [SerializeField] int stopDist;
   
-    public GameObject playerObj;
+    // public GameObject playerObj;
     
     bool playerInRange;
     bool isDead;
@@ -85,8 +85,8 @@ public class v2Mover : MonoBehaviour
 
     void chasePlayer()
     {
-        if (playerObj == null || isDead) return;
-        Vector3 playerGroundPOS = new Vector3(playerObj.transform.position.x, 0, playerObj.transform.position.z);
+        if (GameManager.instance.player.transform.position == null || isDead) return;
+        Vector3 playerGroundPOS = new Vector3(GameManager.instance.player.transform.position.x, 0, GameManager.instance.player.transform.position.z);
         Vector3 directionPlayer = playerGroundPOS - transform.position;
         Vector3 dirFlat = new Vector3(directionPlayer.x, 0, directionPlayer.z);//Was moving upwards as it got closer to the player
         Vector3 direction = playerGroundPOS - transform.position;
@@ -118,9 +118,9 @@ public class v2Mover : MonoBehaviour
         playerInRange = true;
         roamTime = 0f;
 
-        if (playerObj != null)
+        if (GameManager.instance.player.transform != null)
         {
-            Vector3 playerGroundPOS = new Vector3(playerObj.transform.position.x, 0, playerObj.transform.position.z);
+            Vector3 playerGroundPOS = new Vector3(GameManager.instance.player.transform.transform.position.x, 0, GameManager.instance.player.transform.transform.position.z);
             agent.stoppingDistance = stopDist;
             agent.SetDestination(playerGroundPOS);
         }
