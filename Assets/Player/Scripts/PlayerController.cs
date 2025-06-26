@@ -38,7 +38,11 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         playerMovement.HandleMove();//Updates Movement Handling 
         playerMovement.HandleSprint();// Updates Sprint handling
         playerMovement.HandleLanding();// updates landing handling
+        if (!GameManager.instance.isPaused)
+        {
         weaponManager.HandleShooting();// updates shooting
+
+        }
         HandleWeaponSwitch();
 
         if (weaponManager.HasGun())
