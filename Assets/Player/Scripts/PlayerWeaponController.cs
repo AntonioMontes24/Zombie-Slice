@@ -190,13 +190,15 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             RaycastHit hit = validHit.Value;
 
-            if (hit.collider.CompareTag("Enemy"))
+            iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
+
+
+            if (hit.collider.CompareTag("Enemy") && enemyHealth != null)
             {
-                iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
-                if (enemyHealth != null)
-                {
-                    GameManager.instance.SetCurrentEnemy(enemyHealth);
-                }
+
+                GameManager.instance.SetCurrentEnemy(enemyHealth);
+            
             } else
             {
                 if (hit.collider.CompareTag("Enemy"))
@@ -222,7 +224,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 Destroy(bloodEffect, 0.5f);
             }
 
-            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            
             if (dmg != null)
                 dmg.takeDamage(currentGun.shootDamage);
 
