@@ -40,7 +40,7 @@ public class enemyAI : MonoBehaviour, IDamage
     {
 
         colorOrig = model.material.color;
-        GameManager.instance.updateGameGoal(1);
+        ObjectiveManager.instance.updateZombieCount(1);
         startingPos = transform.position;
         playerObj = GameObject.FindWithTag("Player");
         stoppingDistOrig = agent.stoppingDistance;
@@ -132,7 +132,7 @@ public class enemyAI : MonoBehaviour, IDamage
         if (isDead)
         {
             //play dead animation
-            GameManager.instance.updateGameGoal(-1);
+        ObjectiveManager.instance.updateZombieCount(-1);
 
             Destroy(gameObject);
         }

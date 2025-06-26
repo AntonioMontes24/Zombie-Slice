@@ -34,7 +34,7 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
     void Start()
     {
         ShufflePoints();
-        GameManager.instance.updateGameGoal(1);
+        ObjectiveManager.instance.updateZombieCount(1);
         flightPos = transform.position.y;
         lastPos = transform.position;
         
@@ -50,7 +50,7 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
         if (isDead)
         {
             //death animation
-            GameManager.instance.updateGameGoal(-1);
+        ObjectiveManager.instance.updateZombieCount(-1);
         }
     }
 

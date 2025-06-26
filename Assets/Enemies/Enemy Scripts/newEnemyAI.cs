@@ -33,7 +33,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
     {
         originalColor = model.material.color;
         YOrig = transform.position.y;
-        GameManager.instance.updateGameGoal(1);
+        ObjectiveManager.instance.updateZombieCount(1);
         z1Collide = GetComponent<Collider>();
         startSpeed = agent.speed;
         startingPos = transform.position;
@@ -230,7 +230,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
         yield return new WaitForSeconds(2.5f);
         anim.enabled = false;
         agent.enabled = false;
-        GameManager.instance.updateGameGoal(-1);
+        ObjectiveManager.instance.updateZombieCount(-1);
         Destroy(gameObject);
     }
 
