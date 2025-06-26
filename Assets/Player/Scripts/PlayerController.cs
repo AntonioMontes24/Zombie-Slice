@@ -11,15 +11,26 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip freakingZombie;
+    [SerializeField] private Transform leftArm;
 
     [SerializeField] private float leanAngle;
     [SerializeField] private float leanSpeed = 5f;
     [SerializeField] private Transform cameraHolder; //used to tilt camera with lean
+    [SerializeField] private Transform leanRoot;
 
-    private float currentLean = 0;
+    private float currentLean = 0f;
     private float targetLean = 0f;
 
     private bool hasPlayedPickup = false;
+
+
+    void Start() => SpawnPlayer();
+
+    public void SpawnPlayer()
+    {
+        playerMovement.controller.transform.position = GameManager.instance.playerSpawnPoint;
+        playerHealth.ResetHealth();
+    }
 
     // Update is called once per frame
     void Update()
@@ -28,10 +39,22 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         playerMovement.HandleSprint();// Updates Sprint handling
         playerMovement.HandleLanding();// updates landing handling
         weaponManager.HandleShooting();// updates shooting
+        HandleWeaponSwitch();
 
-        if (weaponManager.HasGun() && !hasPlayedPickup)
+        if (weaponManager.HasGun())
         {
-            StartCoroutine(PlayPickupAndEnableArms());
+            var currentGun = weaponManager.CurrentGun;
+
+            bool isPistol = currentGun.isPistol;
+            Debug.Log("Is Pistol: " + isPistol);
+
+            if (leftArm != null)
+                leftArm.localScale = isPistol ? Vector3.zero : Vector3.one;
+
+            if (!hasPlayedPickup)
+            {
+                StartCoroutine(PlayPickupAndEnableArms());
+            }
         }
 
         if (Input.GetButtonDown("FireMode"))//Handles Firemode switch
@@ -39,7 +62,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
             weaponManager.ToggleFireMode();
         }
         weaponManager.HandleADS();// handles ads
-        weaponManager.SetAiming(Input.GetButtonDown("Fire2"));// handles aiming
+        weaponManager.SetAiming(Input.GetButton("Fire2"));// handles aiming
 
         HandleLean();
     }
@@ -55,16 +78,10 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
         currentLean = Mathf.Lerp(currentLean, targetLean, Time.deltaTime * leanSpeed);
 
-        Quaternion leanRotation = Quaternion.Euler(0f, 0f, currentLean);
-
-        if (armsModel != null)
-            armsModel.transform.localRotation = leanRotation;
-
-        if (cameraHolder != null)
-            cameraHolder.localRotation = leanRotation;
+        Quaternion leanRot = Quaternion.Euler(0f, 0f, currentLean);
+        if (leanRoot != null)
+            leanRoot.localRotation = leanRot;
     }
-
-
 
     private IEnumerator PlayPickupAndEnableArms()
     {
@@ -82,4 +99,20 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
             armsModel.SetActive(true);
         }
     }
+
+    void HandleWeaponSwitch()
+    {
+        // Number key selection
+        if (Input.GetKeyDown(KeyCode.Alpha1)) weaponManager.TryEquipWeapon(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) weaponManager.TryEquipWeapon(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) weaponManager.TryEquipWeapon(2);
+
+        // Mouse scroll selection
+        float scroll = Input.mouseScrollDelta.y;
+        if (scroll > 0f)
+            weaponManager.ScrollWeapon(1); // scroll up
+        else if (scroll < 0f)
+            weaponManager.ScrollWeapon(-1); // scroll down
+    }
+
 }

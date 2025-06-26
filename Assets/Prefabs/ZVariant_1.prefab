@@ -94,6 +94,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2a8e721a0b8d02a42954151df509d695, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4727156868060469675}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2a8e721a0b8d02a42954151df509d695, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 178887008326027608}
   m_SourcePrefab: {fileID: 100100000, guid: 2a8e721a0b8d02a42954151df509d695, type: 3}
 --- !u!137 &2098252998271554069 stripped
 SkinnedMeshRenderer:
@@ -123,6 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currHealth: 15
+  _maxHealth: 15
   speed: 10
   speedModifier: 1
   faceTargetSpeed: 20
@@ -249,3 +253,15 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &178887008326027608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5886462537931725200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd3cf65a504137d40a7326a20baa7cdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

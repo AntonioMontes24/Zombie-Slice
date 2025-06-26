@@ -5,7 +5,7 @@ using System.Linq;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField]
-    float testRespawnTime;
+    float waveDelay;
     [SerializeField]
     EnemySpawnTable enemies;
     // you cannot use interfaces in serialized fields for some reason, so these are separate.
@@ -16,6 +16,10 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField]
     RectangleSpawnComponent[] rectangleSpawnComponent;
     List<ISpawnComponent> components;
+    [SerializeField] float range;
+    [SerializeField] int waveCount;
+    [SerializeField] int minWaveSize, maxWaveSize;
+    int waveIdx;
 
     public void SetEnemiesTable(EnemySpawnTable newEnemies) => enemies = newEnemies;
 
@@ -49,15 +53,28 @@ public class EnemySpawner : MonoBehaviour
 
     float timer;
 
+    private void Start()
+    {
+        ObjectiveManager.instance.updateSpawnerCount(1);
+    }
+
+    bool stopped;
     void Update()
     {
-        // TODO: Replace once waves are better understood.
-        timer += Time.deltaTime;
-
-        if (timer > testRespawnTime)
+        if (stopped)
+            return;
+        if (waveIdx >= waveCount && !stopped)
         {
+            stopped = true;
+            ObjectiveManager.instance.updateSpawnerCount(-1);
+            return;
+        }
+        timer += Time.deltaTime;
+        if (timer > waveDelay && waveIdx < waveCount)
+        {
+            waveIdx++;
             timer = 0;
-            SpawnEnemies(5);
+            SpawnEnemies(Random.Range(minWaveSize, maxWaveSize));
         }
     }
 }

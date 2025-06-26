@@ -118,6 +118,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100130, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8441806280427802687}
+    - targetCorrespondingSourceObject: {fileID: 100130, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3230161817396667008}
   m_SourcePrefab: {fileID: 100100000, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
 --- !u!95 &1045616227144864877 stripped
 Animator:
@@ -142,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currHealth: 50
+  _maxHealth: 50
   speed: 40
   speedModifier: 1
   faceTargetSpeed: 20
@@ -224,6 +228,18 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-3230161817396667008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045616227152291375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd3cf65a504137d40a7326a20baa7cdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1045616227152329615 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}

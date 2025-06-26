@@ -5,6 +5,10 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
+    public Vector3 playerSpawnPoint;
+
+    public Action respawnHook;
+
     public static GameManager instance;
 
     [SerializeField] GameObject menuActive;
@@ -26,14 +30,12 @@ public class GameManager : MonoBehaviour
 
     // Enemy HP Bar info
     public GameObject enemyInfoPanel;
-    public TMP_Text enemyHPText;
     public TMP_Text enemyNameText;
     public Image enemyHPBar;
 
-    [SerializeField] TMP_Text zombieCountText;            // keep track of our current objective
-    int zombieCount;                                      // how many zombie in the scene
-    
-    
+    [SerializeField] public TMP_Text zombieCountText;
+    [SerializeField] public TMP_Text objectiveText;   
+                              
     public GameObject player;
     public PlayerController playerScript;
     public PlayerHealth playerHealth;
@@ -49,13 +51,14 @@ public class GameManager : MonoBehaviour
     float timeScaleOrig;
 
     //int gameScore;
-    
 
+    private iEnemyHealth currentEnemy;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         instance = this;
+        playerSpawnPoint = GameObject.FindWithTag("Respawn").transform.position;
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
         timeScaleOrig = Time.timeScale;
@@ -69,6 +72,11 @@ public class GameManager : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        if(enemyInfoPanel != null )
+        {
+            enemyInfoPanel.SetActive(false);
+        }
         
     }
 
@@ -114,7 +122,7 @@ public class GameManager : MonoBehaviour
 
     public void statePause()
     {
-        isPaused = !isPaused;
+        isPaused = true;
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -122,7 +130,7 @@ public class GameManager : MonoBehaviour
 
     public void stateUnpause()
     {
-        isPaused = !isPaused;
+        isPaused = false;
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -147,20 +155,44 @@ public class GameManager : MonoBehaviour
         musicSource.Stop();
     }
 
-    public void updateGameGoal(int amount)
+    public void SetCurrentEnemy(iEnemyHealth en)
     {
-        // positive number adds a enemy or item
-        // negative number reduces it
-        zombieCount += amount;
-        zombieCountText.text = zombieCount.ToString("F0");  
-
-
-        if (zombieCount <= 0)
+        currentEnemy = en;
+        if (currentEnemy != null)
         {
-            // we win! 
-            youWin();
+            enemyInfoPanel.SetActive(true);
+        }
+
+        if(enemyNameText != null && en != null && (en as MonoBehaviour) != null)
+        {
+            enemyNameText.text = (en as MonoBehaviour).gameObject.name;
+        }
+        UpdateEnemyHealthBar(en);
+
+    }
+
+    public void UpdateEnemyHealthBar(iEnemyHealth en)
+    {
+        if(currentEnemy == en && en.maxHealth > 0)
+        {
+            if(enemyHPBar != null)
+            {
+                enemyHPBar.fillAmount = (float)en.CurrentHealth / en.maxHealth;
+            }  
+        }
+        else if (currentEnemy == en && en.CurrentHealth <= 0)
+        {
+            HideEnemyUI();
         }
     }
 
+    public void HideEnemyUI()
+    {
+        if(enemyInfoPanel != null)
+        {
+            enemyInfoPanel.SetActive(false);
+        }
+        currentEnemy = null;
+    }
 
 }

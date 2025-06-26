@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 
-public class ZVariant1_AI : MonoBehaviour, IDamage
+public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 {
     // create some serialized variables
     [SerializeField] int currHealth;                        // the current health 
+    [SerializeField] int _maxHealth;                         // the max health
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -28,11 +29,24 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
     [SerializeField] int attackRate;                         // our Attack is on cooldown
     [SerializeField] int attackDamage;                       // how much damage do we do
 
+    public int CurrentHealth
+    {
+        get { return currHealth; }
+    }
+
+    public int maxHealth
+    {
+        get { return _maxHealth; }
+    }
+
+
     public void takeDamage(int amount)
     {
         if (currHealth > 0)
         {
             currHealth -= amount;
+
+            GameManager.instance.UpdateEnemyHealthBar(this);
 
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
@@ -43,6 +57,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
             {
                 // remove the corpse by destroying the gameObject
                 StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
             }
         }
     }
@@ -57,7 +72,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
         Destroy(gameObject);
 
         // update the number of zombies left in stage
-        GameManager.instance.updateGameGoal(-1);
+        ObjectiveManager.instance.updateZombieCount(-1);
 
     }
 
@@ -81,8 +96,9 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        currHealth = maxHealth;
         // increase the number of zombies left in stage
-        GameManager.instance.updateGameGoal(1);
+        ObjectiveManager.instance.updateZombieCount(1);
     }
 
     // Update is called once per frame
