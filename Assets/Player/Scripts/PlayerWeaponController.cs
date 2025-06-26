@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework.Interfaces;
 using System.Linq;
 using UnityEngine.UI;
-using NUnit.Framework;
+// NUnit.Framework namespaces might not be needed in a game build, but keeping them as per your original script.
+// using NUnit.Framework.Interfaces;
+// using NUnit.Framework; 
 
 public class PlayerWeaponManager : MonoBehaviour
 {
@@ -83,7 +84,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if (movement == null)
             Debug.LogWarning("Player movement not found in parent");
 
-        originalButtonColors.Clear();// Grabs original HotBar color
+        originalButtonColors.Clear(); // Grabs original HotBar color
         foreach (var bnt in buttonHiglight)
         {
             if (bnt != null)
@@ -93,7 +94,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void GetGunStats(GunStats gun, int startingAmmo = -1, int reserveAmmo = -1)// Optional Parameters to modify starting ammo 
+    public void GetGunStats(GunStats gun, int startingAmmo = -1, int reserveAmmo = -1) // Optional Parameters to modify starting ammo
     {
         GunStats runtimeGun = gun.Clone();
 
@@ -105,7 +106,7 @@ public class PlayerWeaponManager : MonoBehaviour
     }
 
 
-    public void HandleShooting()//Handles Shooting
+    public void HandleShooting() //Handles Shooting
     {
         if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
             return;
@@ -124,7 +125,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 shootCooldown = isAutomaticMode ? currentGun.autoFireRate : currentGun.semiFireRate;
                 Shoot();
                 currentGun.ammoCur--;
-                ammoText.SetText(currentGun.ammoCur.ToString() + " / " + currentGun.ammoReserve.ToString() );
+                ammoText.SetText(currentGun.ammoCur.ToString() + " / " + currentGun.ammoReserve.ToString());
                 playedEmptySound = false;
 
                 if (currentGun.ammoCur <= 0 && currentGun.ammoReserve > 0)
@@ -134,7 +135,7 @@ public class PlayerWeaponManager : MonoBehaviour
             {
                 if (currentGun.ammoReserve > 0 && reloadCoroutine == null) // Checks ammo Reserve
                     reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));
-                else if (currentGun.emptySound != null && !playedEmptySound)// Flag to avoid empty sound spam
+                else if (currentGun.emptySound != null && !playedEmptySound) // Flag to avoid empty sound spam
                 {
                     aud.PlayOneShot(currentGun.emptySound);
                     playedEmptySound = true;
@@ -146,11 +147,11 @@ public class PlayerWeaponManager : MonoBehaviour
             playedEmptySound = false;
 
         if (Input.GetKeyDown(KeyCode.R) && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
-            reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));// Starts Reload
+            reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun)); // Starts Reload
         //ammoText.SetText(currentGun.ammoCur.ToString());
     }
 
-    void Shoot()//Handles damage/Ray cast/ and checks for current gun and gun stats
+    void Shoot() //Handles damage/Ray cast/ and checks for current gun and gun stats
     {
         if (gunList.Count == 0 || gameplayCamera == null) return;
         GunStats currentGun = gunList[currentWeaponIndex];
@@ -173,8 +174,8 @@ public class PlayerWeaponManager : MonoBehaviour
             ray = new Ray(barrelTip.position, spreadDir);
         }
 
-        
-        if (muzzleFlashPrefab != null && barrelTip != null)//Muzzle flash handler
+
+        if (muzzleFlashPrefab != null && barrelTip != null) //Muzzle flash handler
         {
             muzzleFlashTime = 0.1f;
             GameObject flash = Instantiate(muzzleFlashPrefab, barrelTip.position, barrelTip.rotation, barrelTip);
@@ -190,10 +191,25 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             RaycastHit hit = validHit.Value;
 
-            if (hit.collider.CompareTag("Enemy"))
+            // Try to get the generic iEnemyHealth interface
+            iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>(); // <--- Using iEnemyHealth
+            IDamage dmg = hit.collider.GetComponent<IDamage>(); // Keep this for damage application
+
+            if (hit.collider.CompareTag("Enemy") && enemyHealth != null)
             {
-                GameManager.instance.enemyInfoPanel.SetActive(true);
-                GameManager.instance.enemyNameText.text = hit.collider.name;
+                // Set the currently tracked enemy in GameManager using the interface
+                GameManager.instance.SetCurrentEnemy(enemyHealth);
+            }
+            else
+            {
+                // If an object is tagged "Enemy" but doesn't implement iEnemyHealth,
+                // or it's tagged "Enemy" but enemyHealth is null (shouldn't happen if properly set up),
+                // or it's not an enemy, hide the panel.
+                if (hit.collider.CompareTag("Enemy"))
+                {
+                     Debug.LogWarning("Enemy hit, but iEnemyHealth component not found on: " + hit.collider.name);
+                }
+                GameManager.instance.HideEnemyUI(); // Hide UI if not a valid enemy for tracking
             }
 
             if (currentGun.hitEffect != null)
@@ -212,9 +228,17 @@ public class PlayerWeaponManager : MonoBehaviour
                 Destroy(bloodEffect, 0.5f);
             }
 
-            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            // This is the critical line for dealing damage
             if (dmg != null)
-                dmg.takeDamage(currentGun.shootDamage);
+            {
+                Debug.Log($"Applying {currentGun.shootDamage} damage to {hit.collider.name}"); // <-- NEW DEBUG LOG
+                dmg.takeDamage(currentGun.shootDamage); // This will trigger the enemy's takeDamage.
+            }
+            else
+            {
+                Debug.LogWarning($"No IDamage component found on {hit.collider.name} with tag {hit.collider.tag}"); // <-- NEW DEBUG LOG
+            }
+
 
             if (!hit.collider.CompareTag("Enemy") && tracerPrefab != null)
             {
@@ -225,15 +249,15 @@ public class PlayerWeaponManager : MonoBehaviour
                 Destroy(tracer, 2f);
             }
 
-            if (shellCasingPrefab != null && shellEjectionPoint != null)//------Shell casing Prefab
+            if (shellCasingPrefab != null && shellEjectionPoint != null) //------Shell casing Prefab
             {
                 GameObject shell = Instantiate(shellCasingPrefab, shellEjectionPoint.position, shellEjectionPoint.rotation);
                 Rigidbody rb = shell.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
                     Vector3 ejectDirection = shellEjectionPoint.right + // Random Shell ejection
-                                       (shellEjectionPoint.up * Random.Range(-0.2f, 0.2f)) +
-                                       (shellEjectionPoint.forward * Random.Range(-0.1f, 0.1f));
+                                             (shellEjectionPoint.up * Random.Range(-0.2f, 0.2f)) +
+                                             (shellEjectionPoint.forward * Random.Range(-0.1f, 0.1f));
                     rb.AddForce(ejectDirection.normalized * shellEjectForce, ForceMode.Impulse);
                     rb.AddTorque(Random.insideUnitSphere * shellEjectForce, ForceMode.Impulse);
                 }
@@ -244,9 +268,14 @@ public class PlayerWeaponManager : MonoBehaviour
             currentLeftHandOffset.z -= handRecoilKick;
             currentRightHandOffset.z -= handRecoilKick;
         }
+        else
+        {
+            // If the raycast doesn't hit anything valid, hide the enemy UI
+            GameManager.instance.HideEnemyUI(); // Hide UI if no valid hit at all
+        }
     }
 
-    IEnumerator ReloadRoutine(GunStats gun)//Handles reload and ammo limit reserve. 
+    IEnumerator ReloadRoutine(GunStats gun) //Handles reload and ammo limit reserve.
     {
         isReloading = true;
         if (animator != null && animator.runtimeAnimatorController != null)
@@ -257,7 +286,7 @@ public class PlayerWeaponManager : MonoBehaviour
         yield return new WaitForSeconds(gun.reloadTime);
 
         int needed = gun.ammoMax - gun.ammoCur;
-        if(gun.ammoReserve >= needed)
+        if (gun.ammoReserve >= needed)
         {
             gun.ammoCur += needed;
             gun.ammoReserve -= needed;
@@ -272,7 +301,7 @@ public class PlayerWeaponManager : MonoBehaviour
         ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
     }
 
-    public void SetAiming(bool aim)//Sets aiming bool
+    public void SetAiming(bool aim) //Sets aiming bool
     {
         isAiming = aim;
         if (animator != null)
@@ -281,7 +310,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void HandleADS()//Handles ads position/recoil
+    public void HandleADS() //Handles ads position/recoil
     {
         if (currentHipPosition == null || currentAdsPosition == null)
             return;
@@ -323,7 +352,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void ToggleFireMode()//Sets Firemode
+    public void ToggleFireMode() //Sets Firemode
     {
         if (gunList.Count == 0) return;
         GunStats currentGun = gunList[currentWeaponIndex];
@@ -336,7 +365,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public bool HasGun()//Checks if there is a current gun 
+    public bool HasGun() //Checks if there is a current gun
     {
         return gunList.Count > 0;
     }
@@ -367,7 +396,7 @@ public class PlayerWeaponManager : MonoBehaviour
         ammoText.SetText(CurrentGun.ammoCur.ToString() + " / " + CurrentGun.ammoReserve.ToString());
     }
 
-    public void UpdateAmmoUi()// Helper to update Ammo UI
+    public void UpdateAmmoUi() // Helper to update Ammo UI
     {
         if (HasGun())
         {
@@ -376,7 +405,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void EquipWeapon(int index)// Equips weapon and assings Gun icon
+    public void EquipWeapon(int index) // Equips weapon and assings Gun icon
     {
         if (index < 0 || index >= gunList.Count)
         {
@@ -432,7 +461,7 @@ public class PlayerWeaponManager : MonoBehaviour
     }
 
 
-    public void ScrollWeapon(int direction)// Scroll weapon selection 
+    public void ScrollWeapon(int direction) // Scroll weapon selection
     {
         if (gunList.Count == 0) return;
 
