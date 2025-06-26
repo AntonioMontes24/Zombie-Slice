@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using System.Linq;
-using UnityEngine.UIElements;
-using Unity.VisualScripting;
+using UnityEngine.UI;
+using NUnit.Framework;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
@@ -20,6 +20,9 @@ public class PlayerWeaponManager : MonoBehaviour
     [SerializeField] Camera gameplayCamera;
     [SerializeField] public List<Image> hotBarSlots = new List<Image>();
     [SerializeField] int currentWeaponIndex;
+    [SerializeField] List<Image> weaponIcons = new List<Image>();
+    [SerializeField] List<Button> buttonHiglight = new List<Button>();
+    private List<ColorBlock> originalButtonColors = new List<ColorBlock>();
 
     [Header("VFX Prefabs")]
     [SerializeField] GameObject muzzleFlashPrefab;
@@ -79,18 +82,28 @@ public class PlayerWeaponManager : MonoBehaviour
         movement = GetComponentInParent<PlayerMovement>();
         if (movement == null)
             Debug.LogWarning("Player movement not found in parent");
+
+        originalButtonColors.Clear();// Grabs original HotBar color
+        foreach (var bnt in buttonHiglight)
+        {
+            if (bnt != null)
+                originalButtonColors.Add(bnt.colors);
+            else
+                originalButtonColors.Add(default);
+        }
     }
 
-    public void GetGunStats(GunStats gun)//---Gets gun and gunstats
+    public void GetGunStats(GunStats gun, int startingAmmo = -1, int reserveAmmo = -1)// Optional Parameters to modify starting ammo 
     {
         GunStats runtimeGun = gun.Clone();
-        runtimeGun.ammoCur = runtimeGun.ammoMax;
+
+        runtimeGun.ammoCur = (startingAmmo >= 0) ? startingAmmo : runtimeGun.ammoMax;
+        runtimeGun.ammoReserve = (reserveAmmo >= 0) ? reserveAmmo : runtimeGun.maxAmmoReserve;
+
         gunList.Add(runtimeGun);
-
-        int newIndex = gunList.Count - 1;
-
-        EquipWeapon(newIndex);
+        EquipWeapon(gunList.Count - 1);
     }
+
 
     public void HandleShooting()//Handles Shooting
     {
@@ -340,7 +353,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void AddAmmoToReserve(int ammoCount)
     {
-        var gun = gunList[gunList.Count - 1];
+        var gun = gunList[currentWeaponIndex];
         gun.ammoReserve += ammoCount;
         gun.ammoReserve = Mathf.Min(gun.ammoReserve, gun.maxAmmoReserve);
         StartCoroutine(AmmoFlash());
@@ -363,7 +376,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void EquipWeapon(int index)
+    public void EquipWeapon(int index)// Equips weapon and assings Gun icon
     {
         if (index < 0 || index >= gunList.Count)
         {
@@ -375,28 +388,51 @@ public class PlayerWeaponManager : MonoBehaviour
         GunStats gun = gunList[currentWeaponIndex];
         isAutomaticMode = gun.isAutomaticDefault;
 
-        // Destroy previous weapon instance
         if (currentWeaponInstance != null)
             Destroy(currentWeaponInstance);
 
-        // Instantiate and set up new weapon
         currentWeaponInstance = Instantiate(gun.gunModel, weaponHolder);
         currentWeaponInstance.transform.localPosition = Vector3.zero;
         currentWeaponInstance.transform.localRotation = Quaternion.identity;
 
-        // Get important transforms
         currentHipPosition = currentWeaponInstance.transform.Find("HipPosition");
         currentAdsPosition = currentWeaponInstance.transform.Find("ADSPosition");
         barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
         shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
 
-        if (barrelTip == null) Debug.LogWarning("BarrelTip not found in: " + gun.name);
-        if (currentHipPosition == null) Debug.LogWarning("HipPosition not found in: " + gun.name);
-
         ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+
+        for (int i = 0; i < weaponIcons.Count; i++)
+        {
+            bool hasWeapon = i < gunList.Count && gunList[i].gunIcon != null;
+
+            if (weaponIcons[i] != null)
+            {
+                weaponIcons[i].enabled = hasWeapon;
+
+                if (hasWeapon)
+                {
+                    weaponIcons[i].sprite = gunList[i].gunIcon;
+                    weaponIcons[i].color = Color.white;
+                }
+            }
+
+            if (buttonHiglight != null && i < buttonHiglight.Count && buttonHiglight[i] != null)
+            {
+                ColorBlock cb = originalButtonColors[i];
+                cb.normalColor = (i == index) ? Color.white : originalButtonColors[i].normalColor;
+                cb.highlightedColor = (i == index) ? Color.white : originalButtonColors[i].highlightedColor;
+                cb.selectedColor = cb.normalColor;
+                cb.pressedColor = originalButtonColors[i].pressedColor;
+                buttonHiglight[i].colors = cb;
+
+                buttonHiglight[i].gameObject.SetActive(hasWeapon);
+            }
+        }
     }
 
-    public void ScrollWeapon(int direction)
+
+    public void ScrollWeapon(int direction)// Scroll weapon selection 
     {
         if (gunList.Count == 0) return;
 
