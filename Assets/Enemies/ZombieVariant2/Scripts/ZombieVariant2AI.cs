@@ -5,10 +5,11 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 
 
-public class ZombieVariant2AI : MonoBehaviour, IDamage
+public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
 {
     // create some serialized variables
     [SerializeField] int currHealth;                        // the current health 
+    [SerializeField] int _maxHealth;                        // enemy Max Health
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -34,6 +35,16 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     [SerializeField] int biteRate;                          // our bite cooldown
     [SerializeField] int biteDamage;                        // how much damage does a bite do?
 
+    public int CurrentHealth
+    {
+        get { return currHealth; }
+    }
+
+    public int maxHealth
+    {
+        get { return _maxHealth; }
+    }
+
     // for IDamage
     public void takeDamage(int amount)
     {
@@ -44,6 +55,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         {
             currHealth -= amount;
 
+            GameManager.instance.UpdateEnemyHealthBar(this);
+
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
             // agent.SetDestination(GameManager.instance.player.transform.position);
@@ -53,6 +66,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
             {
                 // remove the corpse by destroying the gameObject
                 StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
             }
         }
     }
@@ -106,6 +120,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        currHealth = _maxHealth;
         // increase the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(1);
 
