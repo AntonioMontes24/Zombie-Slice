@@ -134,7 +134,9 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
             // check if we can see the player and we are in range
             if (playerInRange && canWeSeeThePlayer())
             {
-                
+                // reset the stopping distance
+                agent.stoppingDistance = stoppingDistanceOriginal;
+
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     // we need to face the player

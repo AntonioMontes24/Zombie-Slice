@@ -714,6 +714,59 @@ Transform:
   - {fileID: 6871755236977538425}
   m_Father: {fileID: 2120332642166279233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2537335161832201413
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8292163658490515107}
+  - component: {fileID: 8321032850602868244}
+  m_Layer: 0
+  m_Name: Claw
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8292163658490515107
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2537335161832201413}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5839144955156118452}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &8321032850602868244
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2537335161832201413}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2693263698736987946
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,6 +801,7 @@ Transform:
   - {fileID: 3291704638326772948}
   - {fileID: 595232967144412562}
   - {fileID: 506041121155428116}
+  - {fileID: 8292163658490515107}
   m_Father: {fileID: 5734204848406393600}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2705310842024449331
@@ -1316,16 +1370,16 @@ MonoBehaviour:
   model: {fileID: 13700000, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
   agent: {fileID: 7326342601611206665}
   animator: {fileID: 2899921834297245244}
-  playerInRange: 1
+  playerInRange: 0
   field_of_view: 80
   headPos: {fileID: 5875360543871601471}
-  powerAttackRate: 100
   powerAttackDamage: 3
   shootPosition: {fileID: 5854844336854398211}
   blightBall: {fileID: 2554906872843287506, guid: ad4c2c4a93e73d04bb7ed717a568b42b, type: 3}
-  blightBallRate: 1000
   blightBallDamage: 2
   minShootDistance: 0
+  clawCollider: {fileID: 8321032850602868244}
+  attackRate: 300
 --- !u!95 &2899921834297245244
 Animator:
   serializedVersion: 7

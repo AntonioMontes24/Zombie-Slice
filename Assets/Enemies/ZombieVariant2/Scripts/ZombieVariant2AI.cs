@@ -174,22 +174,9 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
     {
         
 
-        if (currHealth >= 0)
+        if (currHealth > 0)
         {
-            // check if we need to increment our roam or just roam
-            if(agent.remainingDistance < 0.01f)
-            {
-                roamTime += Time.deltaTime;
-            }
-            if (playerInRange && !canWeSeeThePlayer())
-            {
-                roamCheck();
-            }
-            else if (!playerInRange)
-            {
-                roamCheck();
-            }
-
+          
             if (playerInRange && canWeSeeThePlayer())
             {
                 // reset the stopping distance
@@ -239,35 +226,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage
         
     }
 
-    void roam()
-    {
-        // reset the timer
-        roamTime = 0;
-
-        // make sure he is able to get to the location and not stop short
-        agent.stoppingDistance = 0;
-
-        // grab a random spot in our sphere on the navmesh
-        Vector3 randPos = Random.insideUnitSphere * roamDistance;
-        randPos += startingPostion;
-
-        // check if the position is on the navmesh
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randPos, out hit, roamDistance, 1);
-
-        // move
-        agent.SetDestination(hit.position);
-    }
-
-    void roamCheck()
-    {
-        // can i roam and am I stopped. 
-        if (roamTime >= roamStopTimer && agent.remainingDistance < 0.1f)
-        {
-            roam();
-        }
-    }
-
+   
     private void OnTriggerEnter(Collider other)
     {
         // the other object in range is Player
