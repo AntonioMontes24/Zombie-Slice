@@ -45,30 +45,30 @@ public class ButtonFunctions : MonoBehaviour
 
     private void Update()
     {
-        if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() <= 1)
-        {
-            InteractText.gameObject.SetActive(true);
+        //if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() <= 1)
+        //{
+        //    InteractText.gameObject.SetActive(true);
 
-            if (Input.GetKey(interactKey))
-            {
-                holdTimer += Time.deltaTime;
+        //    if (Input.GetKey(interactKey))
+        //    {
+        //        holdTimer += Time.deltaTime;
 
-                if (holdTimer >= holdDuration)
-                {
-                    LoadTargetScene();
-                }
-            }
-            else
-            {
-                holdTimer = 0f;
-            }
-        }
+        //        if (holdTimer >= holdDuration)
+        //        {
+        //            LoadTargetScene();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        holdTimer = 0f;
+        //    }
+        //}
 
-        else
-        {
-            InteractText.gameObject.SetActive(false);
-            holdTimer = 0f;
-        }
+        //else
+        //{
+        //    InteractText.gameObject.SetActive(false);
+        //    holdTimer = 0f;
+        //}
         
     }
 
