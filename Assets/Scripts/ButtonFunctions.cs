@@ -35,7 +35,7 @@ public class ButtonFunctions : MonoBehaviour
     }
 
     [Header("Door Interaction")]
-    [SerializeField] private float holdDuration = 2f;
+    [SerializeField] private float holdDuration = 1f;
     [SerializeField] private int sceneBuildIndex = 2;
     [SerializeField] private KeyCode interactKey = KeyCode.X;
     [SerializeField] private TMP_Text InteractText;
@@ -45,7 +45,7 @@ public class ButtonFunctions : MonoBehaviour
 
     private void Update()
     {
-        if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() == 0)
+        if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() <= 1)
         {
             InteractText.gameObject.SetActive(true);
 
@@ -60,10 +60,16 @@ public class ButtonFunctions : MonoBehaviour
             }
             else
             {
-                InteractText.gameObject.SetActive(false);
                 holdTimer = 0f;
             }
         }
+
+        else
+        {
+            InteractText.gameObject.SetActive(false);
+            holdTimer = 0f;
+        }
+        
     }
 
     private void LoadTargetScene()
