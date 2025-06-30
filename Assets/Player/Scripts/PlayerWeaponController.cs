@@ -104,7 +104,6 @@ public class PlayerWeaponManager : MonoBehaviour
         EquipWeapon(gunList.Count - 1);
     }
 
-
     public void HandleShooting()//Handles Shooting
     {
         if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
