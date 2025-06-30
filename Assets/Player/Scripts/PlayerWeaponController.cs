@@ -142,6 +142,9 @@ public class PlayerWeaponManager : MonoBehaviour
             }
         }
 
+
+
+
         if (!Input.GetButton("Fire1"))
             playedEmptySound = false;
 
