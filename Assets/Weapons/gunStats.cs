@@ -29,7 +29,7 @@ public class GunStats : ScriptableObject
     [SerializeField] public AudioClip shootSound;
     [SerializeField] public AudioClip reloadSound;
     [SerializeField] public AudioClip emptySound;
-    [SerializeField] public float shootVol;
+    //[SerializeField] public float shootVol;
     [SerializeField] public AudioClip fireModeSwitchSound;
     [SerializeField] public AudioClip reloadFreakingZombie;
 
