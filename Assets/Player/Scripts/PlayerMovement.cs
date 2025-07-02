@@ -30,7 +30,8 @@ public class PlayerMovement : MonoBehaviour
     private float regenTimer;
     public bool canSprint => currentStamina > 0;
 
-
+    private int currentJumpCount;
+    private float currentAnimSpeed = 0f;
     Vector3 moveDir;
     Vector3 playerVel;
     bool isSprinting;
@@ -41,21 +42,22 @@ public class PlayerMovement : MonoBehaviour
     public void HandleMove()//Movement
     {
         HandleJump();
-        wasGrounded = controller.isGrounded;
 
-        if (controller.isGrounded)
+
+        if (controller.isGrounded && playerVel.y < 0)
         {
             isJumped = false;
-            playerVel = Vector3.zero;
+            playerVel.y = 0f;
+            currentJumpCount = 0;
         }
+
 
         moveDir = (Input.GetAxis("Horizontal") * transform.right) +
                   (Input.GetAxis("Vertical") * transform.forward);
         float currentSpeed = isSprinting ? walkSpeed * sprintMultiplier : walkSpeed;
         controller.Move(moveDir * currentSpeed * Time.deltaTime);
 
-        if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
-            animator.SetBool("isWalking", moveDir.magnitude > 0.1f);
+        SetAnimations();
 
 
         controller.Move(playerVel * Time.deltaTime);
@@ -64,6 +66,26 @@ public class PlayerMovement : MonoBehaviour
         if (controller.isGrounded && moveDir.magnitude > 0.3f && !isPlayingStep)
             StartCoroutine(PlaySteps());
     }
+
+    void SetAnimations()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
+        {
+
+            float targetSpeed = 0f;
+
+            if (moveDir.magnitude > 0.1f)
+                targetSpeed = isSprinting ? 1f : 0.5f;
+
+            // Smoothly transition to the target speed
+            currentAnimSpeed = Mathf.MoveTowards(currentAnimSpeed, targetSpeed, Time.deltaTime * 1f);
+
+            animator.SetFloat("Speed", currentAnimSpeed);
+
+            animator.SetFloat("AnimFreeze", controller.isGrounded ? 1f : 0f);
+        }
+    }
+
 
     public void HandleSprint()//Sprint
     {
@@ -88,8 +110,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
-            animator.SetBool("isRunning", isSprinting && moveDir.magnitude > 0.1f);
+       SetAnimations();
 
         if (staminaSlider != null)
             staminaSlider.value = currentStamina;
@@ -98,10 +119,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleJump()//Jump
     {
-        if (Input.GetButtonDown("Jump") && wasGrounded)
+        if (Input.GetButtonDown("Jump") && currentJumpCount < jumpMax)
         {
             playerVel.y = jumpForce;
             isJumped = true;
+            currentJumpCount++;
 
             if (audioJump != null && audioJump.Length > 0)
                 aud.PlayOneShot(audioJump[Random.Range(0, audioJump.Length)]/*, audioJumpVol*/);
