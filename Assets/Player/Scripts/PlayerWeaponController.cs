@@ -104,7 +104,6 @@ public class PlayerWeaponManager : MonoBehaviour
         EquipWeapon(gunList.Count - 1);
     }
 
-
     public void HandleShooting()//Handles Shooting
     {
         if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
@@ -142,6 +141,9 @@ public class PlayerWeaponManager : MonoBehaviour
             }
         }
 
+
+
+
         if (!Input.GetButton("Fire1"))
             playedEmptySound = false;
 
@@ -156,7 +158,7 @@ public class PlayerWeaponManager : MonoBehaviour
         GunStats currentGun = gunList[currentWeaponIndex];
 
         if (currentGun.shootSound != null)
-            aud.PlayOneShot(currentGun.shootSound, currentGun.shootVol);
+            aud.PlayOneShot(currentGun.shootSound/*, currentGun.shootVol*/);
 
         Ray ray;
         if (isAiming)
@@ -190,15 +192,13 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             RaycastHit hit = validHit.Value;
 
-            iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
-            IDamage dmg = hit.collider.GetComponent<IDamage>();
-
-
-            if (hit.collider.CompareTag("Enemy") && enemyHealth != null)
+            if (hit.collider.CompareTag("Enemy"))
             {
-
-                GameManager.instance.SetCurrentEnemy(enemyHealth);
-            
+                iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
+                if (enemyHealth != null)
+                {
+                    GameManager.instance.SetCurrentEnemy(enemyHealth);
+                }
             } else
             {
                 if (hit.collider.CompareTag("Enemy"))
@@ -224,7 +224,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 Destroy(bloodEffect, 0.5f);
             }
 
-            
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
             if (dmg != null)
                 dmg.takeDamage(currentGun.shootDamage);
 
@@ -267,8 +267,8 @@ public class PlayerWeaponManager : MonoBehaviour
         if (animator != null && animator.runtimeAnimatorController != null)
             animator.SetTrigger("Reload");
 
-        if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound, 0.8f);
-        if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie, 0.8f);
+        if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound/*, 0.8f*/);
+        //if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie/*, 0.8f*/);
         yield return new WaitForSeconds(gun.reloadTime);
 
         int needed = gun.ammoMax - gun.ammoCur;
@@ -347,7 +347,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             isAutomaticMode = !isAutomaticMode;
             if (currentGun.fireModeSwitchSound != null)
-                aud.PlayOneShot(currentGun.fireModeSwitchSound, 0.6f);
+                aud.PlayOneShot(currentGun.fireModeSwitchSound/*, 0.6f*/);
         }
     }
 

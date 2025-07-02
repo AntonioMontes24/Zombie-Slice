@@ -10,18 +10,28 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void restart()
     {
-        GameManager.instance.respawnHook?.Invoke();
-        GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
-        GameManager.instance.stateUnpause();
+        //GameManager.instance.respawnHook?.Invoke();
+        //GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
+        //GameManager.instance.stateUnpause();
 
-        if(KillManager.instance != null)
+        if(GameManager.instance != null)
         {
-            KillManager.instance.ResetKills();
+            GameManager.instance.stateUnpause();
         }
+        SceneManager.LoadScene("Zombie_Scene(Main)");
+
+        //if (KillManager.instance != null)
+        //{
+        //    KillManager.instance.ResetKills();
+        //}
     }
     public void options()
     {
         // saving this for later
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OptionsMenu();
+        }
     }
 
     public void quit()
@@ -40,7 +50,7 @@ public class ButtonFunctions : MonoBehaviour
     [SerializeField] private KeyCode interactKey = KeyCode.X;
     [SerializeField] private TMP_Text InteractText;
 
-    private float holdTimer = 0f;
+    //private float holdTimer = 0f;
     private bool isPlayerNearDoor = false;
 
     private void Update()
@@ -91,7 +101,7 @@ public class ButtonFunctions : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerNearDoor = false;
-            holdTimer = 0f;
+            //holdTimer = 0f;
         }
     }
 }
