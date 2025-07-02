@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System.Linq;
 
 
 public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
@@ -34,6 +35,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
     int biteCounter;                                        // incremented until we hit the biteRate
     [SerializeField] int biteRate;                          // our bite cooldown
     [SerializeField] int biteDamage;                        // how much damage does a bite do?
+
+    List<PickupSpawner> pickups;
 
     public int CurrentHealth
     {
@@ -78,6 +81,9 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
         // wait 2 seconds
         yield return new WaitForSeconds(2);
 
+        foreach (var p in pickups)
+            p.Spawn();
+
         Destroy(gameObject);
 
         // update the number of zombies left in stage
@@ -120,6 +126,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        pickups.AddRange(GetComponents<PickupSpawner>());
+        pickups.AddRange(GetComponentsInChildren<PickupSpawner>());
         currHealth = _maxHealth;
         // increase the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(1);

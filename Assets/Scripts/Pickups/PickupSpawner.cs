@@ -20,7 +20,7 @@ public class PickupSpawner : MonoBehaviour
         }
         for (int i = 0; i < count; i++)
         {
-            var t = Instantiate(pickup[Random.Range(0, pickup.Length - 1)], transform.position, Quaternion.identity).GetComponent<Transform>();
+            var t = Instantiate(pickup[Random.Range(0, pickup.Length)], transform.position, Quaternion.identity).GetComponent<Transform>();
             var pos = transform.position + new Vector3(Random.Range(minSpawnArea, maxSpawnArea), 0, Random.Range(minSpawnArea, maxSpawnArea));
             t.SetPositionAndRotation(pos, Quaternion.Euler(0, Random.Range(0, 360), 0));
         }

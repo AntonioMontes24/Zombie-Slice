@@ -41,7 +41,12 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         playerMovement.HandleMove();//Updates Movement Handling 
         playerMovement.HandleSprint();// Updates Sprint handling
         playerMovement.HandleLanding();// updates landing handling
+        playerMovement.HandleJump();
+        if (!GameManager.instance.isPaused)
+        {
         weaponManager.HandleShooting();// updates shooting
+
+        }
         HandleWeaponSwitch();
 
         if (weaponManager.HasGun())
@@ -56,7 +61,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
             if (!hasPlayedPickup)
             {
-                StartCoroutine(PlayPickupAndEnableArms());
+                StartCoroutine(PlayPickupAnimation());
             }
         }
 
@@ -86,21 +91,40 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
             leanRoot.localRotation = leanRot;
     }
 
-    private IEnumerator PlayPickupAndEnableArms()
+    public IEnumerator PlayPickupAnimation()
     {
         hasPlayedPickup = true;
-        if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
-            animator.SetBool("HasGun", true);
-        Debug.Log("Setting Has Gun = true");
+        PlayGunTakeOutAnimation();
 
         if (freakingZombie != null && audioSource != null)
             audioSource.PlayOneShot(freakingZombie/*, 0.8f*/);
 
         yield return new WaitForSeconds(0.1f);
+        EnableHands();
+    }
+    private void EnableHands()
+    {
         if (armsModel != null)
         {
-            armsModel.SetActive(true);
+            armsModel.SetActive(true );
         }
+    }
+
+    public void PlayGunTakeOutAnimation()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            animator.ResetTrigger("GunTakeOut");
+            animator.SetTrigger("GunTakeOut");
+        }
+        StartCoroutine(BlockFireDuringGunSwitch(0.7f));
+    }
+
+    public IEnumerator BlockFireDuringGunSwitch(float duration )
+    {
+        weaponManager.SetCanFire(false);
+        yield return new WaitForSeconds(duration);
+        weaponManager.SetCanFire(true);
     }
 
     void HandleWeaponSwitch()

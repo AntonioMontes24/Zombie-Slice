@@ -60,6 +60,7 @@ public class PlayerWeaponManager : MonoBehaviour
     bool isAiming;
     GameObject currentWeaponInstance;
 
+    private bool canFire = true;
     private PlayerMovement movement;
 
     //GunRecoil and position
@@ -104,9 +105,9 @@ public class PlayerWeaponManager : MonoBehaviour
         EquipWeapon(gunList.Count - 1);
     }
 
-
     public void HandleShooting()//Handles Shooting
     {
+        if(!canFire) return;
         if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
             return;
 
@@ -417,6 +418,8 @@ public class PlayerWeaponManager : MonoBehaviour
 
         ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
 
+        Object.FindFirstObjectByType<PlayerController>().PlayGunTakeOutAnimation();
+
         for (int i = 0; i < weaponIcons.Count; i++)
         {
             bool hasWeapon = i < gunList.Count && gunList[i].gunIcon != null;
@@ -465,6 +468,11 @@ public class PlayerWeaponManager : MonoBehaviour
         if (index == currentWeaponIndex) return;
 
         EquipWeapon(index);
+    }
+
+    public void SetCanFire(bool value)
+    {
+        canFire = value;
     }
 
 }

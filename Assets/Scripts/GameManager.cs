@@ -72,10 +72,13 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 1.0f;
         timeScaleOrig = Time.timeScale;
-
-        playerSpawnPoint = GameObject.FindWithTag("Respawn").transform.position;
+        var respawnPoint = GameObject.FindWithTag("Respawn");
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
+        if (respawnPoint == null)
+            playerSpawnPoint = player.transform.position;
+        else
+            playerSpawnPoint = respawnPoint.transform.position;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

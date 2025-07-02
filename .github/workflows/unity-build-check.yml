@@ -1,0 +1,28 @@
+name: Unity Build Check
+
+on:
+  pull_request:
+    branches: [ staging ]
+  push:
+    branches: [ staging ]
+
+jobs:
+  build-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache Unity packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.unity3d
+            ~/.cache/unity3d
+          key: ${{ runner.os }}-unity
+
+      - name: Unity - Test Project Builds
+        uses: game-ci/unity-builder@v4
+        with:
+          unityVersion: 6000.1.6f1
+          targetPlatform: StandaloneWindows64
