@@ -22,7 +22,7 @@ public class enemyAI : MonoBehaviour, IDamage
     [SerializeField] Animator anim;
 
     Color colorOrig;
-    public GameObject playerObj;
+    //public GameObject playerObj;
     private float origY;
     float hitTimer;
     float angleToPlayer;
@@ -42,7 +42,7 @@ public class enemyAI : MonoBehaviour, IDamage
         colorOrig = model.material.color;
         ObjectiveManager.instance.updateZombieCount(1);
         startingPos = transform.position;
-        playerObj = GameObject.FindWithTag("Player");
+        //playerObj = GameObject.FindWithTag("Player");
         stoppingDistOrig = agent.stoppingDistance;
         origY = transform.position.y; // Grab Y
     }
@@ -100,9 +100,9 @@ public class enemyAI : MonoBehaviour, IDamage
 
     void seePlayer()
     {
-        if (playerObj == null) return;
+        
 
-        Vector3 playerGroundPOS = new Vector3(playerObj.transform.position.x, origY, playerObj.transform.position.z);
+        Vector3 playerGroundPOS = new Vector3(GameManager.instance.player.transform.position.x, origY, GameManager.instance.player.transform.position.z);
         Vector3 directionPlayer = playerGroundPOS - transform.position;
         Vector3 dirFlat = new Vector3(directionPlayer.x, 0, directionPlayer.z);//Was moving upwards as it got closer to the player
 

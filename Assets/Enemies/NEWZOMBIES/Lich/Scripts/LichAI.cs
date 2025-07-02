@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
+//using Unity.VisualScripting;
 
 
 public class LichAI : MonoBehaviour, IDamage, iEnemyHealth

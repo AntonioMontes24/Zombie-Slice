@@ -14,6 +14,7 @@ public class newEnemyAI : MonoBehaviour, IDamage
     [SerializeField] NavMeshAgent agent;
     [SerializeField] int roamDist;
     [SerializeField] int roamStopTime;
+    //[SerializeField] int hitDmg;
  
     float startSpeed;
 
@@ -23,7 +24,6 @@ public class newEnemyAI : MonoBehaviour, IDamage
     bool inRange = false;
     bool meleeRange = false;
     bool isDead = false;
-    bool headHit;
     // public GameObject playerObj;
     public Collider z1Collide;
     Color originalColor;
@@ -71,12 +71,6 @@ public class newEnemyAI : MonoBehaviour, IDamage
         {
             inRange = true;
         }
-        // if (other.gameObject.CompareTag("Enemy_head"))
-        // {
-        //     headHit = true;
-        // }
-        // else
-        //     headHit = false;
     }
 
     void OnTriggerExit(Collider other)
@@ -243,8 +237,6 @@ public class newEnemyAI : MonoBehaviour, IDamage
     public void takeDamage(int amount)
     {
         if (isDead) return;
-        //HP -= amount;
-       
         HP -= amount;
         StartCoroutine(getHitAnim());
         inRange = true;
