@@ -95,7 +95,7 @@ public class v2Mover : MonoBehaviour
         if (distance < stopDistPlayer)
         {
             agent.isStopped = true;
-
+            
         }
         else
         {
@@ -123,6 +123,7 @@ public class v2Mover : MonoBehaviour
             Vector3 playerGroundPOS = new Vector3(GameManager.instance.player.transform.transform.position.x, 0, GameManager.instance.player.transform.transform.position.z);
             agent.stoppingDistance = stopDist;
             agent.SetDestination(playerGroundPOS);
+            agent.speed = 6.0f;
         }
     }
 

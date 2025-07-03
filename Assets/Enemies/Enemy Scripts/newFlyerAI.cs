@@ -24,6 +24,7 @@ public class newFlyerAI : MonoBehaviour, IDamage
     {
         parentPos = transform.position;
         ObjectiveManager.instance.updateZombieCount(1);
+        playerObj = GameManager.instance.player;
     }
 
     // Update is called once per frame
@@ -91,7 +92,7 @@ public class newFlyerAI : MonoBehaviour, IDamage
     IEnumerator death()
     {
         anim.SetBool("isDead", true);
-        float dropSpeed = 1.5f;
+        float dropSpeed = 2.0f;
         float elapsed = 0f;
         Vector3 startPos = transform.position; //Current position
         Vector3 targetPos = new Vector3(startPos.x, 0f, startPos.z); //Drop location on y axis
