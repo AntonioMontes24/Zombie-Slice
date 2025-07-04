@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
     [SerializeField] public GameObject armsModel;
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip freakingZombie;
+    [SerializeField] private AudioClip weaponSwap;
     [SerializeField] private Transform leftArm;
 
     [SerializeField] private float leanAngle;
@@ -91,8 +91,8 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         hasPlayedPickup = true;
         PlayGunTakeOutAnimation();
 
-        if (freakingZombie != null && audioSource != null)
-            audioSource.PlayOneShot(freakingZombie/*, 0.8f*/);
+        if (weaponSwap != null && audioSource != null)
+            audioSource.PlayOneShot(weaponSwap/*, 0.8f*/);
 
         yield return new WaitForSeconds(0.1f);
         EnableHands();
