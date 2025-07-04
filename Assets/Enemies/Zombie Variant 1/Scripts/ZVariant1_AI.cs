@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 
-public class ZVariant1_AI : MonoBehaviour, IDamage
+public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 {
     // create some serialized variables
     [SerializeField] int currHealth;                        // the current health 
+    [SerializeField] int _maxHealth;                         // the max health
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -23,24 +24,29 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
     float angle_to_player;                                  // the angle to the player 
 
     // attack fields
-    // bool canAttack;                                          // can we attack
+    bool canAttack;                                          // can we attack
     int attackCounter;                                       // incremented until we hit the attackRate
     [SerializeField] int attackRate;                         // our Attack is on cooldown
     [SerializeField] int attackDamage;                       // how much damage do we do
 
-    [SerializeField] Collider clawCollider;                 // claw collider
+    public int CurrentHealth
+    {
+        get { return currHealth; }
+    }
 
-    [SerializeField] int roamDistance;                      // max distance he can roam from start position
-    [SerializeField] int roamStopTimer;                     // how long before he roams again
-    Vector3 startingPostion;                                // where his spawn position is
-    float roamTime;                                         // counter to see if he can roam 
-    float stoppingDistanceOriginal;                         // cache off the original stopping distance
+    public int maxHealth
+    {
+        get { return _maxHealth; }
+    }
+
 
     public void takeDamage(int amount)
     {
         if (currHealth > 0)
         {
             currHealth -= amount;
+
+            GameManager.instance.UpdateEnemyHealthBar(this);
 
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
@@ -51,6 +57,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
             {
                 // remove the corpse by destroying the gameObject
                 StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
             }
         }
     }
@@ -73,40 +80,23 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
-            animator.SetTrigger("swipe");
+            animator.SetBool("canAttack", true);
 
+            // wait 1 second
             yield return new WaitForSeconds(1);
+
+            animator.SetBool("canAttack", false);
 
             // assign damage to the player
             IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
             player_dmg.takeDamage(attackDamage);
         }
+
     }
-
-    public void clawColliderOn()
-    {
-        if (clawCollider)
-            clawCollider.enabled = true;
-    }
-
-    public void clawColliderOff()
-    {
-        if (clawCollider)
-            clawCollider.enabled = false;
-    }
-
-    private void Awake()
-    {
-        // set our starting position so that we know how far we can roam. This is the point we will check from
-        startingPostion = transform.position;
-
-        // set our stopping distance to the stopping distance in Unity
-        stoppingDistanceOriginal = agent.stoppingDistance;
-    }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        currHealth = maxHealth;
         // increase the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(1);
     }
@@ -116,31 +106,17 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
     {
         if (currHealth >= 0)
         {
-            // check if we need to increment our roam or just roam
-            if (agent.remainingDistance < 0.01f)
-            {
-                roamTime += Time.deltaTime;
-                animator.SetFloat("Speed", 0);
-            }
-            if (playerInRange && !canWeSeeThePlayer())
-            {
-                roamCheck();
-            }
-            else if (!playerInRange)
-            {
-                roamCheck();
-            }
-            
-            // check if we can see the player and we are in range
             if (playerInRange && canWeSeeThePlayer())
             {
-                // reset the stopping distance
-                agent.stoppingDistance = stoppingDistanceOriginal;
-
+                
+      
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     // we need to face the player
                     faceTarget();
+
+                    // set my bool for animator
+                    animator.SetBool("inMeleeRange", true);
 
                     // need to check for biteAttack 
                     if (attackCounter >= attackRate)
@@ -156,6 +132,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
                 else
                 {
                     attackCounter++;
+                    animator.SetBool("inMeleeRange", false);
                 }
             }
         }
@@ -209,13 +186,14 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
                 // agent.SetDestination(GameManager.instance.player.transform.position);
 
                 agent.SetDestination(GameManager.instance.player.transform.position);
-                animator.SetFloat("Speed", 1);
+
+                if (animator != null && animator.runtimeAnimatorController != null)
+                    animator.SetBool("isWalking", true);
 
                 // face the target
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     faceTarget();
-                    animator.SetFloat("Speed", 0);
                 }
 
                 // we need to return true since we found the player
@@ -224,36 +202,8 @@ public class ZVariant1_AI : MonoBehaviour, IDamage
 
         }
 
+        // we did not hit the player
+        animator.SetBool("isWalking", false);
         return false;
-    }
-
-    void roam()
-    {
-        // reset the timer
-        roamTime = 0;
-
-        // make sure he is able to get to the location and not stop short
-        agent.stoppingDistance = 0;
-
-        // grab a random spot in our sphere on the navmesh
-        Vector3 randPos = Random.insideUnitSphere * roamDistance;
-        randPos += startingPostion;
-
-        // check if the position is on the navmesh
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randPos, out hit, roamDistance, 1);
-
-        // move
-        agent.SetDestination(hit.position);
-        animator.SetFloat("Speed", 1);
-    }
-
-    void roamCheck()
-    {
-        // can i roam and am I stopped. 
-        if (roamTime >= roamStopTimer && agent.remainingDistance < 0.1f)
-        {
-            roam();
-        }
     }
 }

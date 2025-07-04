@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 
-public class ZBodyguardAI : MonoBehaviour, IDamage
+public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
 {
     // create some serialized variables
     [SerializeField] int currHealth;                        // the current health 
-    [SerializeField] int maxHealth;                         // the maximum or starting health of the enemy
+    [SerializeField] int _maxHealth;                         // the maximum or starting health of the enemy
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -47,6 +47,18 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
 
     [SerializeField] int animSpeedTransition;               // for the LERP on transitions
 
+
+    public int CurrentHealth
+    {
+        get { return currHealth; }
+    }
+
+    public int maxHealth
+    {
+        get { return _maxHealth; }
+    }
+
+
     // for IDamage
     public void takeDamage(int amount)
     {
@@ -57,7 +69,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
         {
             currHealth -= amount;
 
-            
+            GameManager.instance.UpdateEnemyHealthBar(this);
 
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
@@ -68,6 +80,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
             {
                 // remove the corpse by destroying the gameObject
                 StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
             }
         }
     }
@@ -139,8 +152,8 @@ public class ZBodyguardAI : MonoBehaviour, IDamage
         ObjectiveManager.instance.updateZombieCount(1);
 
         // set our HP variables for the health bar
-        currHealth = maxHealth;
-        
+        currHealth = _maxHealth;
+
         // set our starting position so that we know how far we can roam. This is the point we will check from
         startingPostion = transform.position;
         // set our stopping distance to the stopping distance in Unity

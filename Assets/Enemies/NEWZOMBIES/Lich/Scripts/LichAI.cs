@@ -3,13 +3,13 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
 
 
-public class LichAI : MonoBehaviour, IDamage
+public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 {
     // create some serialized variables
-    [SerializeField] int currHealth;                        // the current health 
+    [SerializeField] int currHealth;                        // the current health
+    [SerializeField] int _maxHealth;                        // max health of lich
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -50,14 +50,22 @@ public class LichAI : MonoBehaviour, IDamage
     // 1. Blightball 
     // 2. Blight Storm
 
+    public int CurrentHealth
+    {
+        get { return currHealth; }
+    }
+
+    public int maxHealth
+    {
+        get { return _maxHealth; }
+    }
+
     IEnumerator removeCorpse()
     {
         animator.SetTrigger("isDead");
 
         // wait 2 seconds
         yield return new WaitForSeconds(2);
-
-        ObjectiveManager.instance.updateZombieCount(-1);
 
         Destroy(gameObject);
 
@@ -113,11 +121,13 @@ public class LichAI : MonoBehaviour, IDamage
         if (currHealth > 0)
         {
             currHealth -= amount;
+            GameManager.instance.UpdateEnemyHealthBar(this);
 
             if (currHealth <= 0)
             {
                 // remove the corpse by destroying the gameObject
                 StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
             }
         }
     }
@@ -125,7 +135,9 @@ public class LichAI : MonoBehaviour, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        currHealth = _maxHealth;
         ObjectiveManager.instance.updateZombieCount(1);
+
     }
 
     // Update is called once per frame

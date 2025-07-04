@@ -10,18 +10,28 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void restart()
     {
-        GameManager.instance.respawnHook?.Invoke();
-        GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
-        GameManager.instance.stateUnpause();
+        //GameManager.instance.respawnHook?.Invoke();
+        //GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
+        //GameManager.instance.stateUnpause();
 
-        if(KillManager.instance != null)
+        if(GameManager.instance != null)
         {
-            KillManager.instance.ResetKills();
+            GameManager.instance.stateUnpause();
         }
+        SceneManager.LoadScene("Zombie_Scene(Main)");
+
+        //if (KillManager.instance != null)
+        //{
+        //    KillManager.instance.ResetKills();
+        //}
     }
     public void options()
     {
         // saving this for later
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OptionsMenu();
+        }
     }
 
     public void quit()
@@ -35,35 +45,41 @@ public class ButtonFunctions : MonoBehaviour
     }
 
     [Header("Door Interaction")]
-    [SerializeField] private float holdDuration = 2f;
+    [SerializeField] private float holdDuration = 1f;
     [SerializeField] private int sceneBuildIndex = 2;
     [SerializeField] private KeyCode interactKey = KeyCode.X;
     [SerializeField] private TMP_Text InteractText;
 
-    private float holdTimer = 0f;
+    //private float holdTimer = 0f;
     private bool isPlayerNearDoor = false;
 
     private void Update()
     {
-        if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() == 0)
-        {
-            InteractText.gameObject.SetActive(true);
+        //if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() <= 1)
+        //{
+        //    InteractText.gameObject.SetActive(true);
 
-            if (Input.GetKey(interactKey))
-            {
-                holdTimer += Time.deltaTime;
+        //    if (Input.GetKey(interactKey))
+        //    {
+        //        holdTimer += Time.deltaTime;
 
-                if (holdTimer >= holdDuration)
-                {
-                    LoadTargetScene();
-                }
-            }
-            else
-            {
-                InteractText.gameObject.SetActive(false);
-                holdTimer = 0f;
-            }
-        }
+        //        if (holdTimer >= holdDuration)
+        //        {
+        //            LoadTargetScene();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        holdTimer = 0f;
+        //    }
+        //}
+
+        //else
+        //{
+        //    InteractText.gameObject.SetActive(false);
+        //    holdTimer = 0f;
+        //}
+        
     }
 
     private void LoadTargetScene()
@@ -85,7 +101,7 @@ public class ButtonFunctions : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerNearDoor = false;
-            holdTimer = 0f;
+            //holdTimer = 0f;
         }
     }
 }

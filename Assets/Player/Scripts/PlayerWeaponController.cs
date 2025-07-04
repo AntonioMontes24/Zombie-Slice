@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using System.Linq;
-using UnityEngine.UIElements;
-using Unity.VisualScripting;
+using UnityEngine.UI;
+using NUnit.Framework;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
@@ -18,6 +18,11 @@ public class PlayerWeaponManager : MonoBehaviour
     [Header("Weapon Components")]
     [SerializeField] AudioSource aud;
     [SerializeField] Camera gameplayCamera;
+    [SerializeField] public List<Image> hotBarSlots = new List<Image>();
+    [SerializeField] int currentWeaponIndex;
+    [SerializeField] List<Image> weaponIcons = new List<Image>();
+    [SerializeField] List<Button> buttonHiglight = new List<Button>();
+    private List<ColorBlock> originalButtonColors = new List<ColorBlock>();
 
     [Header("VFX Prefabs")]
     [SerializeField] GameObject muzzleFlashPrefab;
@@ -55,6 +60,7 @@ public class PlayerWeaponManager : MonoBehaviour
     bool isAiming;
     GameObject currentWeaponInstance;
 
+    private bool canFire = true;
     private PlayerMovement movement;
 
     //GunRecoil and position
@@ -77,47 +83,37 @@ public class PlayerWeaponManager : MonoBehaviour
         movement = GetComponentInParent<PlayerMovement>();
         if (movement == null)
             Debug.LogWarning("Player movement not found in parent");
+
+        originalButtonColors.Clear();// Grabs original HotBar color
+        foreach (var bnt in buttonHiglight)
+        {
+            if (bnt != null)
+                originalButtonColors.Add(bnt.colors);
+            else
+                originalButtonColors.Add(default);
+        }
     }
 
-    public void GetGunStats(GunStats gun)//---Gets gun and gunstats
+    public void GetGunStats(GunStats gun, int startingAmmo = -1, int reserveAmmo = -1)// Optional Parameters to modify starting ammo 
     {
-        // Add to inventory
         GunStats runtimeGun = gun.Clone();
+
+        runtimeGun.ammoCur = (startingAmmo >= 0) ? startingAmmo : runtimeGun.ammoMax;
+        runtimeGun.ammoReserve = (reserveAmmo >= 0) ? reserveAmmo : runtimeGun.maxAmmoReserve;
+
         gunList.Add(runtimeGun);
-        runtimeGun.ammoCur = runtimeGun.ammoMax;
-        isAutomaticMode = gun.isAutomaticDefault;
-
-        // Destroy previous weapon if exists
-        if (currentWeaponInstance != null)
-            Destroy(currentWeaponInstance);
-
-        // Instantiate weapon prefab
-        currentWeaponInstance = Instantiate(gun.gunModel, weaponHolder);
-        currentWeaponInstance.transform.localPosition = Vector3.zero;
-        currentWeaponInstance.transform.localRotation = Quaternion.identity;
-
-        // Assign important weapon transforms
-        currentHipPosition = currentWeaponInstance.transform.Find("HipPosition");
-        currentAdsPosition = currentWeaponInstance.transform.Find("ADSPosition");
-        barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
-        shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
-
-        if (barrelTip == null)
-            Debug.LogWarning("BarrelTip not found in: " + gun.name);
-        if (currentHipPosition == null)
-            Debug.LogWarning("HipPosition not found in: " + gun.name);
-
-        ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+        EquipWeapon(gunList.Count - 1);
     }
 
     public void HandleShooting()//Handles Shooting
     {
+        if(!canFire) return;
         if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
             return;
 
         shootCooldown -= Time.deltaTime;
         if (gunList.Count == 0) return;
-        GunStats currentGun = gunList[gunList.Count - 1];
+        GunStats currentGun = gunList[currentWeaponIndex];
         if (isReloading) return;
 
         bool fireInput = isAutomaticMode ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1");
@@ -158,10 +154,10 @@ public class PlayerWeaponManager : MonoBehaviour
     void Shoot()//Handles damage/Ray cast/ and checks for current gun and gun stats
     {
         if (gunList.Count == 0 || gameplayCamera == null) return;
-        GunStats currentGun = gunList[gunList.Count - 1];
+        GunStats currentGun = gunList[currentWeaponIndex];
 
         if (currentGun.shootSound != null)
-            aud.PlayOneShot(currentGun.shootSound, currentGun.shootVol);
+            aud.PlayOneShot(currentGun.shootSound/*, currentGun.shootVol*/);
 
         Ray ray;
         if (isAiming)
@@ -197,8 +193,18 @@ public class PlayerWeaponManager : MonoBehaviour
 
             if (hit.collider.CompareTag("Enemy"))
             {
-                GameManager.instance.enemyInfoPanel.SetActive(true);
-                GameManager.instance.enemyNameText.text = hit.collider.name;
+                iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
+                if (enemyHealth != null)
+                {
+                    GameManager.instance.SetCurrentEnemy(enemyHealth);
+                }
+            } else
+            {
+                if (hit.collider.CompareTag("Enemy"))
+                {
+                    Debug.LogWarning("Enemy hit, but iEnemyHealth component not found on: " + hit.collider.name);
+                }
+                GameManager.instance.HideEnemyUI();
             }
 
             if (currentGun.hitEffect != null)
@@ -248,6 +254,9 @@ public class PlayerWeaponManager : MonoBehaviour
             currentGunOffset.y -= weaponRecoilKick;
             currentLeftHandOffset.z -= handRecoilKick;
             currentRightHandOffset.z -= handRecoilKick;
+        } else
+        {
+            GameManager.instance.HideEnemyUI();
         }
     }
 
@@ -257,8 +266,8 @@ public class PlayerWeaponManager : MonoBehaviour
         if (animator != null && animator.runtimeAnimatorController != null)
             animator.SetTrigger("Reload");
 
-        if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound, 0.8f);
-        if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie, 0.8f);
+        if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound/*, 0.8f*/);
+        if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie/*, 0.8f*/);
         yield return new WaitForSeconds(gun.reloadTime);
 
         int needed = gun.ammoMax - gun.ammoCur;
@@ -331,13 +340,13 @@ public class PlayerWeaponManager : MonoBehaviour
     public void ToggleFireMode()//Sets Firemode
     {
         if (gunList.Count == 0) return;
-        GunStats currentGun = gunList[gunList.Count - 1];
+        GunStats currentGun = gunList[currentWeaponIndex];
 
         if (currentGun.canSwitchFireMode)
         {
             isAutomaticMode = !isAutomaticMode;
             if (currentGun.fireModeSwitchSound != null)
-                aud.PlayOneShot(currentGun.fireModeSwitchSound, 0.6f);
+                aud.PlayOneShot(currentGun.fireModeSwitchSound/*, 0.6f*/);
         }
     }
 
@@ -352,13 +361,13 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             if (gunList == null || gunList.Count == 0)
                 return null;
-            return gunList[gunList.Count - 1];
+            return gunList[currentWeaponIndex];
         }
     }
 
     public void AddAmmoToReserve(int ammoCount)
     {
-        var gun = gunList[gunList.Count - 1];
+        var gun = gunList[currentWeaponIndex];
         gun.ammoReserve += ammoCount;
         gun.ammoReserve = Mathf.Min(gun.ammoReserve, gun.maxAmmoReserve);
         StartCoroutine(AmmoFlash());
@@ -380,4 +389,89 @@ public class PlayerWeaponManager : MonoBehaviour
             ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
         }
     }
+
+    public void EquipWeapon(int index)// Equips weapon and assings Gun icon
+    {
+        if (index < 0 || index >= gunList.Count)
+        {
+            Debug.LogWarning("EquipWeapon: Invalid index");
+            return;
+        }
+
+        currentWeaponIndex = index;
+        GunStats gun = gunList[currentWeaponIndex];
+        isAutomaticMode = gun.isAutomaticDefault;
+
+        if (currentWeaponInstance != null)
+            Destroy(currentWeaponInstance);
+
+        currentWeaponInstance = Instantiate(gun.gunModel, weaponHolder);
+        currentWeaponInstance.transform.localPosition = Vector3.zero;
+        currentWeaponInstance.transform.localRotation = Quaternion.identity;
+
+        currentHipPosition = currentWeaponInstance.transform.Find("HipPosition");
+        currentAdsPosition = currentWeaponInstance.transform.Find("ADSPosition");
+        barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
+        shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
+
+        ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+
+        var player = Object.FindFirstObjectByType<PlayerController>();
+        player.StartCoroutine(player.PlayPickupAnimation(gun.isOneHanded));
+
+        for (int i = 0; i < weaponIcons.Count; i++)
+        {
+            bool hasWeapon = i < gunList.Count && gunList[i].gunIcon != null;
+
+            if (weaponIcons[i] != null)
+            {
+                weaponIcons[i].enabled = hasWeapon;
+
+                if (hasWeapon)
+                {
+                    weaponIcons[i].sprite = gunList[i].gunIcon;
+                    weaponIcons[i].color = Color.white;
+                }
+            }
+
+            if (buttonHiglight != null && i < buttonHiglight.Count && buttonHiglight[i] != null)
+            {
+                ColorBlock cb = originalButtonColors[i];
+                cb.normalColor = (i == index) ? Color.white : originalButtonColors[i].normalColor;
+                cb.highlightedColor = (i == index) ? Color.white : originalButtonColors[i].highlightedColor;
+                cb.selectedColor = cb.normalColor;
+                cb.pressedColor = originalButtonColors[i].pressedColor;
+                buttonHiglight[i].colors = cb;
+
+                buttonHiglight[i].gameObject.SetActive(hasWeapon);
+            }
+        }
+    }
+
+
+    public void ScrollWeapon(int direction)// Scroll weapon selection 
+    {
+        if (gunList.Count == 0) return;
+
+        int newIndex = (currentWeaponIndex + direction + gunList.Count) % gunList.Count;
+
+        if (newIndex == currentWeaponIndex)
+            return; // Don't re-equip the same weapon
+
+        EquipWeapon(newIndex);
+    }
+
+    public void TryEquipWeapon(int index)
+    {
+        if (index < 0 || index >= gunList.Count) return;
+        if (index == currentWeaponIndex) return;
+
+        EquipWeapon(index);
+    }
+
+    public void SetCanFire(bool value)
+    {
+        canFire = value;
+    }
+
 }
