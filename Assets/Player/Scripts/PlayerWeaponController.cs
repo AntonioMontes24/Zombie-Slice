@@ -417,7 +417,6 @@ public class PlayerWeaponManager : MonoBehaviour
         ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
 
         Object.FindFirstObjectByType<PlayerController>().PlayGunTakeOutAnimation();
-
         for (int i = 0; i < weaponIcons.Count; i++)
         {
             bool hasWeapon = i < gunList.Count && gunList[i].gunIcon != null;
