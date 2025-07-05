@@ -263,4 +263,14 @@ public class GameManager : MonoBehaviour
         currentEnemy = null;
     }
 
+    public void ResetBarriers()
+    {
+        ProgressionBarriers[] barriers = FindObjectsOfType<ProgressionBarriers>();
+        foreach (var barrier in barriers)
+        {
+            barrier.ResetBarrier();
+
+        }
+
+    }
 }
