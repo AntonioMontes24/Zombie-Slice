@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
     [SerializeField] public GameObject armsModel;
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip freakingZombie;
+    [SerializeField] private AudioClip weaponSwap;
     [SerializeField] private Transform leftArm;
 
     [SerializeField] private float leanAngle;
@@ -53,15 +53,10 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         {
             var currentGun = weaponManager.CurrentGun;
 
-            bool isPistol = currentGun.isPistol;
-            Debug.Log("Is Pistol: " + isPistol);
-
-            if (leftArm != null)
-                leftArm.localScale = isPistol ? Vector3.zero : Vector3.one;
-
             if (!hasPlayedPickup)
             {
-                StartCoroutine(PlayPickupAnimation());
+                bool isOneHanded = currentGun.isOneHanded;
+                StartCoroutine(PlayPickupAnimation(isOneHanded));
             }
         }
 
@@ -91,22 +86,51 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
             leanRoot.localRotation = leanRot;
     }
 
-    public IEnumerator PlayPickupAnimation()
+    public IEnumerator PlayPickupAnimation(bool isOneHanded)
     {
         hasPlayedPickup = true;
         PlayGunTakeOutAnimation();
 
-        if (freakingZombie != null && audioSource != null)
-            audioSource.PlayOneShot(freakingZombie/*, 0.8f*/);
+        if (weaponSwap != null && audioSource != null)
+            audioSource.PlayOneShot(weaponSwap/*, 0.8f*/);
 
         yield return new WaitForSeconds(0.1f);
         EnableHands();
+
+        yield return new WaitForSeconds(0.05f);
+        UpdateOneHandedWeaponArms(isOneHanded);
     }
     private void EnableHands()
     {
         if (armsModel != null)
         {
-            armsModel.SetActive(true );
+            armsModel.SetActive(true);
+
+            if (weaponManager != null && weaponManager.HasGun())
+            {
+                var gun = weaponManager.CurrentGun;
+                if (gun != null)
+                {
+                    Debug.Log("EnableHands: Checking for one-handed weapon");
+                    UpdateOneHandedWeaponArms(gun.isOneHanded);
+                }
+            }
+        }
+    }
+
+
+    public void UpdateOneHandedWeaponArms(bool isOneHanded)
+    {
+        Debug.Log("One Handed Function called" + isOneHanded);
+        if (leftArm != null)
+        {
+            Debug.LogWarning("Left Arm Found. Resizing");
+            leftArm.localScale = isOneHanded ? Vector3.zero : Vector3.one;
+
+        }
+        else
+        {
+            Debug.LogWarning("L Arm Reference is NULL");
         }
     }
 

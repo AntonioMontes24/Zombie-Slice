@@ -37,7 +37,7 @@ public class GunStats : ScriptableObject
     [SerializeField] public Sprite gunIcon;
 
     [Header("Weapon Type")]
-    [SerializeField] public bool isPistol;
+    [SerializeField] public bool isOneHanded;
 
 
     public GunStats Clone()
