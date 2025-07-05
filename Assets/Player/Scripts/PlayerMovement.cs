@@ -7,8 +7,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] public CharacterController controller;
     [SerializeField] float walkSpeed;
     [SerializeField] float sprintMultiplier;
-
-    [Header("Audio and Animations")]
+    [SerializeField] int jumpMax;
+    [SerializeField] float jumpForce;
+    [SerializeField] float gravity;
     [SerializeField] AudioSource aud;
     [SerializeField] AudioClip[] audioSteps;
     //[SerializeField] public float audioStepsVol;
@@ -17,14 +18,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] AudioClip[] audioLand;
     //[SerializeField] public float audioLandVol;
     [SerializeField] public Animator animator;
-
-
-    [Header("JumpSettings")]
-    [SerializeField] int jumpMax;
-    [SerializeField] float jumpForce;
-    [SerializeField] float gravity;
-    [SerializeField] float fallMultiplier;
-    [SerializeField] float lowMultiplier;
 
     [Header("Stamina Settings")]
     [SerializeField] public float maxStamina;
@@ -66,19 +59,10 @@ public class PlayerMovement : MonoBehaviour
 
         SetAnimations();
 
-        if (playerVel.y < 0)
-        {
-            playerVel.y += gravity * fallMultiplier * Time.deltaTime;
-        }
-        else if (playerVel.y > 0 && !Input.GetButton("Jump"))
-        {
-            playerVel.y += gravity * lowMultiplier * Time.deltaTime;
-        }
-        else
-        {
-            playerVel.y += gravity * Time.deltaTime;
-        }
+
         controller.Move(playerVel * Time.deltaTime);
+        playerVel.y -= gravity * Time.deltaTime;
+
         if (controller.isGrounded && moveDir.magnitude > 0.3f && !isPlayingStep)
             StartCoroutine(PlaySteps());
     }
@@ -87,24 +71,21 @@ public class PlayerMovement : MonoBehaviour
     {
         if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
         {
-            // Freeze all animation playback if not grounded
-            if (!controller.isGrounded)
-            {
-                animator.speed = 0f;
-                return; // Exit early — no need to update speed or parameters
-            }
-
-            animator.speed = 1f; // Resume animations if grounded
 
             float targetSpeed = 0f;
+
             if (moveDir.magnitude > 0.1f)
                 targetSpeed = isSprinting ? 1f : 0.5f;
 
-            // Smooth speed blending
-            currentAnimSpeed = Mathf.MoveTowards(currentAnimSpeed, targetSpeed, Time.deltaTime * 5f);
+            // Smoothly transition to the target speed
+            currentAnimSpeed = Mathf.MoveTowards(currentAnimSpeed, targetSpeed, Time.deltaTime * 1f);
+
             animator.SetFloat("Speed", currentAnimSpeed);
+
+            animator.SetFloat("AnimFreeze", controller.isGrounded ? 1f : 0f);
         }
     }
+
 
     public void HandleSprint()//Sprint
     {
