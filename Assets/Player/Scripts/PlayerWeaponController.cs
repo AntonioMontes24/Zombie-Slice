@@ -269,7 +269,7 @@ public class PlayerWeaponManager : MonoBehaviour
             animator.SetTrigger("Reload");
 
         if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound/*, 0.8f*/);
-        //if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie/*, 0.8f*/);
+        if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie/*, 0.8f*/);
         yield return new WaitForSeconds(gun.reloadTime);
 
         int needed = gun.ammoMax - gun.ammoCur;
@@ -418,7 +418,8 @@ public class PlayerWeaponManager : MonoBehaviour
 
         ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
 
-        Object.FindFirstObjectByType<PlayerController>().PlayGunTakeOutAnimation();
+        var player = Object.FindFirstObjectByType<PlayerController>();
+        player.StartCoroutine(player.PlayPickupAnimation(gun.isOneHanded));
 
         for (int i = 0; i < weaponIcons.Count; i++)
         {
