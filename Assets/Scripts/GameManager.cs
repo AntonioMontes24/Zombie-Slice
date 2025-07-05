@@ -263,9 +263,9 @@ public class GameManager : MonoBehaviour
         currentEnemy = null;
     }
 
-    public void ResetBarriers()
+    public void ResetBarriers()   //calls ResetBarrier so we can re enable colliders for Kill Based Barriers
     {
-        ProgressionBarriers[] barriers = FindObjectsOfType<ProgressionBarriers>();
+        ProgressionBarriers[] barriers = FindObjectsOfType<ProgressionBarriers>();  
         foreach (var barrier in barriers)
         {
             barrier.ResetBarrier();

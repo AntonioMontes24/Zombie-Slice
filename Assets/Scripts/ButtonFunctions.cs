@@ -24,7 +24,7 @@ public class ButtonFunctions : MonoBehaviour
         //}
     }
 
-   private void OnSceneReloaded(Scene scene, LoadSceneMode mode)
+   private void OnSceneReloaded(Scene scene, LoadSceneMode mode)  //makes sure you reload the scene with the barriers getting reset
     {
 
         SceneManager.sceneLoaded -= OnSceneReloaded;
