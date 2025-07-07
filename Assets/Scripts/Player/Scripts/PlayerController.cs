@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         playerMovement.HandleSprint();// Updates Sprint handling
         playerMovement.HandleLanding();// updates landing handling
         playerMovement.HandleJump();
+        weaponManager.HandleMeleeAttack();
+
         if (!GameManager.instance.isPaused)
         {
         weaponManager.HandleShooting();// updates shooting
@@ -49,16 +51,12 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         }
         HandleWeaponSwitch();
 
-        if (weaponManager.HasGun())
+        if (!hasPlayedPickup && weaponManager.HasGun())
         {
-            var currentGun = weaponManager.CurrentGun;
-
-            if (!hasPlayedPickup)
-            {
-                bool isOneHanded = currentGun.isOneHanded;
-                StartCoroutine(PlayPickupAnimation(isOneHanded));
-            }
+            bool isOneHanded = weaponManager.CurrentGun?.isOneHanded ?? true;
+            StartCoroutine(PlayPickupAnimation(isOneHanded));
         }
+
 
         if (Input.GetButtonDown("FireMode"))//Handles Firemode switch
         {
@@ -124,14 +122,9 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         Debug.Log("One Handed Function called" + isOneHanded);
         if (leftArm != null)
         {
-            Debug.LogWarning("Left Arm Found. Resizing");
             leftArm.localScale = isOneHanded ? Vector3.zero : Vector3.one;
+        }
 
-        }
-        else
-        {
-            Debug.LogWarning("L Arm Reference is NULL");
-        }
     }
 
     public void PlayGunTakeOutAnimation()
