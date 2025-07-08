@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuNoTime;
-    [SerializeField] TMP_Text gameTimerText;
     [SerializeField] float remainingTime;
     //[SerializeField] AudioClip musicGame;
 
@@ -123,35 +122,6 @@ public class GameManager : MonoBehaviour
                 stateUnpause();
             }
         }
-
-        if(remainingTime > 0)
-        {
-            remainingTime -= Time.deltaTime;
-        } 
-        else if (remainingTime <= 0)
-        {
-            remainingTime = 0;
-            if (!isPaused)
-            {
-                youRanOutOfTime();
-            }
-            
-            AudioManager.instance.StopMusic();
-            // youWin();
-        }
-
-        int minutes = Mathf.FloorToInt(remainingTime / 60);
-        int seconds = Mathf.FloorToInt(remainingTime % 60);
-        gameTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-        //if (isPaused && musicSource.isPlaying)
-        //{
-        //    musicSource.Pause();
-        //}
-        //else if (!isPaused && !musicSource.isPlaying)
-        //{
-        //    musicSource.UnPause();
-        //}
     }
 
     public void statePause()
