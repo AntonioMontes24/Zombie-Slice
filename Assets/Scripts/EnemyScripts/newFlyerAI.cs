@@ -23,7 +23,6 @@ public class newFlyerAI : MonoBehaviour, IDamage
     void Start()
     {
         parentPos = transform.position;
-        ObjectiveManager.instance.updateZombieCount(1);
     }
 
     // Update is called once per frame
@@ -79,8 +78,6 @@ public class newFlyerAI : MonoBehaviour, IDamage
             HP -= amount;
         }
         moverScript.forceChasePlayer();
-        if (HP <= 0)
-        ObjectiveManager.instance.updateZombieCount(-1);
     }
 
     void bomberAttack()

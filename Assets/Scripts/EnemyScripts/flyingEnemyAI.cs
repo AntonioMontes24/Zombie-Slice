@@ -33,7 +33,6 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
     void Start()
     {
         ShufflePoints();
-        ObjectiveManager.instance.updateZombieCount(1);
         flightPos = transform.position.y;
         lastPos = transform.position;
         
@@ -46,11 +45,6 @@ public class flyingEnemyAI : MonoBehaviour, IDamage
             patrolNextArea();
         else
             chasePlayer();
-        if (isDead)
-        {
-            //death animation
-        ObjectiveManager.instance.updateZombieCount(-1);
-        }
     }
 
     void setAnimations()

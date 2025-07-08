@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public Vector3 playerSpawnPoint;
-    public int currentCheckpointID;
 
     public Action respawnHook;
 
@@ -38,7 +37,6 @@ public class GameManager : MonoBehaviour
     public TMP_Text enemyNameText;
     public Image enemyHPBar;
 
-    [SerializeField] public TMP_Text zombieCountText;
     [SerializeField] public TMP_Text objectiveText;   
                               
     public GameObject player;

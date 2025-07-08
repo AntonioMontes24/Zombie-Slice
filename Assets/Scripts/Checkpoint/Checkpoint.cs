@@ -8,8 +8,6 @@ public class Checkpoint : MonoBehaviour
     [SerializeField] bool usesSceneChange;
     [SerializeField] string nextSceneName;
 
-    public int checkpointID;
-
     [SerializeField] Renderer[] models;
     Color color = Color.white;
 
@@ -23,7 +21,6 @@ public class Checkpoint : MonoBehaviour
         else
         {
             GameManager.instance.playerSpawnPoint = transform.position;
-            GameManager.instance.currentCheckpointID = checkpointID;
             StartCoroutine(Flash());
         }
     }

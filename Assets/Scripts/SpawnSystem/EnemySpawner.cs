@@ -55,7 +55,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        ObjectiveManager.instance.updateSpawnerCount(1);
     }
 
     bool stopped;
@@ -66,7 +65,6 @@ public class EnemySpawner : MonoBehaviour
         if (waveIdx >= waveCount && !stopped)
         {
             stopped = true;
-            ObjectiveManager.instance.updateSpawnerCount(-1);
             return;
         }
         timer += Time.deltaTime;

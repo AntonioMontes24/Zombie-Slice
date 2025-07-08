@@ -70,10 +70,6 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         yield return new WaitForSeconds(2);
 
         Destroy(gameObject);
-
-        // update the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(-1);
-
     }
 
     IEnumerator attack()
@@ -97,8 +93,6 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     void Start()
     {
         currHealth = maxHealth;
-        // increase the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(1);
     }
 
     // Update is called once per frame

@@ -136,7 +136,6 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
     void Start()
     {
         currHealth = _maxHealth;
-        ObjectiveManager.instance.updateZombieCount(1);
 
     }
 

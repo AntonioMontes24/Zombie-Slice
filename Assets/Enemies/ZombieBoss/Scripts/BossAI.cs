@@ -75,9 +75,6 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
         yield return new WaitForSeconds(2);
 
         Destroy(gameObject);
-
-        // update the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(-1);
     }
 
     IEnumerator shootBlightBall()
@@ -127,8 +124,6 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
     {
         currHealth = _maxHealth;
         minShootDistance = agent.stoppingDistance + 20.0f;
-        // increase the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(1);
     }
 
     // Update is called once per frame

@@ -85,9 +85,6 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
             p.Spawn();
 
         Destroy(gameObject);
-
-        // update the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(-1);
     }
 
     IEnumerator swipeAttack()
@@ -129,9 +126,6 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
         pickups.AddRange(GetComponents<PickupSpawner>());
         pickups.AddRange(GetComponentsInChildren<PickupSpawner>());
         currHealth = _maxHealth;
-        // increase the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(1);
-
     }
 
     // Update is called once per frame
