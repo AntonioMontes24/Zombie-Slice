@@ -13,7 +13,6 @@ public class PlayerWeaponManager : MonoBehaviour
     [SerializeField] float adsSpeed;
     [SerializeField] GameObject gunModel;
     [SerializeField] Transform weaponHolder;
-    [SerializeField] TMPro.TextMeshProUGUI ammoText;
 
     [Header("Weapon Components")]
     [SerializeField] AudioSource aud;
@@ -78,7 +77,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if (rightHandGrip != null)
             initialRightHandPos = rightHandGrip.localPosition;
 
-        ammoText.SetText("00");
+        GameManager.instance.ammoText.SetText("00");
 
         movement = GetComponentInParent<PlayerMovement>();
         if (movement == null)
@@ -125,7 +124,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 shootCooldown = isAutomaticMode ? currentGun.autoFireRate : currentGun.semiFireRate;
                 Shoot();
                 currentGun.ammoCur--;
-                ammoText.SetText(currentGun.ammoCur.ToString() + " / " + currentGun.ammoReserve.ToString() );
+                GameManager.instance.ammoText.SetText(currentGun.ammoCur.ToString() + " / " + currentGun.ammoReserve.ToString() );
                 playedEmptySound = false;
 
                 if (currentGun.ammoCur <= 0 && currentGun.ammoReserve > 0)
@@ -283,7 +282,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
         isReloading = false;
         reloadCoroutine = null;
-        ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
+        GameManager.instance.ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
     }
 
     public void SetAiming(bool aim)//Sets aiming bool
@@ -378,7 +377,7 @@ public class PlayerWeaponManager : MonoBehaviour
         GameManager.instance.flashAmmoPickUp.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.flashAmmoPickUp.SetActive(false);
-        ammoText.SetText(CurrentGun.ammoCur.ToString() + " / " + CurrentGun.ammoReserve.ToString());
+        GameManager.instance.ammoText.SetText(CurrentGun.ammoCur.ToString() + " / " + CurrentGun.ammoReserve.ToString());
     }
 
     public void UpdateAmmoUi()// Helper to update Ammo UI
@@ -386,7 +385,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if (HasGun())
         {
             GunStats gun = CurrentGun;
-            ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+            GameManager.instance.ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
         }
     }
 
@@ -414,9 +413,9 @@ public class PlayerWeaponManager : MonoBehaviour
         barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
         shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
 
-        ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+        GameManager.instance.ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
 
-        var player = Object.FindFirstObjectByType<PlayerController>();
+        var player = FindFirstObjectByType<PlayerController>();
         player.StartCoroutine(player.PlayPickupAnimation(gun.isOneHanded));
 
         for (int i = 0; i < weaponIcons.Count; i++)
