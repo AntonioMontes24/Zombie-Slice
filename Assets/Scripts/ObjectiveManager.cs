@@ -20,7 +20,8 @@ public class ObjectiveManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        GameManager.instance.objectiveText.text = objectives[0].objectiveDescription;
+        if (objectives.Length != 0)
+            GameManager.instance.objectiveText.text = objectives[0].objectiveDescription;
     }
 
     public void updateSpawnerCount(int amount)
@@ -40,6 +41,8 @@ public class ObjectiveManager : MonoBehaviour
 
     void CheckObjective()
     {
+        if (objectives.Length == 0)
+            return;
         if (zombieCount <= 0 && spawnerCount <= 0)
         {
             objectives[idx].completeEvent?.Invoke();
