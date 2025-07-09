@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-    [SerializeField] GameObject doorModel;
+    [SerializeField] private GameObject doorModel;
 
 
 
@@ -15,7 +15,7 @@ public class Door : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.isTrigger)
+        if (other.CompareTag("Player"))
             return;
 
         Debug.Log(other.transform.name);
@@ -30,6 +30,9 @@ public class Door : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.CompareTag("Player"))
+            return;
+
         IOpen open = other.GetComponent<IOpen>();
 
         if (open != null)
