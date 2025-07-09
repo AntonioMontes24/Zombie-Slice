@@ -4,11 +4,12 @@ using UnityEngine.SceneManagement;
 
 public class Checkpoint : MonoBehaviour
 {
+    [SerializeField] int id;
+    [SerializeField] Renderer[] models;
     [Header("Leave empty to keep this as a regular checkpoint")]
     [SerializeField] bool usesSceneChange;
     [SerializeField] string nextSceneName;
-
-    [SerializeField] Renderer[] models;
+    
     Color color = Color.white;
 
     void OnTriggerEnter(Collider other)
@@ -20,6 +21,7 @@ public class Checkpoint : MonoBehaviour
             SceneManager.LoadScene(nextSceneName);
         else
         {
+            GameManager.instance.currentCheckpointID = id;
             GameManager.instance.playerSpawnPoint = transform.position;
             StartCoroutine(Flash());
         }

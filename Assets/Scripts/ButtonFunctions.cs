@@ -10,20 +10,13 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void restart()
     {
-        //GameManager.instance.respawnHook?.Invoke();
-        //GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
-        //GameManager.instance.stateUnpause();
-
-        if(GameManager.instance != null)
+        if (GameManager.instance != null)
         {
+            GameManager.instance.respawnHook?.Invoke();
+            GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
             GameManager.instance.stateUnpause();
         }
-        SceneManager.LoadScene("Zombie_Scene(Main)");
 
-        //if (KillManager.instance != null)
-        //{
-        //    KillManager.instance.ResetKills();
-        //}
     }
     public void options()
     {

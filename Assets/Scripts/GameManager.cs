@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public Vector3 playerSpawnPoint;
+    public int currentCheckpointID;
 
     public Action respawnHook;
 
