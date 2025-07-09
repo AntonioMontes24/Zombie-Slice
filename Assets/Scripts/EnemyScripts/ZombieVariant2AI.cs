@@ -36,7 +36,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] int biteRate;                          // our bite cooldown
     [SerializeField] int biteDamage;                        // how much damage does a bite do?
 
-    List<PickupSpawner> pickups;
+    List<PickupSpawner> pickups = new List<PickupSpawner>();
 
     public int CurrentHealth
     {
@@ -126,8 +126,12 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        pickups.AddRange(GetComponents<PickupSpawner>());
-        pickups.AddRange(GetComponentsInChildren<PickupSpawner>());
+        var components = GetComponents<PickupSpawner>();
+        if (components != null)
+            pickups.AddRange(components);
+        var componentsInChildren = GetComponentsInChildren<PickupSpawner>();
+        if (componentsInChildren != null)
+            pickups.AddRange(componentsInChildren);
         currHealth = _maxHealth;
         // increase the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(1);
