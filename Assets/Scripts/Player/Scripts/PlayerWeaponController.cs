@@ -9,6 +9,10 @@ using UnityEngine.Audio;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
+    [Header("Starting Weapon")]
+    [SerializeField] private MeleeWeaponStats startingKnife;
+
+
     [Header("Weapon Items")]
     [SerializeField] List<WeaponStats> weaponList = new List<WeaponStats>();
     [SerializeField] float adsSpeed;
@@ -95,9 +99,13 @@ public class PlayerWeaponManager : MonoBehaviour
             else
                 originalButtonColors.Add(default);
         }
+
+        if (startingKnife != null)
+            GetGunStats(startingKnife, autoEquip: true);
+
     }
 
-    public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1)// Optional Parameters to modify starting ammo
+    public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1, bool autoEquip = true)// Optional Parameters to modify starting ammo
     {
         WeaponStats runtimeWeapon = Instantiate(gun);
 
@@ -108,6 +116,8 @@ public class PlayerWeaponManager : MonoBehaviour
         }
 
         weaponList.Add(runtimeWeapon);
+
+        if(autoEquip)
         EquipWeapon(weaponList.Count - 1);
     }
 
@@ -265,14 +275,14 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void HandleMeleeAttack()
     {
-        meleeCooldownTimer -= Time.deltaTime;
-
-        if (!Input.GetMouseButtonDown(1)) return; // Right-click for melee
         if (!HasGun()) return;
 
         var weapon = weaponList[currentWeaponIndex];
-
         if (weapon is not MeleeWeaponStats melee) return;
+
+        meleeCooldownTimer -= Time.deltaTime;
+
+        if (!Input.GetButtonDown("Fire1")) return;
         if (meleeCooldownTimer > 0f) return;
 
         meleeCooldownTimer = melee.attackRate;
@@ -281,17 +291,31 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             animator.ResetTrigger("MeleeAttack");
             animator.SetTrigger("MeleeAttack");
+            Collider knifeCollider = currentWeaponInstance.GetComponentInChildren<Collider>();
+            StartCoroutine(EnableKnifeHitBox(knifeCollider, 0.3f));
         }
 
         if (melee.swingSound != null)
             aud.PlayOneShot(melee.swingSound);
 
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        Debug.DrawRay(ray.origin, ray.direction * 2f, Color.red, 1f); // Debug line
+
         if (Physics.Raycast(ray, out RaycastHit hit, 2f))
         {
             IDamage dmg = hit.collider.GetComponent<IDamage>();
             if (dmg != null)
                 dmg.takeDamage(melee.damage);
+
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                aud.PlayOneShot(melee.hitSound);//TESTING THIS 
+                iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
+                if (enemyHealth != null)
+                {
+                    GameManager.instance.SetCurrentEnemy(enemyHealth);
+                }
+            }
 
             if (melee.hitEffect != null)
                 Instantiate(melee.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
@@ -300,6 +324,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 aud.PlayOneShot(melee.hitSound);
         }
     }
+
 
 
     IEnumerator ReloadRoutine(FireArmStats gun)//Handles reload and ammo limit reserve.
@@ -340,6 +365,9 @@ public class PlayerWeaponManager : MonoBehaviour
     public void HandleADS()//Handles ads position/recoil
     {
         if (currentHipPosition == null || currentAdsPosition == null)
+            return;
+
+        if (weaponList[currentWeaponIndex] is MeleeWeaponStats)
             return;
 
         Transform target = isAiming ? currentAdsPosition : currentHipPosition;
@@ -459,8 +487,16 @@ public class PlayerWeaponManager : MonoBehaviour
             Destroy(currentWeaponInstance);
 
         currentWeaponInstance = Instantiate(weapon.weaponModel, weaponHolder);
-        currentWeaponInstance.transform.localPosition = Vector3.zero;
-        //currentWeaponInstance.transform.localRotation = Quaternion.identity;
+        currentWeaponInstance.transform.localPosition = weapon.weaponModel.transform.localPosition;
+        currentWeaponInstance.transform.localRotation = weapon.weaponModel.transform.localRotation;
+
+        if (melee != null)// Assings melee damage from melee stats
+        {
+            MeleeWeaponHitbox hitbox = currentWeaponInstance.GetComponentInChildren<MeleeWeaponHitbox>();
+            if (hitbox != null)
+                hitbox.SetDamage(melee.damage);
+        }
+
 
         currentHipPosition = currentWeaponInstance.transform.Find("HipPosition");
         Debug.Log("HipPosition local rotation: " + currentHipPosition.localRotation);
@@ -472,10 +508,17 @@ public class PlayerWeaponManager : MonoBehaviour
 
         if (gun != null)// new flag to check if the current equip weapon is a firearm, shows ammo, does not displays ammo for melee
         {
+            currentAdsPosition = currentWeaponInstance.transform.Find("ADSPosition");
+            barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
+            shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
             ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
         }
         else
         {
+            // Melee weapon — disable ADS
+            currentAdsPosition = null;
+            barrelTip = null;
+            shellEjectionPoint = null;
             ammoText.SetText("∞");
         }
 
@@ -522,6 +565,13 @@ public class PlayerWeaponManager : MonoBehaviour
             return; // Don't re-equip the same weapon
 
         EquipWeapon(newIndex);
+    }
+
+    IEnumerator EnableKnifeHitBox(Collider hitbox, float duration)
+    {
+        hitbox.enabled = true;
+        yield return new WaitForSeconds(duration);
+        hitbox.enabled = false;
     }
 
     public void TryEquipWeapon(int index)
