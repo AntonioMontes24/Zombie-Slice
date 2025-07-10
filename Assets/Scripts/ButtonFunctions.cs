@@ -49,7 +49,39 @@ public class ButtonFunctions : MonoBehaviour
         // saving this for later
         if (GameManager.instance != null)
         {
-            GameManager.instance.OptionsMenu();
+            GameManager.instance.OpenOptionsMenu();
+        }
+    }
+
+    public void audioOptions()
+    {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OpenAudioOptionsMenu();
+        }
+        {
+            
+        }
+    }
+
+    public void videoOptions()
+    {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OpenVideoOptionsMenu();
+        }
+        {
+
+        }
+    }
+    public void controlsOptions()
+    {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OpenControlsOptionsMenu();
+        }
+        {
+
         }
     }
 

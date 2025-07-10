@@ -1622,7 +1622,7 @@ Transform:
   m_GameObject: {fileID: 6435963869261824987}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7338863, z: -0, w: 0.6792724}
-  m_LocalPosition: {x: 40.07, y: 1, z: 41.48}
+  m_LocalPosition: {x: 42.992, y: 1, z: 43.376}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1647,10 +1647,10 @@ MonoBehaviour:
   armsModel: {fileID: 3000028547139957864}
   animator: {fileID: 5115858651537047381}
   audioSource: {fileID: 2514215997645759898}
-  freakingZombie: {fileID: 8300000, guid: 291e7aab756fc474cb1085be543bed9d, type: 3}
+  weaponSwap: {fileID: 0}
   leftArm: {fileID: 4031703221456838650}
   leanAngle: 15
-  leanSpeed: 5
+  leanSpeed: 4.42
   cameraHolder: {fileID: 4958580457673050824}
   leanRoot: {fileID: 4280925506053537427}
 --- !u!114 &1164481958771840420
@@ -1701,7 +1701,6 @@ MonoBehaviour:
   adsSpeed: 8
   gunModel: {fileID: 3421782144554468919}
   weaponHolder: {fileID: 6703358965873412575}
-  ammoText: {fileID: 0}
   aud: {fileID: 2514215997645759898}
   gameplayCamera: {fileID: 7365902755400001526}
   hotBarSlots: []
