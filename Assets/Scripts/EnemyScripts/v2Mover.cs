@@ -1,3 +1,4 @@
+using System.Collections;
 using JetBrains.Annotations;
 using UnityEditor.Analytics;
 using UnityEngine;
@@ -11,13 +12,13 @@ public class v2Mover : MonoBehaviour
     [SerializeField] float stopDistPlayer;
     [SerializeField] float facePlayerSpeed;
     [SerializeField] int stopDist;
-  
+
     // public GameObject playerObj;
-    
+
     bool playerInRange;
     bool isDead;
     float roamTime;
-  
+
 
     Vector3 startingPos;
 
@@ -25,6 +26,8 @@ public class v2Mover : MonoBehaviour
     void Start()
     {
         startingPos = transform.position;
+        //ObjectiveManager.instance.updateZombieCount(1);
+
     }
 
     // Update is called once per frame
@@ -95,7 +98,7 @@ public class v2Mover : MonoBehaviour
         if (distance < stopDistPlayer)
         {
             agent.isStopped = true;
-            
+
         }
         else
         {
@@ -126,8 +129,27 @@ public class v2Mover : MonoBehaviour
             agent.speed = 6.0f;
         }
     }
+    //After death zombie sinks into ground before being destroyed
+    private IEnumerator forceDeathSink()
+    {
+        agent.enabled = false;
+        transform.Translate(Vector3.down * 1.0f * Time.deltaTime);
+        yield return new WaitForSeconds(2.0f);
+        Destroy(gameObject, 2.0f);
+       // ObjectiveManager.instance.updateZombieCount(-1); //Calls this too many times. not sure why
 
-    
+    }
 
+    public void SinkingZombie()
+    {
+        StartCoroutine(forceDeathSink());
+    }
+
+    public void forceStop()
+    {
+        agent.isStopped = true;
+        agent.speed = 0;
+        isDead = true;
+    }
 
 }

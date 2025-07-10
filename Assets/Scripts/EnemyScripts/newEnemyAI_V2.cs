@@ -12,7 +12,7 @@ public class newEnemyAI_V2 : MonoBehaviour, IDamage
     [SerializeField] headHit HeadScript;
     public GameObject playerObj;
     public GameObject parentObj;
-    
+
     public Animator anim;
     public Collider z2Collide;
     public Collider headCollider;
@@ -22,12 +22,17 @@ public class newEnemyAI_V2 : MonoBehaviour, IDamage
     bool inRange;
     bool meleeRange;
     bool headHit;
+   //bool isUpdating;
+    //int deathCount;
 
+
+ 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         parentPos = transform.position;
-        ObjectiveManager.instance.updateZombieCount(1);
+        // ObjectiveManager.instance.updateZombieCount(1);
+       // deathCount = 1;
         orignialColor = model.material.color;
         z2Collide = GetComponent<Collider>();
         headCollider = GetComponent<Collider>();
@@ -108,17 +113,19 @@ public class newEnemyAI_V2 : MonoBehaviour, IDamage
             HeadScript.hit = false;
         }
         if (HP > 0)
-            {
-                HP -= amount;
-            }
+        {
+            HP -= amount;
+        }
         StartCoroutine(getHit());
         moverScript.forceChasePlayer();
+        //Calls parent to stop all movement
         if (HP <= 0)
         {
 
-            ObjectiveManager.instance.updateZombieCount(-1);
+            //ObjectiveManager.instance.updateZombieCount(-1);
+            moverScript.forceStop();
         }
-        
+
     }
 
     void meleeAttack()
@@ -127,7 +134,7 @@ public class newEnemyAI_V2 : MonoBehaviour, IDamage
         {
             StartCoroutine(attack());
         }
-        
+
     }
 
     IEnumerator attack()
@@ -142,17 +149,20 @@ public class newEnemyAI_V2 : MonoBehaviour, IDamage
         {
             hitbox.Deactivate();
         }
-        
+
     }
 
     IEnumerator death()
     {
         anim.SetBool("isDead", true);
         z2Collide.enabled = false;
+        //deadCount();
         yield return new WaitForSeconds(2.0f);
         anim.enabled = false;
-        ObjectiveManager.instance.updateZombieCount(-1);
-        Destroy(parentObj.gameObject);
+        // ObjectiveManager.instance.updateZombieCount(-1);
+        yield return new WaitForSeconds(2.0f);
+        moverScript.SinkingZombie();//Calls sink function from parent
+        
     }
 
     IEnumerator getHit()
@@ -162,5 +172,19 @@ public class newEnemyAI_V2 : MonoBehaviour, IDamage
         yield return new WaitForSeconds(0.1f);
         model.material.color = orignialColor;
     }
+    //Gamegoal updater failsafe
+    // public void deadCount()
+    // {
+    //     if (isUpdating && deathCount == 1)
+    //     {
+    //         ObjectiveManager.instance.updateZombieCount(-1);
+    //         isUpdating = false;
+    //         deathCount = 0;
+            
+    //     }
+    //     if (!isUpdating || deathCount == 0)
+    //         return;
+        
+    // }
 }
 

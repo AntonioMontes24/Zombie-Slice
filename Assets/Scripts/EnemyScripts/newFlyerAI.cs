@@ -25,6 +25,7 @@ public class newFlyerAI : MonoBehaviour, IDamage
         parentPos = transform.position;
         ObjectiveManager.instance.updateZombieCount(1);
         playerObj = GameManager.instance.player;
+        
     }
 
     // Update is called once per frame
@@ -81,7 +82,10 @@ public class newFlyerAI : MonoBehaviour, IDamage
         }
         moverScript.forceChasePlayer();
         if (HP <= 0)
-        ObjectiveManager.instance.updateZombieCount(-1);
+        {
+            ObjectiveManager.instance.updateZombieCount(-1);
+            moverScript.forceStop();
+        }
     }
 
     void bomberAttack()
@@ -92,7 +96,7 @@ public class newFlyerAI : MonoBehaviour, IDamage
     IEnumerator death()
     {
         anim.SetBool("isDead", true);
-        float dropSpeed = 2.0f;
+        float dropSpeed = 3.0f;
         float elapsed = 0f;
         Vector3 startPos = transform.position; //Current position
         Vector3 targetPos = new Vector3(startPos.x, 0f, startPos.z); //Drop location on y axis
@@ -104,11 +108,13 @@ public class newFlyerAI : MonoBehaviour, IDamage
             yield return null;
         }
         transform.position = targetPos; //set new position
-        
+
         yield return new WaitForSeconds(1.5f);
-        
+
         anim.enabled = false; //disable animator
-        Destroy(parentObj.gameObject); //destroy zombiemover
+        moverScript.SinkingZombie(); // Call zombie sink from parent
+        transform.position = Vector3.Lerp(targetPos, parentObj.transform.position, 2f * Time.deltaTime);
+        //Destroy(parentObj.gameObject); //destroy zombiemover
     }
 
     public void createBlight()
