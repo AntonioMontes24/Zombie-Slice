@@ -5,6 +5,7 @@ using NUnit.Framework.Interfaces;
 using System.Linq;
 using UnityEngine.UI;
 using NUnit.Framework;
+using TMPro;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class PlayerWeaponManager : MonoBehaviour
     [SerializeField] float adsSpeed;
     [SerializeField] GameObject gunModel;
     [SerializeField] Transform weaponHolder;
-    [SerializeField] TMPro.TextMeshProUGUI ammoText;
+    [SerializeField] TMP_Text ammoText;
 
     [Header("Weapon Components")]
     [SerializeField] AudioSource aud;
@@ -70,6 +71,7 @@ public class PlayerWeaponManager : MonoBehaviour
     private Vector3 currentLeftHandOffset;
     private Vector3 currentRightHandOffset;
 
+
     private void Start()
     {
         if (leftHandGrip != null)
@@ -78,6 +80,9 @@ public class PlayerWeaponManager : MonoBehaviour
         if (rightHandGrip != null)
             initialRightHandPos = rightHandGrip.localPosition;
 
+        // float for ammo bar
+
+        GameManager.instance.ammoyBar.fillAmount = 0;
         ammoText.SetText("00");
 
         movement = GetComponentInParent<PlayerMovement>();
@@ -125,6 +130,9 @@ public class PlayerWeaponManager : MonoBehaviour
                 shootCooldown = isAutomaticMode ? currentGun.autoFireRate : currentGun.semiFireRate;
                 Shoot();
                 currentGun.ammoCur--;
+                // ammo fill bar
+                float ammoPercent = (float)currentGun.ammoCur / currentGun.ammoMax;
+                GameManager.instance.ammoyBar.fillAmount = ammoPercent;
                 ammoText.SetText(currentGun.ammoCur.ToString() + " / " + currentGun.ammoReserve.ToString() );
                 playedEmptySound = false;
 
@@ -283,6 +291,9 @@ public class PlayerWeaponManager : MonoBehaviour
         }
         isReloading = false;
         reloadCoroutine = null;
+        // ammo fill bar
+        float ammoPercent = (float)gun.ammoCur / gun.ammoMax;
+        GameManager.instance.ammoyBar.fillAmount = ammoPercent;
         ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
     }
 
@@ -386,6 +397,11 @@ public class PlayerWeaponManager : MonoBehaviour
         if (HasGun())
         {
             GunStats gun = CurrentGun;
+            // float for ammo bar
+            float ammoPercent = (float)gun.ammoCur / gun.ammoMax;
+
+            
+            GameManager.instance.ammoyBar.fillAmount = ammoPercent;
             ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
         }
     }
@@ -413,6 +429,10 @@ public class PlayerWeaponManager : MonoBehaviour
         currentAdsPosition = currentWeaponInstance.transform.Find("ADSPosition");
         barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
         shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
+
+        // ammo fill bar
+        float ammoPercent = (float)gun.ammoCur / gun.ammoMax;
+        GameManager.instance.ammoyBar.fillAmount = ammoPercent;
 
         ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
 

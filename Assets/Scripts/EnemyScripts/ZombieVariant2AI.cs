@@ -81,8 +81,9 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
         // wait 2 seconds
         yield return new WaitForSeconds(2);
 
-        foreach (var p in pickups)
-            p.Spawn();
+        // Creating NullReference Needs to be fixed
+        //foreach (var p in pickups)
+        //    p.Spawn();
 
         Destroy(gameObject);
 
@@ -126,8 +127,11 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        pickups.AddRange(GetComponents<PickupSpawner>());
-        pickups.AddRange(GetComponentsInChildren<PickupSpawner>());
+        //Both of there are throwing NullReferences and need to be looked at
+        //pickups.AddRange(GetComponents<PickupSpawner>());
+        //pickups.AddRange(GetComponentsInChildren<PickupSpawner>());
+
+
         currHealth = _maxHealth;
         // increase the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(1);
