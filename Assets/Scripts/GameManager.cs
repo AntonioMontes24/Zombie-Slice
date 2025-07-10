@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 
     public Action respawnHook;
 
+    public TextMeshProUGUI ammoText;
+
     public static GameManager instance;
 
     [SerializeField] GameObject menuActive;
