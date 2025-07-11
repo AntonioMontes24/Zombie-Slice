@@ -38,7 +38,7 @@ public class Door : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    // Update is called once per frameso i found a
     void Update()
     {
 
