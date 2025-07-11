@@ -53,6 +53,12 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         {
             Debug.Log($"Rigidbody NOT FOUND!! on {gameObject.name}.");
         }
+
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
     }
 
 
@@ -63,29 +69,6 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
             GameManager.instance.HideEnemyUI();
             return;
         }
-
-
-        //if (currHealth > 0)
-        //{
-        //    currHealth -= amount;
-
-        //    GameManager.instance.UpdateEnemyHealthBar(this);
-
-        //    // we took damage so we need to head towards the player
-        //    // set our navmesh agent towards the players position
-        //    // agent.SetDestination(GameManager.instance.player.transform.position);
-        //    agent.SetDestination(GameManager.instance.player.transform.position);
-
-        //    if (currHealth <= 0)
-        //    {
-        //        // stop displaying enemy healthbar
-        //        GameManager.instance.enemyInfoPanel.SetActive(false);
-
-        //        // remove the corpse by destroying the gameObject
-        //        StartCoroutine(removeCorpse());
-                
-        //    }
-        //}
 
         // redoing this section to set a clamp on health to ensure it doesnt go below 0.
         currHealth -= amount;
@@ -112,6 +95,21 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
             {
                 rb.isKinematic = false;
                 rb.useGravity = true;
+
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+
+                rb.AddForce(Vector3.down * 10f, ForceMode.Impulse);
+
+            }
+
+            if(animator != null)
+            {
+                animator.applyRootMotion = false;
+                if(animator.runtimeAnimatorController != null)
+                {
+                    animator.SetTrigger("isDead");
+                }
             }
 
             StartCoroutine(removeCorpse());
@@ -127,9 +125,10 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 
     IEnumerator removeCorpse()
     {
-        if (animator != null && animator.runtimeAnimatorController != null)
-            animator.SetTrigger("isDead");
-        // wait 2 seconds
+
+        yield return null;
+
+
         yield return new WaitForSeconds(2.0f);
 
         GameManager.instance.HideEnemyUI();
