@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 
 public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
@@ -35,6 +36,14 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] Transform BS3Position;               // where does our blightball spawn from
     [SerializeField] Transform BS4Position;               // where does our blightball spawn from
 
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip aud_clip_idle;
+    [SerializeField] AudioClip aud_clip_attack;
+    [SerializeField] AudioClip aud_clip_death;
+    [SerializeField] int audioCounter;
+
+    bool audio_is_playing;
+
     // we will check for blight storm then blight ball
     // [SerializeField] int blightBallCounter;                 // increment to see if we can attack
     // [SerializeField] int blightBallRate;                    // our rate of fire
@@ -62,10 +71,17 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 
     IEnumerator removeCorpse()
     {
+        animator.Play("Idle");
         animator.SetTrigger("isDead");
+
+        aud.Stop();
+
+        if (aud_clip_death != null)
+            aud.PlayOneShot(aud_clip_death);
 
         // wait 2 seconds
         yield return new WaitForSeconds(5);
+       
 
         Destroy(gameObject);
 
@@ -79,6 +95,9 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
         // reset the timer set the animation
         // blightBallCounter = 0;
         yield return new WaitForSeconds(0.1f);
+
+        // StartCoroutine(attackSound());
+
         animator.SetTrigger("shootBlightBall");
 
     }
@@ -91,9 +110,14 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
         // reset the timer set the animation
         // blightStormCounter = 0;
         yield return new WaitForSeconds(0.1f);
+
+        // StartCoroutine(attackSound());
+
         animator.SetTrigger("shootBlightstorm");
 
     }
+
+    
 
     public void createBlightBall()
     {
@@ -136,6 +160,11 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
     void Start()
     {
         currHealth = _maxHealth;
+        audioCounter = 999;
+
+        if (aud_clip_idle != null)
+           // TODO 
+
         ObjectiveManager.instance.updateZombieCount(1);
 
     }
@@ -146,11 +175,29 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
         if (currHealth > 0)
         {
             attackCounter++;
-            // we are alive to lets check if we can attack
+            
 
+            // we are alive to lets check if we can attack
+            if(canWeSeeThePlayer() && playerInRange)
+            {
+                
+                if (audioCounter >= 750)
+                {
+                    audioCounter = 0;
+                    // play sound
+                    if (aud_clip_attack != null)
+                        aud.PlayOneShot(aud_clip_attack);
+                    
+                }
+                else
+                {
+                    audioCounter++;
+                }
+            }
             // we check blight storm before we check blight ball
             if (canWeSeeThePlayer() && playerInRange && attackCounter >= attackRate)
             {
+                
                 attackToUse = chooseAttack();
 
                 if(attackToUse >= 2)
