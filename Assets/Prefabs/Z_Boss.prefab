@@ -1,5 +1,58 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &63134647607136590
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6403626396519814743}
+  - component: {fileID: 2082646991808938068}
+  m_Layer: 0
+  m_Name: Claw
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6403626396519814743
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63134647607136590}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.192, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1045616227152329669}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &2082646991808938068
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63134647607136590}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &958478907640163315
 GameObject:
   m_ObjectHideFlags: 0
@@ -53,7 +106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400130, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.06
+      value: 0.21361
       objectReference: {fileID: 0}
     - target: {fileID: 400130, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
       propertyPath: m_LocalPosition.y
@@ -61,7 +114,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400130, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -13.27
+      value: -8.85068
       objectReference: {fileID: 0}
     - target: {fileID: 400130, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
       propertyPath: m_LocalRotation.w
@@ -105,6 +158,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 400002, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1309015190375059498}
+    - targetCorrespondingSourceObject: {fileID: 400072, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6403626396519814743}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100130, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
       insertIndex: 1
@@ -152,7 +208,7 @@ MonoBehaviour:
   model: {fileID: 13700000, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
   agent: {fileID: 8441806280427802687}
   animator: {fileID: 1045616227144864877}
-  playerInRange: 1
+  playerInRange: 0
   field_of_view: 80
   headPos: {fileID: 1045616227152329615}
   powerAttackRate: 100
@@ -162,6 +218,8 @@ MonoBehaviour:
   blightBallRate: 1000
   blightBallDamage: 2
   minShootDistance: 0
+  clawCollider: {fileID: 2082646991808938068}
+  attackRate: 1000
 --- !u!136 &4609222109715291856
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -243,5 +301,10 @@ MonoBehaviour:
 --- !u!4 &1045616227152329615 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
+  m_PrefabInstance: {fileID: 1045616227152191757}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1045616227152329669 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400072, guid: 5fa3882e0fab442d6b27b10ebb2c6110, type: 3}
   m_PrefabInstance: {fileID: 1045616227152191757}
   m_PrefabAsset: {fileID: 0}

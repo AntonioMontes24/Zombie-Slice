@@ -65,7 +65,7 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
         animator.SetTrigger("isDead");
 
         // wait 2 seconds
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(5);
 
         Destroy(gameObject);
 

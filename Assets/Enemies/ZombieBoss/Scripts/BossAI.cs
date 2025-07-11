@@ -94,6 +94,12 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
     {
         if (animator != null && animator.runtimeAnimatorController != null)
             animator.SetTrigger("isDead");
+       
+        transform.Translate(Vector3.down * 1.0f * Time.deltaTime);
+        yield return new WaitForSeconds(2.0f);
+        Destroy(gameObject, 2.0f);
+
+        /*
         // wait 2 seconds
         yield return new WaitForSeconds(2);
 
@@ -101,6 +107,7 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
 
         // update the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(-1);
+        */
     }
 
     IEnumerator shootBlightBall()
@@ -232,7 +239,6 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
 
                 agent.SetDestination(GameManager.instance.player.transform.position);
 
-                if (animator != null && animator.runtimeAnimatorController != null)
                     animator.SetFloat("Speed", speed);
 
 
