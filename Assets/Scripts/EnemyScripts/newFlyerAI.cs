@@ -3,9 +3,10 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class newFlyerAI : MonoBehaviour, IDamage
+public class newFlyerAI : MonoBehaviour, IDamage, iEnemyHealth
 {
     [SerializeField] int HP;
+    [SerializeField] int maxHP;
     [SerializeField] GameObject blightBomb;
     [SerializeField] Transform firePos;
     [SerializeField] int animSpeedTrans;
@@ -14,10 +15,17 @@ public class newFlyerAI : MonoBehaviour, IDamage
     public GameObject playerObj;
     public GameObject parentObj;
     public Animator anim;
-    
+
     Vector3 parentPos;
     bool isDead;
     bool inRange;
+
+    public int CurrentHealth => HP;
+
+    public int maxHealth => maxHP;
+    bool fade;
+    float alpha = 0f;
+    float fadespeed = 1.5f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,7 +33,12 @@ public class newFlyerAI : MonoBehaviour, IDamage
         parentPos = transform.position;
         ObjectiveManager.instance.updateZombieCount(1);
         playerObj = GameManager.instance.player;
-        
+        //For death fade
+        Material mat = GetComponent<Renderer>().material;
+        Color newColor = mat.color;
+        newColor.a = alpha;
+        mat.color = newColor;
+
     }
 
     // Update is called once per frame
@@ -42,7 +55,7 @@ public class newFlyerAI : MonoBehaviour, IDamage
         }
         else
             isDead = false;
-            
+
     }
 
     void OnTriggerEnter(Collider other)
@@ -101,6 +114,7 @@ public class newFlyerAI : MonoBehaviour, IDamage
         Vector3 startPos = transform.position; //Current position
         Vector3 targetPos = new Vector3(startPos.x, 0f, startPos.z); //Drop location on y axis
 
+
         while (elapsed < dropSpeed)
         {
             transform.position = Vector3.Lerp(startPos, targetPos, elapsed / dropSpeed);
@@ -112,9 +126,13 @@ public class newFlyerAI : MonoBehaviour, IDamage
         yield return new WaitForSeconds(1.5f);
 
         anim.enabled = false; //disable animator
-        moverScript.SinkingZombie(); // Call zombie sink from parent
-        transform.position = Vector3.Lerp(targetPos, parentObj.transform.position, 2f * Time.deltaTime);
-        //Destroy(parentObj.gameObject); //destroy zombiemover
+        //moverScript.SinkingZombie(); // Call zombie sink from parent
+        //transform.Translate(Vector3.down * 1.0f * Time.deltaTime);
+
+        deathFade();
+        yield return new WaitForSeconds(2.0f);
+        Destroy(transform.parent.gameObject);
+
     }
 
     public void createBlight()
@@ -128,6 +146,17 @@ public class newFlyerAI : MonoBehaviour, IDamage
             Vector3 direction = (Quaternion.Euler(downAngle, target.y, target.z) * firePos.forward).normalized;
             rb.linearVelocity = direction;
 
+        }
+    }
+
+    private void deathFade()
+    {
+        if (fade)
+        {
+            Material mat = GetComponent<Renderer>().material;
+            Color newColor = mat.color;
+            newColor.a = Mathf.MoveTowards(newColor.a, 0, fadespeed * Time.deltaTime);
+            mat.color = newColor;
         }
     }
 }

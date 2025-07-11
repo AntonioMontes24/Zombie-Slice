@@ -33,18 +33,21 @@ public class v2Mover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (agent.remainingDistance < 0.01f)
+        if (!isDead)
         {
-            roamTime += Time.deltaTime;
-        }
+            if (agent.remainingDistance < 0.01f)
+            {
+                roamTime += Time.deltaTime;
+            }
 
-        if (!playerInRange)
-        {
-            roamCheck();
-        }
-        else
-        {
-            chasePlayer();
+            if (!playerInRange)
+            {
+                roamCheck();
+            }
+            else
+            {
+                chasePlayer();
+            }
         }
     }
 
@@ -136,7 +139,7 @@ public class v2Mover : MonoBehaviour
         transform.Translate(Vector3.down * 1.0f * Time.deltaTime);
         yield return new WaitForSeconds(2.0f);
         Destroy(gameObject, 2.0f);
-       // ObjectiveManager.instance.updateZombieCount(-1); //Calls this too many times. not sure why
+        // ObjectiveManager.instance.updateZombieCount(-1); //Calls this too many times. not sure why
 
     }
 
@@ -151,5 +154,6 @@ public class v2Mover : MonoBehaviour
         agent.speed = 0;
         isDead = true;
     }
+
 
 }
