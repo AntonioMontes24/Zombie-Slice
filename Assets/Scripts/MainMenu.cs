@@ -1,12 +1,37 @@
 using JetBrains.Annotations;
+using System.Collections;
+
 //using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public GameObject mainMenuPanel;
+    public GameObject optionsMenuPanel;
+
+    private void Start()
+    {
+        if(mainMenuPanel != null)
+        {
+            mainMenuPanel.SetActive(true);
+        }
+        if(optionsMenuPanel != null)
+        {
+            optionsMenuPanel.SetActive(false);
+        }
+    }
+
+
     public void PlayGame(string level)
     {
+
+        if(AudioManager.instance != null)
+        {
+            AudioManager.instance.StopMusic();
+        }
+
         SceneManager.LoadScene(level);
 
 
@@ -14,7 +39,14 @@ public class MainMenu : MonoBehaviour
 
     public void OptionsMenu()
     {
-
+        if(mainMenuPanel != null)
+        {
+            mainMenuPanel.SetActive(false);
+        }
+        if(optionsMenuPanel != null)
+        {
+            optionsMenuPanel.SetActive(true);
+        }
     }
 
     public void QuitGame()
@@ -25,4 +57,7 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
 #endif
     }
+
+
+
 }

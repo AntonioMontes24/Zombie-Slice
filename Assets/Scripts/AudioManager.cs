@@ -10,11 +10,18 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioMixer mixer;
     [SerializeField] AudioSource musicSource;
 
+    [SerializeField] AudioSource buttonHoverSource;
+    [SerializeField] AudioSource buttonSelectSource;
+
     public const string MUSIC_KEY = "Music";
     public const string SFX_KEY = "SFX";
+    public const string MENU_KEY = "Menu";
 
     public AudioClip menuMusic;
     public AudioClip gameMusic;
+
+    public AudioClip buttonHoverClip;
+    public AudioClip buttonSelectClip;
 
     private void Awake()
     {
@@ -31,6 +38,65 @@ public class AudioManager : MonoBehaviour
                 {
                     musicSource = gameObject.AddComponent<AudioSource>();
                 }
+            }
+
+            // button audio sources
+            if(buttonHoverSource == null)
+            {
+                //GameObject hover = GameObject.Find("ButtonHover");
+                Transform hoverTransform = transform.Find("ButtonHover");
+                if(hoverTransform != null)
+                {
+                    buttonHoverSource = hoverTransform.GetComponent<AudioSource>();
+                    if(buttonHoverSource == null)
+                    {
+                        //buttonHoverSource= gameObject.AddComponent<AudioSource>();
+                        buttonHoverSource = hoverTransform.gameObject.AddComponent<AudioSource>();
+                    }
+                }else
+                {
+                    Debug.LogWarning("AudioManager: button hover gameobject not found");
+                }
+            }
+
+            if(buttonSelectClip == null)
+            {
+                Transform selectTransform = transform.Find("ButtonSelect");
+                //GameObject select = GameObject.Find("ButtonSelect");
+                if(selectTransform != null)
+                {
+                    buttonSelectSource = selectTransform.GetComponent<AudioSource>();
+                    if(buttonSelectSource == null)
+                    {
+                        //buttonSelectSource= gameObject.AddComponent<AudioSource>();
+                        buttonSelectSource = selectTransform.gameObject.AddComponent<AudioSource>();
+                    }
+                }else
+                {
+                    Debug.LogWarning("AudioManager: button select gameobject not found!");
+                }
+            }
+
+            if(buttonHoverSource != null && mixer != null)
+            {
+                string menuGroupName = "Menu";
+                AudioMixerGroup[] menuGroups = mixer.FindMatchingGroups(menuGroupName);
+                if(menuGroups.Length > 0)
+                {
+                    buttonHoverSource.outputAudioMixerGroup = menuGroups[0];
+                }
+                //buttonHoverSource.outputAudioMixerGroup = mixer.FindMatchingGroups("Menu")[0];
+            }
+            if(buttonSelectSource != null && mixer != null)
+            {
+                string menuGroupName = "Menu";
+                AudioMixerGroup[] menuGroups = mixer.FindMatchingGroups(menuGroupName);
+
+                if(menuGroups.Length > 0)
+                {
+                    buttonSelectSource.outputAudioMixerGroup = menuGroups[0];
+                }
+                //buttonSelectSource.outputAudioMixerGroup = mixer.FindMatchingGroups("Menu")[0];
             }
 
         } else
@@ -94,13 +160,38 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void PlayButtonHoverSound()
+    {
+        if(buttonHoverSource != null && buttonHoverClip != null)
+        {
+            buttonHoverSource.PlayOneShot(buttonHoverClip);
+        } else
+        {
+            Debug.LogWarning("AudioManager: button hover sound not set up correctly.");
+        }
+    }
+
+    public void PlayButtonSelectSound()
+    {
+        if(buttonSelectSource != null && buttonSelectClip != null)
+        {
+            buttonSelectSource.PlayOneShot(buttonSelectClip);
+        } else
+        {
+            Debug.LogWarning("AudioManager: button select sound not set up correctly.");
+        }
+    }
+
+
     // volume saved in volumesettings.cs
     void LoadVolume()
     {
         float musicVolume = PlayerPrefs.GetFloat(MUSIC_KEY, 1f);
         float sfxVolume = PlayerPrefs.GetFloat(SFX_KEY, 1f);
+        float menuVolume = PlayerPrefs.GetFloat(MENU_KEY, 1f);
 
         mixer.SetFloat(VolumeSettings.MIXER_MUSIC, Mathf.Log10(musicVolume) * 20);
         mixer.SetFloat(VolumeSettings.MIXER_SFX, Mathf.Log10(sfxVolume) * 20);
+        mixer.SetFloat(VolumeSettings.MIXER_MENU, Mathf.Log10(menuVolume) * 20);
     }
 }

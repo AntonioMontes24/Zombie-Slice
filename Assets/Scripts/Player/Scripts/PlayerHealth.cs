@@ -12,6 +12,13 @@ public class PlayerHealth : MonoBehaviour, IDamage
     public AudioClip hurtSound;//hurt sfx   
     public AudioClip deathSound;// death sfx
 
+    [Header("UI Low Health Flashing")]
+    [SerializeField] Animator lowHealthFlashAnimator;
+    [Range(0f, 1f)]
+    [SerializeField] float lowHealthThreashHold = 0.25f; // 0.25 for 25% threshold
+
+    private bool isFlashingLowHealth = false;
+
     Coroutine damageSoundRoutine;
 
     bool playedHurtSound;
@@ -28,6 +35,12 @@ public class PlayerHealth : MonoBehaviour, IDamage
         playerHP = currentHealth;
         Debug.Log(playerHP);
         audioSource = GetComponent<AudioSource>();
+
+        if(lowHealthFlashAnimator != null)
+        {
+            lowHealthFlashAnimator.SetBool("IsLowHealth", false);
+            isFlashingLowHealth = false;
+        }
     }
 
     public void takeDamage(int amount)// handles damage take
@@ -52,6 +65,12 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
                 if (damageSoundRoutine != null)
                     StopCoroutine(damageSoundRoutine);
+
+                if(lowHealthFlashAnimator != null)
+                {
+                    lowHealthFlashAnimator.SetBool("IsLowHealth", false);
+                    isFlashingLowHealth = false;
+                }
             }
         }
         else
@@ -80,6 +99,13 @@ public class PlayerHealth : MonoBehaviour, IDamage
         currentHealth = maxHealth;
         updatePlayerUI();
         hasDied = false;
+
+        if(lowHealthFlashAnimator != null)
+        {
+            lowHealthFlashAnimator.SetBool("IsLowHealth", false);
+            isFlashingLowHealth = false;
+        }
+
     }
 
     public bool CanHeal()
@@ -137,6 +163,28 @@ public class PlayerHealth : MonoBehaviour, IDamage
         else
         {
             GameManager.instance.playerHPBar.color = Color.red;
+        }
+
+        if(lowHealthFlashAnimator != null)
+        {
+            if(healthPercent <= lowHealthThreashHold && !hasDied)
+            {
+                if(!isFlashingLowHealth)
+                {
+                    lowHealthFlashAnimator.SetBool("IsLowHealth", true);
+                    isFlashingLowHealth = true;
+                    Debug.Log("Low Health: Flashing!");
+                }
+            }
+            else
+            {
+                if (isFlashingLowHealth)
+                {
+                    lowHealthFlashAnimator.SetBool("IsLowHealth", false);
+                    isFlashingLowHealth= false;
+                    Debug.Log("Low Health flashing stopped.");
+                }
+            }
         }
 
         
