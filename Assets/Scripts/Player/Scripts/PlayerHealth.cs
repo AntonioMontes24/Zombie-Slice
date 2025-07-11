@@ -12,6 +12,8 @@ public class PlayerHealth : MonoBehaviour, IDamage
     public AudioClip hurtSound;//hurt sfx   
     public AudioClip deathSound;// death sfx
 
+    [SerializeField] Animator animator;
+
     Coroutine damageSoundRoutine;
 
     bool playedHurtSound;
@@ -48,8 +50,6 @@ public class PlayerHealth : MonoBehaviour, IDamage
                 if (deathSound && audioSource)
                     audioSource.PlayOneShot(deathSound);
                 Die();
-                GameManager.instance.youLose();
-
                 if (damageSoundRoutine != null)
                     StopCoroutine(damageSoundRoutine);
             }
@@ -91,7 +91,8 @@ public class PlayerHealth : MonoBehaviour, IDamage
     {
         if (deathEffect) Instantiate(deathEffect, transform.position, Quaternion.identity);
         if (deathSound && audioSource) audioSource.PlayOneShot(deathSound);
-        GameManager.instance.youLose();
+        //GameManager.instance.youLose();
+        StartCoroutine(PlayDeathAnim());
         Debug.Log("Player died!");
     }
 
@@ -142,7 +143,19 @@ public class PlayerHealth : MonoBehaviour, IDamage
         
     }
 
-    IEnumerator damageFlash()
+
+    IEnumerator PlayDeathAnim()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
+        {
+            animator.SetTrigger("IsDead");
+            yield return new WaitUntil(() =>
+            animator.GetCurrentAnimatorStateInfo(0).IsName("IsDead") &&
+                                                               animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+        }
+    }
+
+        IEnumerator damageFlash()
     {
         GameManager.instance.flashDamageScreen.SetActive(true);
         yield return new WaitForSeconds(0.1f);
