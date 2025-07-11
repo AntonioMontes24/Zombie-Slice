@@ -2,22 +2,34 @@ using UnityEngine;
 
 public class doorScript : MonoBehaviour
 {
-    [SerializeField] KeyCode openCode = KeyCode.E; //Letter to press to interact with door
+    public enum DoorType { Normal, RequiresKey, LockedUntilClear }
+    [SerializeField] private DoorType doorType = DoorType.Normal;
+    [SerializeField] KeyCode openCode = KeyCode.F; //Letter to press to interact with door
     [SerializeField] float openSpeed;  //Adjust open speed of door
+    [SerializeField] string requiredKeyName; //For doors that require a key
+    [SerializeField] EnemyRoom enemyRoom;
     [SerializeField] public GameObject doorHinge;
+    [SerializeField] float openAngleOffsetY = -90f;
+
     bool isOpen = false; //toggle if door is open
-    bool isRotating;
-    bool hasKey; //If door requires key toggle.
-    /*The has key bool will need to interact with the playerscript in someway to see if the key is active and present on the player.*/
+    bool isLockedByEnemies;
     bool playerInRange;
+    bool isAnimating = false;
     private Quaternion openRotation;
     private Quaternion closeRotation;
+    private Quaternion targetRotation;
+    private PlayerInventory playerInventory;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        closeRotation = transform.rotation;
-        openRotation = closeRotation * Quaternion.Euler(0, 90f, 0);
+        closeRotation = doorHinge.transform.localRotation;
+        openRotation = closeRotation * Quaternion.Euler(0, openAngleOffsetY, 0);
+        targetRotation = closeRotation;
+        if (doorType == DoorType.LockedUntilClear)
+        {
+            isLockedByEnemies = true;
+        }
     }
 
     // Update is called once per frame
@@ -25,17 +37,53 @@ public class doorScript : MonoBehaviour
     {
         if (Input.GetKeyDown(openCode) && playerInRange)
         {
-            if (isOpen)
+            if (CanOpen())
             {
-                doorHinge.transform.Rotate(0f, 90f, 0f);
-                isOpen = false;
+                ToggleDoor();
             }
-            else if (!isOpen)
-            {
-                doorHinge.transform.Rotate(0f, -90f, 0f);
-                isOpen = true;
-            }
-            
+
+
+        }
+        if (Quaternion.Angle(doorHinge.transform.localRotation, targetRotation) > 0.01f)
+        {
+            doorHinge.transform.localRotation = Quaternion.Slerp(doorHinge.transform.localRotation, targetRotation, Time.deltaTime * openSpeed);
+        }
+    }
+
+    private bool CanOpen()
+    {
+        switch (doorType)
+        {
+            case DoorType.Normal:
+                return true;
+            case DoorType.RequiresKey:
+                return playerInventory != null && playerInventory.HasKey(requiredKeyName);
+            case DoorType.LockedUntilClear:
+                if (enemyRoom != null)
+                {
+                    if (!enemyRoom.RoomTriggered)
+                    {
+                        return true;
+                    }
+                    return enemyRoom.AreAllEnemiesDefeated();
+                }
+                return false;
+
+            default:
+                return false;
+        }
+    }
+
+    private void ToggleDoor()
+    {
+        isOpen = !isOpen;
+        if (isOpen)
+        {
+            targetRotation = closeRotation * Quaternion.Euler(0, 90f, 0);
+        }
+        else
+        {
+            targetRotation = closeRotation;
         }
     }
 
@@ -44,7 +92,29 @@ public class doorScript : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
-            
+            playerInventory = other.GetComponent<PlayerInventory>();
         }
     }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = false;
+        }
+    }
+
+    public void UnlockDoor()
+    {
+        isLockedByEnemies = false;
+    }
+
+    public void LockDoorByEnemies()
+    {
+        if (doorType == DoorType.LockedUntilClear)
+        {
+            isLockedByEnemies = true;
+        }
+    }
+
 }
