@@ -184,13 +184,13 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
                     faceTarget();
 
                     // set my bool for animator
-                    animator.SetBool("inMeleeRange", true);
+                    // animator.SetBool("inMeleeRange", true);
 
-                    // need to check for biteAttack 
+                    // need to check for punch
                     if (punchCounter >= punchRate)
                     {
 
-                        // animate the bite
+                        // punch animation
                         punchAttack();
 
                     }
