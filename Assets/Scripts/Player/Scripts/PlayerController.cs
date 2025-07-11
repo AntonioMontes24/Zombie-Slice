@@ -41,10 +41,10 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         playerMovement.HandleMove();//Updates Movement Handling 
         playerMovement.HandleSprint();// Updates Sprint handling
         playerMovement.HandleLanding();// updates landing handling
-        playerMovement.HandleJump();
-        weaponManager.HandleMeleeAttack();
+        playerMovement.HandleJump();// Updates Jump handling
+        weaponManager.HandleMeleeAttack();// Updates melee attacks
 
-        if (!GameManager.instance.isPaused)
+        if (!GameManager.instance.isPaused)// If game is not paused player can shoot else player cannot shoot
         {
         weaponManager.HandleShooting();// updates shooting
 
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         HandleLean();
     }
 
-    private void HandleLean()
+    private void HandleLean()// Handles L & R leans
     {
         if (Input.GetKey(KeyCode.Q))
             targetLean = leanAngle;
@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
             leanRoot.localRotation = leanRot;
     }
 
-    public IEnumerator PlayPickupAnimation(bool isOneHanded)
+    public IEnumerator PlayPickupAnimation(bool isOneHanded) // Handles Weapon Pick up animation
     {
         hasPlayedPickup = true;
         PlayGunTakeOutAnimation();
@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         yield return new WaitForSeconds(0.05f);
         UpdateOneHandedWeaponArms(isOneHanded);
     }
-    private void EnableHands()
+    private void EnableHands()// Enables hands if a weapon is equipped
     {
         if (armsModel != null)
         {
@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
     }
 
 
-    public void UpdateOneHandedWeaponArms(bool isOneHanded)
+    public void UpdateOneHandedWeaponArms(bool isOneHanded)// Disables one arm for one handed guns and melee weapons
     {
         Debug.Log("One Handed Function called" + isOneHanded);
         if (leftArm != null)
@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     }
 
-    public void PlayGunTakeOutAnimation()
+    public void PlayGunTakeOutAnimation()//Plays switch animation everytime a weapon is picked up or switched
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
@@ -137,14 +137,14 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         StartCoroutine(BlockFireDuringGunSwitch(0.7f));
     }
 
-    public IEnumerator BlockFireDuringGunSwitch(float duration )
+    public IEnumerator BlockFireDuringGunSwitch(float duration ) // Disables the ability to fire during weapon change
     {
         weaponManager.SetCanFire(false);
         yield return new WaitForSeconds(duration);
         weaponManager.SetCanFire(true);
     }
 
-    void HandleWeaponSwitch()
+    void HandleWeaponSwitch()// Handles weapon selection using mouse scroll and numbers
     {
         // Number key selection
         if (Input.GetKeyDown(KeyCode.Alpha1)) weaponManager.TryEquipWeapon(0);

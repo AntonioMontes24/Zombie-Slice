@@ -105,7 +105,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
     }
 
-    public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1, bool autoEquip = true)// Optional Parameters to modify starting ammo
+    public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1, bool autoEquip = true)// Optional Parameters to modify starting ammo and auto equip
     {
         WeaponStats runtimeWeapon = Instantiate(gun);
 
@@ -273,7 +273,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void HandleMeleeAttack()
+    public void HandleMeleeAttack()//Handles melee attacks
     {
         if (!HasGun()) return;
 
