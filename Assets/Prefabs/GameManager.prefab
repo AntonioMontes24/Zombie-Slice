@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3993791858681783806
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1927693393182816193}
+  - component: {fileID: 5863383098689358044}
+  m_Layer: 5
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1927693393182816193
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3993791858681783806}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 960, y: 540}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5863383098689358044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3993791858681783806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfaa6585231aeb74caa2c98b71e219ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerSpawnPoint: {x: 0, y: 0, z: 0}
+  menuActive: {fileID: 0}
+  menuPause: {fileID: 0}
+  menuWin: {fileID: 0}
+  menuLose: {fileID: 0}
+  menuOptions: {fileID: 0}
+  menuNoTime: {fileID: 0}
+  menuAudio: {fileID: 0}
+  menuVideo: {fileID: 0}
+  menuControls: {fileID: 0}
+  inGameUI: {fileID: 0}
+  gameTimerText: {fileID: 0}
+  remainingTime: 480
+  playerHPText: {fileID: 0}
+  playerHPBar: {fileID: 0}
+  playerStaminaText: {fileID: 0}
+  playerStaminaBar: {fileID: 0}
+  ammoText: {fileID: 0}
+  ammoyBar: {fileID: 0}
+  enemyInfoPanel: {fileID: 0}
+  enemyNameText: {fileID: 0}
+  enemyHPBar: {fileID: 0}
+  zombieCountText: {fileID: 0}
+  objectiveText: {fileID: 0}
+  player: {fileID: 0}
+  playerScript: {fileID: 0}
+  playerHealth: {fileID: 0}
+  flashDamageScreen: {fileID: 0}
+  flashHealScreen: {fileID: 0}
+  flashAmmoPickUp: {fileID: 0}
+  isPaused: 0
