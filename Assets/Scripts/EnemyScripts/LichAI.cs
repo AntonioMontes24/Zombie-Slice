@@ -65,7 +65,7 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
         animator.SetTrigger("isDead");
 
         // wait 2 seconds
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(5);
 
         Destroy(gameObject);
 
@@ -164,29 +164,6 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
                     StartCoroutine(shootBlightStorm());
                 }
 
-                
-                /*
-                // we can see the player
-                // can we blight storm
-                if (blightStormCounter >= blightStormRate)
-                {
-                    // we can blight storm
-                    StartCoroutine(shootBlightStorm());
-                    
-                }
-                else if (blightBallCounter >= blightBallRate)
-                {
-                    // we can blight ball
-                    StartCoroutine(shootBlightBall());
-                    
-                }
-                else
-                {
-                    // update our counts
-                    blightBallCounter++;
-                    blightStormCounter++;
-                }
-                */
             }
 
         }

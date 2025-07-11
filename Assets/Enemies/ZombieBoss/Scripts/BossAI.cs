@@ -4,6 +4,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
+
 public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
 {
     // create some serialized variables
@@ -38,6 +39,10 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] int blightBallDamage;                  // how much damage does a blight ball do
     [SerializeField] float minShootDistance;                // minimum range to shoot blightball
 
+    [SerializeField] Collider clawCollider;                 // Collider for the power attack
+    int attackToUse;
+    int attackCounter;
+    [SerializeField] int attackRate;
 
     public int CurrentHealth
     {
@@ -49,17 +54,23 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
         get { return _maxHealth; }
     }
 
+    public int chooseAttack()
+    {
+        return Random.Range(0, 5);
+
+    }
+
     // coroutines 
     IEnumerator powerAttack()
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
-            animator.SetBool("canPowerAttack", true);
+            attackCounter = 0;
+
+            animator.SetTrigger("Attack");
 
             // wait 1 second
             yield return new WaitForSeconds(1);
-
-            animator.SetBool("canPowerAttack", false);
 
             // assign damage to the player
             IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
@@ -67,10 +78,28 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
         }
     }
 
+    public void clawColliderOn()
+    {
+        if (clawCollider)
+            clawCollider.enabled = true;
+    }
+
+    public void clawColliderOff()
+    {
+        if (clawCollider)
+            clawCollider.enabled = false;
+    }
+
     IEnumerator removeCorpse()
     {
         if (animator != null && animator.runtimeAnimatorController != null)
             animator.SetTrigger("isDead");
+       
+        transform.Translate(Vector3.down * 1.0f * Time.deltaTime);
+        yield return new WaitForSeconds(2.0f);
+        Destroy(gameObject, 2.0f);
+
+        /*
         // wait 2 seconds
         yield return new WaitForSeconds(2);
 
@@ -78,29 +107,24 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
 
         // update the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(-1);
+        */
     }
 
     IEnumerator shootBlightBall()
     {
-       
-        // set our bool for transition
-        animator.SetBool("canShootBlight", true);
-
+        attackCounter = 0;
+        animator.SetTrigger("Blightball");
         // wait 1 second
         yield return new WaitForSeconds(1);
 
-        // set our bool for transition
-        animator.SetBool("canShootBlight", false);
-
-        // possibly instantiate here
-        if (blightBall == null || !blightBall.activeInHierarchy)
-        {
-            Instantiate(blightBall, shootPosition.position, transform.rotation);
-        }
-        
+    }
+    public void createBlightBall()
+    {
+        // create one of our prefabs at the shoot position 
+        Instantiate(blightBall, shootPosition.position, transform.rotation);
     }
 
-     public void takeDamage(int amount)
+    public void takeDamage(int amount)
     {
         if (currHealth > 0)
         {
@@ -122,64 +146,44 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
         }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
         currHealth = _maxHealth;
         minShootDistance = agent.stoppingDistance + 20.0f;
         // increase the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(1);
     }
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+    
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (currHealth >= 0)
+        if (currHealth > 0)
         {
             if (playerInRange && canWeSeeThePlayer())
             {
-                powerAttackCounter++;
-                blightBallCounter++;
-
-                if (agent.remainingDistance <= agent.stoppingDistance)
+                attackCounter++;
+                if(attackCounter >= attackRate)
                 {
-                    // we need to face the player
-                    faceTarget();
-
-                    // set my bool for animator
-                    animator.SetBool("inMeleeRange", true);
-
-                    // need to check for biteAttack 
-                    if (powerAttackCounter >= powerAttackRate)
+                    if (agent.remainingDistance <= agent.stoppingDistance)
                     {
-                        // reset the counter
-                        powerAttackCounter = 0;
+                        // we need to face the player
+                        faceTarget();
 
-                        // animate the bite
+                        // melee attack
                         StartCoroutine(powerAttack());
                     }
-
-                }
-                else
-                {
-                    animator.SetBool("inMeleeRange", false);
-                }
-
-                // check if we are beyond minimum shoot distance
-                if(agent.remainingDistance <= minShootDistance)
-                {
-                    // we are in range but not in melee range
-                    if (blightBallCounter >= blightBallRate)
+                    else
                     {
-                        // reset our counter
-                        blightBallCounter = 0;
-
-                        // animate the blight ball
-                        StartCoroutine(shootBlightBall());
-
+                       // ranged attack
+                       StartCoroutine(shootBlightBall());
                     }
                 }
-                
+ 
             }
         }
     }
@@ -235,26 +239,23 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
 
                 agent.SetDestination(GameManager.instance.player.transform.position);
 
-                if (animator != null && animator.runtimeAnimatorController != null)
-                    animator.SetBool("isWalking", true);
+                    animator.SetFloat("Speed", speed);
 
-            
 
                 // face the target
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     faceTarget();
+                    animator.SetFloat("Speed", 0);
                 }
 
                 // we need to return true since we found the player
                 return true;
             }
 
-
         }
 
-        // we did not hit the player
-        animator.SetBool("isWalking", false);
+        animator.SetFloat("Speed", 0);
         return false;
     }
 }
