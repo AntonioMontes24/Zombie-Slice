@@ -12,6 +12,10 @@ public class OptionsMenu : MonoBehaviour
     [SerializeField] GameObject VideoMenu;
     [SerializeField] GameObject ControlsMenu;
 
+    [Header("Controlers Type")]
+    [SerializeField] GameObject KBMouse;
+    [SerializeField] GameObject controllerPad;
+
     private GameObject ActiveMenu;
 
     private void Start()
@@ -19,6 +23,9 @@ public class OptionsMenu : MonoBehaviour
         AudioMenu.SetActive(false);
         VideoMenu.SetActive(false); 
         ControlsMenu.SetActive(false);
+
+        KBMouse.SetActive(false);
+        controllerPad.SetActive(false);
     }
 
     private void SetActiveMenu(GameObject menu)
@@ -34,6 +41,17 @@ public class OptionsMenu : MonoBehaviour
         {
             ActiveMenu.SetActive(true);
         }
+
+        if(ActiveMenu == ControlsMenu)
+        {
+            ShowKBMouseBindings();
+        }
+        else
+        {
+            KBMouse.SetActive(false);
+            controllerPad.SetActive(false);
+        }
+
     }
 
     public void AudioOptions()
@@ -54,6 +72,18 @@ public class OptionsMenu : MonoBehaviour
 
     }
 
+    public void ShowKBMouseBindings()
+    {
+        KBMouse.SetActive(true);
+        controllerPad.SetActive(false);
+    }
+
+    public void ShowControllerBindings()
+    {
+        KBMouse.SetActive(false);
+        controllerPad.SetActive(true);
+    }
+
 
     public void Back()
     {
@@ -62,6 +92,11 @@ public class OptionsMenu : MonoBehaviour
             ActiveMenu.SetActive(false);
             ActiveMenu = null;
         }
+
+        KBMouse.SetActive(false);
+        controllerPad.SetActive(false);
+
+
         if(optionsMenuPanel != null)
             {
                 optionsMenuPanel.SetActive(false);

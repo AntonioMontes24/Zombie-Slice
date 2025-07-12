@@ -5,20 +5,24 @@ using NUnit.Framework.Interfaces;
 using System.Linq;
 using UnityEngine.UI;
 using NUnit.Framework;
-using TMPro;
+using UnityEngine.Audio;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
+    [Header("Starting Weapon")]
+    [SerializeField] private MeleeWeaponStats startingKnife;
+
+
     [Header("Weapon Items")]
-    [SerializeField] List<GunStats> gunList = new List<GunStats>();
+    [SerializeField] List<WeaponStats> weaponList = new List<WeaponStats>();
     [SerializeField] float adsSpeed;
     [SerializeField] GameObject gunModel;
     [SerializeField] Transform weaponHolder;
+    [SerializeField] TMPro.TextMeshProUGUI ammoText;
 
     [Header("Weapon Components")]
     [SerializeField] AudioSource aud;
     [SerializeField] Camera gameplayCamera;
-    [SerializeField] public List<Image> hotBarSlots = new List<Image>();
     [SerializeField] int currentWeaponIndex;
     [SerializeField] List<Image> weaponIcons = new List<Image>();
     [SerializeField] List<Button> buttonHiglight = new List<Button>();
@@ -63,13 +67,15 @@ public class PlayerWeaponManager : MonoBehaviour
     private bool canFire = true;
     private PlayerMovement movement;
 
+    //melee
+    private float meleeCooldownTimer;
+
     //GunRecoil and position
     private Vector3 currentGunOffset;
     private Vector3 initialLeftHandPos;
     private Vector3 initialRightHandPos;
     private Vector3 currentLeftHandOffset;
     private Vector3 currentRightHandOffset;
-
 
     private void Start()
     {
@@ -79,7 +85,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if (rightHandGrip != null)
             initialRightHandPos = rightHandGrip.localPosition;
 
-        GameManager.instance.ammoText.SetText("00");
+        ammoText.SetText("00");
 
         movement = GetComponentInParent<PlayerMovement>();
         if (movement == null)
@@ -93,29 +99,38 @@ public class PlayerWeaponManager : MonoBehaviour
             else
                 originalButtonColors.Add(default);
         }
+
+        if (startingKnife != null)
+            GetGunStats(startingKnife, autoEquip: true);
+
     }
 
-    public void GetGunStats(GunStats gun, int startingAmmo = -1, int reserveAmmo = -1)// Optional Parameters to modify starting ammo 
+    public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1, bool autoEquip = true)// Optional Parameters to modify starting ammo and auto equip
     {
-        GunStats runtimeGun = gun.Clone();
+        WeaponStats runtimeWeapon = Instantiate(gun);
 
-        runtimeGun.ammoCur = (startingAmmo >= 0) ? startingAmmo : runtimeGun.ammoMax;
-        runtimeGun.ammoReserve = (reserveAmmo >= 0) ? reserveAmmo : runtimeGun.maxAmmoReserve;
+        if (runtimeWeapon is FireArmStats firearm)
+        {
+            firearm.ammoCur = (startingAmmo >= 0) ? startingAmmo : firearm.ammoMax;
+            firearm.ammoReserve = (reserveAmmo >= 0) ? reserveAmmo : firearm.maxAmmoReserve;
+        }
 
-        gunList.Add(runtimeGun);
-        EquipWeapon(gunList.Count - 1);
+        weaponList.Add(runtimeWeapon);
+
+        if(autoEquip)
+        EquipWeapon(weaponList.Count - 1);
     }
 
     public void HandleShooting()//Handles Shooting
     {
-        if(!canFire) return;
+        if (!canFire) return;
         if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
             return;
 
         shootCooldown -= Time.deltaTime;
-        if (gunList.Count == 0) return;
-        GunStats currentGun = gunList[currentWeaponIndex];
-        if (isReloading) return;
+        if (weaponList.Count == 0) return;
+        FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
+        if (currentGun == null || isReloading) return;
 
         bool fireInput = isAutomaticMode ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1");
 
@@ -126,7 +141,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 shootCooldown = isAutomaticMode ? currentGun.autoFireRate : currentGun.semiFireRate;
                 Shoot();
                 currentGun.ammoCur--;
-                GameManager.instance.ammoText.SetText(currentGun.ammoCur.ToString() + " / " + currentGun.ammoReserve.ToString() );
+                ammoText.SetText(currentGun.ammoCur + " / " + currentGun.ammoReserve);
                 playedEmptySound = false;
 
                 if (currentGun.ammoCur <= 0 && currentGun.ammoReserve > 0)
@@ -149,16 +164,16 @@ public class PlayerWeaponManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R) && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
             reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));// Starts Reload
-        //ammoText.SetText(currentGun.ammoCur.ToString());
     }
 
     void Shoot()//Handles damage/Ray cast/ and checks for current gun and gun stats
     {
-        if (gunList.Count == 0 || gameplayCamera == null) return;
-        GunStats currentGun = gunList[currentWeaponIndex];
+        if (weaponList.Count == 0 || gameplayCamera == null) return;
+        FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
+        if (currentGun == null) return;
 
         if (currentGun.shootSound != null)
-            aud.PlayOneShot(currentGun.shootSound/*, currentGun.shootVol*/);
+            aud.PlayOneShot(currentGun.shootSound);
 
         Ray ray;
         if (isAiming)
@@ -175,7 +190,6 @@ public class PlayerWeaponManager : MonoBehaviour
             ray = new Ray(barrelTip.position, spreadDir);
         }
 
-        
         if (muzzleFlashPrefab != null && barrelTip != null)//Muzzle flash handler
         {
             muzzleFlashTime = 0.1f;
@@ -199,12 +213,9 @@ public class PlayerWeaponManager : MonoBehaviour
                 {
                     GameManager.instance.SetCurrentEnemy(enemyHealth);
                 }
-            } else
+            }
+            else
             {
-                if (hit.collider.CompareTag("Enemy"))
-                {
-                    Debug.LogWarning("Enemy hit, but iEnemyHealth component not found on: " + hit.collider.name);
-                }
                 GameManager.instance.HideEnemyUI();
             }
 
@@ -244,8 +255,8 @@ public class PlayerWeaponManager : MonoBehaviour
                 if (rb != null)
                 {
                     Vector3 ejectDirection = shellEjectionPoint.right + // Random Shell ejection
-                                       (shellEjectionPoint.up * Random.Range(-0.2f, 0.2f)) +
-                                       (shellEjectionPoint.forward * Random.Range(-0.1f, 0.1f));
+                        (shellEjectionPoint.up * Random.Range(-0.2f, 0.2f)) +
+                        (shellEjectionPoint.forward * Random.Range(-0.1f, 0.1f));
                     rb.AddForce(ejectDirection.normalized * shellEjectForce, ForceMode.Impulse);
                     rb.AddTorque(Random.insideUnitSphere * shellEjectForce, ForceMode.Impulse);
                 }
@@ -255,24 +266,79 @@ public class PlayerWeaponManager : MonoBehaviour
             currentGunOffset.y -= weaponRecoilKick;
             currentLeftHandOffset.z -= handRecoilKick;
             currentRightHandOffset.z -= handRecoilKick;
-        } else
+        }
+        else
         {
             GameManager.instance.HideEnemyUI();
         }
     }
 
-    IEnumerator ReloadRoutine(GunStats gun)//Handles reload and ammo limit reserve. 
+    public void HandleMeleeAttack()//Handles melee attacks
+    {
+        if (!HasGun()) return;
+
+        var weapon = weaponList[currentWeaponIndex];
+        if (weapon is not MeleeWeaponStats melee) return;
+
+        meleeCooldownTimer -= Time.deltaTime;
+
+        if (!Input.GetButtonDown("Fire1")) return;
+        if (meleeCooldownTimer > 0f) return;
+
+        meleeCooldownTimer = melee.attackRate;
+
+        if (animator != null)
+        {
+            animator.ResetTrigger("MeleeAttack");
+            animator.SetTrigger("MeleeAttack");
+            Collider knifeCollider = currentWeaponInstance.GetComponentInChildren<Collider>();
+            StartCoroutine(EnableKnifeHitBox(knifeCollider, 0.3f));
+        }
+
+        if (melee.swingSound != null)
+            aud.PlayOneShot(melee.swingSound);
+
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        Debug.DrawRay(ray.origin, ray.direction * 2f, Color.red, 1f); // Debug line
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 2f))
+        {
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            if (dmg != null)
+                dmg.takeDamage(melee.damage);
+
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                aud.PlayOneShot(melee.hitSound);//TESTING THIS 
+                iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
+                if (enemyHealth != null)
+                {
+                    GameManager.instance.SetCurrentEnemy(enemyHealth);
+                }
+            }
+
+            if (melee.hitEffect != null)
+                Instantiate(melee.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
+
+            if (melee.hitSound != null)
+                aud.PlayOneShot(melee.hitSound);
+        }
+    }
+
+
+
+    IEnumerator ReloadRoutine(FireArmStats gun)//Handles reload and ammo limit reserve.
     {
         isReloading = true;
         if (animator != null && animator.runtimeAnimatorController != null)
             animator.SetTrigger("Reload");
 
-        if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound/*, 0.8f*/);
-        if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie/*, 0.8f*/);
+        if (gun.reloadSound != null) aud.PlayOneShot(gun.reloadSound);
+        if (gun.reloadFreakingZombie != null) aud.PlayOneShot(gun.reloadFreakingZombie);
         yield return new WaitForSeconds(gun.reloadTime);
 
         int needed = gun.ammoMax - gun.ammoCur;
-        if(gun.ammoReserve >= needed)
+        if (gun.ammoReserve >= needed)
         {
             gun.ammoCur += needed;
             gun.ammoReserve -= needed;
@@ -284,7 +350,7 @@ public class PlayerWeaponManager : MonoBehaviour
         }
         isReloading = false;
         reloadCoroutine = null;
-        GameManager.instance.ammoText.SetText(gun.ammoCur.ToString() + " / " + gun.ammoReserve.ToString());
+        ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
     }
 
     public void SetAiming(bool aim)//Sets aiming bool
@@ -299,6 +365,9 @@ public class PlayerWeaponManager : MonoBehaviour
     public void HandleADS()//Handles ads position/recoil
     {
         if (currentHipPosition == null || currentAdsPosition == null)
+            return;
+
+        if (weaponList[currentWeaponIndex] is MeleeWeaponStats)
             return;
 
         Transform target = isAiming ? currentAdsPosition : currentHipPosition;
@@ -340,35 +409,37 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void ToggleFireMode()//Sets Firemode
     {
-        if (gunList.Count == 0) return;
-        GunStats currentGun = gunList[currentWeaponIndex];
+        if (weaponList.Count == 0) return;
+        FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
+        if (currentGun == null) return;
 
         if (currentGun.canSwitchFireMode)
         {
             isAutomaticMode = !isAutomaticMode;
             if (currentGun.fireModeSwitchSound != null)
-                aud.PlayOneShot(currentGun.fireModeSwitchSound/*, 0.6f*/);
+                aud.PlayOneShot(currentGun.fireModeSwitchSound);
         }
     }
 
-    public bool HasGun()//Checks if there is a current gun 
+    public bool HasGun()//Checks if there is a current gun
     {
-        return gunList.Count > 0;
+        return weaponList.Count > 0;
     }
 
-    public GunStats CurrentGun
+    public FireArmStats CurrentGun
     {
         get
         {
-            if (gunList == null || gunList.Count == 0)
+            if (weaponList == null || weaponList.Count == 0)
                 return null;
-            return gunList[currentWeaponIndex];
+            return weaponList[currentWeaponIndex] as FireArmStats;
         }
     }
 
     public void AddAmmoToReserve(int ammoCount)
     {
-        var gun = gunList[currentWeaponIndex];
+        var gun = CurrentGun;
+        if (gun == null) return;
         gun.ammoReserve += ammoCount;
         gun.ammoReserve = Mathf.Min(gun.ammoReserve, gun.maxAmmoReserve);
         StartCoroutine(AmmoFlash());
@@ -379,50 +450,85 @@ public class PlayerWeaponManager : MonoBehaviour
         GameManager.instance.flashAmmoPickUp.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.flashAmmoPickUp.SetActive(false);
-        GameManager.instance.ammoText.SetText(CurrentGun.ammoCur.ToString() + " / " + CurrentGun.ammoReserve.ToString());
+        ammoText.SetText(CurrentGun.ammoCur + " / " + CurrentGun.ammoReserve);
     }
 
     public void UpdateAmmoUi()// Helper to update Ammo UI
     {
         if (HasGun())
         {
-            GunStats gun = CurrentGun;
-            GameManager.instance.ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+            FireArmStats gun = CurrentGun;
+            ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
         }
     }
 
     public void EquipWeapon(int index)// Equips weapon and assings Gun icon
     {
-        if (index < 0 || index >= gunList.Count)
+        if (index < 0 || index >= weaponList.Count)
         {
             Debug.LogWarning("EquipWeapon: Invalid index");
             return;
         }
 
         currentWeaponIndex = index;
-        GunStats gun = gunList[currentWeaponIndex];
-        isAutomaticMode = gun.isAutomaticDefault;
+
+        WeaponStats weapon = weaponList[currentWeaponIndex];
+        FireArmStats gun = weapon as FireArmStats;
+        MeleeWeaponStats melee = weapon as MeleeWeaponStats;
+
+        if (gun == null && melee == null) return;
+
+        if (gun != null)
+        {
+            isAutomaticMode = gun.isAutomaticDefault;
+        }
 
         if (currentWeaponInstance != null)
             Destroy(currentWeaponInstance);
 
-        currentWeaponInstance = Instantiate(gun.gunModel, weaponHolder);
-        currentWeaponInstance.transform.localPosition = Vector3.zero;
-        currentWeaponInstance.transform.localRotation = Quaternion.identity;
+        currentWeaponInstance = Instantiate(weapon.weaponModel, weaponHolder);
+        currentWeaponInstance.transform.localPosition = weapon.weaponModel.transform.localPosition;
+        currentWeaponInstance.transform.localRotation = weapon.weaponModel.transform.localRotation;
+
+        if (melee != null)// Assings melee damage from melee stats
+        {
+            MeleeWeaponHitbox hitbox = currentWeaponInstance.GetComponentInChildren<MeleeWeaponHitbox>();
+            if (hitbox != null)
+                hitbox.SetDamage(melee.damage);
+        }
+
 
         currentHipPosition = currentWeaponInstance.transform.Find("HipPosition");
+        Debug.Log("HipPosition local rotation: " + currentHipPosition.localRotation);
+        Debug.Log("Hip world rotation" + currentHipPosition.rotation);
         currentAdsPosition = currentWeaponInstance.transform.Find("ADSPosition");
         barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
         shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
 
-        GameManager.instance.ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
 
-        var player = FindFirstObjectByType<PlayerController>();
-        player.StartCoroutine(player.PlayPickupAnimation(gun.isOneHanded));
+        if (gun != null)// new flag to check if the current equip weapon is a firearm, shows ammo, does not displays ammo for melee
+        {
+            currentAdsPosition = currentWeaponInstance.transform.Find("ADSPosition");
+            barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
+            shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
+            ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+        }
+        else
+        {
+            // Melee weapon — disable ADS
+            currentAdsPosition = null;
+            barrelTip = null;
+            shellEjectionPoint = null;
+            ammoText.SetText("∞");
+        }
+
+        var player = Object.FindFirstObjectByType<PlayerController>();
+        bool isOneHanded = gun?.isOneHanded ?? melee?.isOneHanded ?? true;
+        player.StartCoroutine(player.PlayPickupAnimation(isOneHanded));
 
         for (int i = 0; i < weaponIcons.Count; i++)
         {
-            bool hasWeapon = i < gunList.Count && gunList[i].gunIcon != null;
+            bool hasWeapon = i < weaponList.Count && weaponList[i]?.weaponIcon != null;
 
             if (weaponIcons[i] != null)
             {
@@ -430,7 +536,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
                 if (hasWeapon)
                 {
-                    weaponIcons[i].sprite = gunList[i].gunIcon;
+                    weaponIcons[i].sprite = weaponList[i].weaponIcon;
                     weaponIcons[i].color = Color.white;
                 }
             }
@@ -449,12 +555,11 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-
-    public void ScrollWeapon(int direction)// Scroll weapon selection 
+    public void ScrollWeapon(int direction)
     {
-        if (gunList.Count == 0) return;
+        if (weaponList.Count == 0) return;
 
-        int newIndex = (currentWeaponIndex + direction + gunList.Count) % gunList.Count;
+        int newIndex = (currentWeaponIndex + direction + weaponList.Count) % weaponList.Count;
 
         if (newIndex == currentWeaponIndex)
             return; // Don't re-equip the same weapon
@@ -462,9 +567,16 @@ public class PlayerWeaponManager : MonoBehaviour
         EquipWeapon(newIndex);
     }
 
+    IEnumerator EnableKnifeHitBox(Collider hitbox, float duration)
+    {
+        hitbox.enabled = true;
+        yield return new WaitForSeconds(duration);
+        hitbox.enabled = false;
+    }
+
     public void TryEquipWeapon(int index)
     {
-        if (index < 0 || index >= gunList.Count) return;
+        if (index < 0 || index >= weaponList.Count) return;
         if (index == currentWeaponIndex) return;
 
         EquipWeapon(index);
@@ -474,5 +586,4 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         canFire = value;
     }
-
 }

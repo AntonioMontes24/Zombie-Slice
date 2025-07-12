@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using EasyRoads3Dv3;
 
 
 public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
@@ -17,6 +18,8 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] NavMeshAgent agent;                    // NavMeshAgent to traverse our navmesh
     [SerializeField] Animator animator;                     // this will handle our animations
 
+    private Rigidbody rb;
+
     [SerializeField] bool playerInRange;                    // is our player in range to be chased
     Vector3 playerDirection;                                // Direction of our player
     [SerializeField] int field_of_view;                     // the number of degrees our of enemy can see
@@ -29,6 +32,9 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] int attackRate;                         // our Attack is on cooldown
     [SerializeField] int attackDamage;                       // how much damage do we do
 
+    //Bool to track enemy death for enemy health bar to be hidden
+    private bool isDead = false;
+
     public int CurrentHealth
     {
         get { return currHealth; }
@@ -39,35 +45,93 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         get { return _maxHealth; }
     }
 
+    // using awake to get component references soon as instance is being used
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        if(rb == null)
+        {
+            Debug.Log($"Rigidbody NOT FOUND!! on {gameObject.name}.");
+        }
+
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+    }
+
 
     public void takeDamage(int amount)
     {
-        if (currHealth > 0)
+        if (isDead)
         {
-            currHealth -= amount;
+            GameManager.instance.HideEnemyUI();
+            return;
+        }
 
-            GameManager.instance.UpdateEnemyHealthBar(this);
+        // redoing this section to set a clamp on health to ensure it doesnt go below 0.
+        currHealth -= amount;
+        currHealth = Mathf.Max(0, currHealth);
 
-            // we took damage so we need to head towards the player
-            // set our navmesh agent towards the players position
-            // agent.SetDestination(GameManager.instance.player.transform.position);
-            agent.SetDestination(GameManager.instance.player.transform.position);
+        // constantly update health bar
+        GameManager.instance.UpdateEnemyHealthBar(this);
 
-            if (currHealth <= 0)
+        //if currhealth is exactly 0 and not already dead
+        if(currHealth <= 0 && !isDead)
+        {
+            isDead = true;
+            GameManager.instance.HideEnemyUI();
+
+
+            //stop nav mesh instantly
+            if(agent != null && agent.enabled)
             {
-                // remove the corpse by destroying the gameObject
-                StartCoroutine(removeCorpse());
-                GameManager.instance.enemyInfoPanel.SetActive(false);
+                agent.isStopped = true;
+                agent.enabled = false;
+            }
+
+            if(rb != null)
+            {
+                rb.isKinematic = false;
+                rb.useGravity = true;
+
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+
+                rb.AddForce(Vector3.down * 10f, ForceMode.Impulse);
+
+            }
+
+            if(animator != null)
+            {
+                animator.applyRootMotion = false;
+                if(animator.runtimeAnimatorController != null)
+                {
+                    animator.SetTrigger("isDead");
+                }
+            }
+
+            StartCoroutine(removeCorpse());
+
+        } else if (currHealth > 0)
+        {
+            if(agent != null && agent.enabled && !agent.isStopped)
+            {
+                agent.SetDestination(GameManager.instance.player.transform.position);
             }
         }
     }
 
     IEnumerator removeCorpse()
     {
-        if (animator != null && animator.runtimeAnimatorController != null)
-            animator.SetTrigger("isDead");
-        // wait 2 seconds
-        yield return new WaitForSeconds(2);
+
+        yield return null;
+
+
+        yield return new WaitForSeconds(2.0f);
+
+        GameManager.instance.HideEnemyUI();
 
         Destroy(gameObject);
 
@@ -104,12 +168,15 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     // Update is called once per frame
     void Update()
     {
+        //if dead, no AI logic is to be ran
+        if(isDead) return;
+
+
         if (currHealth >= 0)
         {
             if (playerInRange && canWeSeeThePlayer())
             {
                 
-      
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     // we need to face the player
@@ -133,6 +200,12 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
                 {
                     attackCounter++;
                     animator.SetBool("inMeleeRange", false);
+
+                    // make sure path is still set if player is visible and not in range
+                    if(agent.enabled && !agent.isStopped)
+                    {
+                        agent.SetDestination(GameManager.instance.player.transform.position);
+                    }
                 }
             }
         }

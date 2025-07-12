@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class pickup : PickupBase
 {
-    [SerializeField] GunStats gun;
+    [SerializeField] WeaponStats gun;
     [SerializeField] int startingAmmo = -1;
     [SerializeField] private int reserveAmmo = -1;
 
