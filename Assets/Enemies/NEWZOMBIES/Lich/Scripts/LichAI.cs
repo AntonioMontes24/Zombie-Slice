@@ -71,7 +71,15 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 
     IEnumerator removeCorpse()
     {
-        animator.Play("Idle");
+        animator.enabled = false;
+
+        // Enable the Animator
+        animator.enabled = true;
+
+        //Rebind the animator and update it
+        animator.Rebind();
+        animator.Update(0f);
+
         animator.SetTrigger("isDead");
 
         aud.Stop();
@@ -161,6 +169,8 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
     {
         currHealth = _maxHealth;
         audioCounter = 999;
+
+        animator = GetComponent<Animator>();
 
         if (aud_clip_idle != null)
            // TODO 
