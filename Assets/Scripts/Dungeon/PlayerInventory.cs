@@ -19,5 +19,8 @@ public class PlayerInventory : MonoBehaviour
     public void AddKey(string keyName)
     {
         keys.Add(keyName);
+        Debug.Log("Has Key " + keyName);
     }
+
+   
 }

@@ -1,13 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class EnemyRoom : MonoBehaviour
 {
-    [SerializeField] EnemySpawner spawner;
+    [SerializeField] List<GameObject> enemyPrefabs;
+    [SerializeField] List<Transform> spawnPoints;
     [SerializeField] Collider triggerzone;
     [SerializeField] int spawnCount;
     [SerializeField] List<doorScript> doorsToLock = new List<doorScript>();
+    
 
     bool roomTriggered;
     bool doorUnlocked = false;
@@ -33,21 +36,7 @@ public class EnemyRoom : MonoBehaviour
             UnlockDoor();
         }
     }
-//     public void TriggerRoom()
-// {
-//     if (!roomTriggered)
-//     {
-//         roomTriggered = true;
 
-//         if (spawner != null)
-//         {
-//             List<GameObject> spawnedEnemies = spawner.SpawnEnemies();
-//             enemies.AddRange(spawnedEnemies);
-//         }
-
-//         LockDoors(); // Optional, only if you want the doors to close after spawning
-//     }
-// }
 
 
     void LockDoor()
@@ -74,26 +63,36 @@ public class EnemyRoom : MonoBehaviour
     }
 
     void SpawnEnemies()
+{
+    activeEnemies.Clear();
+
+    // Safety: Clamp the count to how many spawn points you actually have
+    int count = Mathf.Min(spawnCount, spawnPoints.Count);
+
+    List<int> usedIndices = new List<int>();
+
+    for (int i = 0; i < count; i++)
     {
-        for (int i = 0; i < spawnCount; i++)
+        // Choose a random unused spawn point
+        int spawnIndex;
+        do
         {
-            var max = spawner.GetTotalSpawnArea();
-            var pick = Random.Range(0, max);
-            float current = 0f;
-
-            foreach (var component in spawner.GetSpawnComponents())
-            {
-                current += component.GetSize();
-                if (current > pick)
-                {
-                    var enemy = Instantiate(spawner.PickEnemy(), component.GetSpawnPosition(), Quaternion.identity);
-                    activeEnemies.Add(enemy);
-                    break;
-                }
-
-            }
+            spawnIndex = UnityEngine.Random.Range(0, spawnPoints.Count);
         }
+        while (usedIndices.Contains(spawnIndex));
+        usedIndices.Add(spawnIndex);
+
+        Transform spawnPoint = spawnPoints[spawnIndex];
+
+        // Choose a random enemy prefab
+        GameObject enemyPrefab = enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Count)];
+
+        GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        activeEnemies.Add(enemy);
     }
+}
+
+
     public bool AreAllEnemiesDefeated()
     {
         return activeEnemies.TrueForAll(e => e == null || !e.activeInHierarchy);

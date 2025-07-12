@@ -6,11 +6,11 @@ public class doorScript : MonoBehaviour
     [SerializeField] private DoorType doorType = DoorType.Normal;
     [SerializeField] KeyCode openCode = KeyCode.F; //Letter to press to interact with door
     [SerializeField] float openSpeed;  //Adjust open speed of door
-    [SerializeField] string requiredKeyName; //For doors that require a key
+    [SerializeField] string requiredKeyID; //For doors that require a key
     [SerializeField] EnemyRoom enemyRoom;
     [SerializeField] public GameObject doorHinge;
     [SerializeField] float openAngleOffsetY = -90f;
-
+    
     bool isOpen = false; //toggle if door is open
     bool isLockedByEnemies;
     bool playerInRange;
@@ -57,7 +57,11 @@ public class doorScript : MonoBehaviour
             case DoorType.Normal:
                 return true;
             case DoorType.RequiresKey:
-                return playerInventory != null && playerInventory.HasKey(requiredKeyName);
+                if (playerInventory != null && playerInventory.HasKey(requiredKeyID))
+                {
+                    return true;
+                }
+                return false;
             case DoorType.LockedUntilClear:
                 if (enemyRoom != null)
                 {
@@ -85,6 +89,16 @@ public class doorScript : MonoBehaviour
         {
             targetRotation = closeRotation;
         }
+    }
+
+    public void CloseDoor()
+    {
+        if (!isOpen)
+        {
+            return;
+        }
+        isOpen = false;
+        targetRotation = closeRotation;
     }
 
     void OnTriggerEnter(Collider other)
