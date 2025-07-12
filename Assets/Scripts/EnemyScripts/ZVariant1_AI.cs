@@ -28,6 +28,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     int attackCounter;                                       // incremented until we hit the attackRate
     [SerializeField] int attackRate;                         // our Attack is on cooldown
     [SerializeField] int attackDamage;                       // how much damage do we do
+     
 
     [SerializeField] Collider clawCollider;                 // claw collider
 
@@ -42,6 +43,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] AudioClip aud_clip_idle;
     [SerializeField] AudioClip aud_clip_attack;
     [SerializeField] AudioClip aud_clip_death;
+    [SerializeField] AudioClip aud_clip_swipe;
     [SerializeField] int audioCounter;
 
     public int CurrentHealth
@@ -85,13 +87,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
             agent.isStopped = true;
             animator.SetTrigger("isDead");
 
-        aud.Stop();
-
-        if (aud_clip_death != null)
-            aud.PlayOneShot(aud_clip_death);
-
-
-        // wait 2 seconds
+        // wait 4 seconds
         yield return new WaitForSeconds(4);
 
         Destroy(gameObject);
@@ -110,11 +106,38 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
             // wait 1 second
             yield return new WaitForSeconds(1);
 
-            // assign damage to the player
-            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
-            player_dmg.takeDamage(attackDamage);
+            
         }
 
+    }
+
+    public void assignAttackDamage()
+    {
+        // assign damage to the player
+        IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+        player_dmg.takeDamage(attackDamage);
+    }
+
+    public void playAudioDeath()
+    {
+        aud.Stop();
+
+        if (aud_clip_death != null)
+            aud.PlayOneShot(aud_clip_death);
+    }
+
+    public void playAudioIdle()
+    {
+        if (aud_clip_idle != null)
+            aud.PlayOneShot(aud_clip_idle);
+    }
+
+    public void playAudioSwipe()
+    {
+        aud.Stop();
+
+        if (aud_clip_swipe != null)
+            aud.PlayOneShot(aud_clip_swipe);
     }
 
     public void clawColliderOn()
