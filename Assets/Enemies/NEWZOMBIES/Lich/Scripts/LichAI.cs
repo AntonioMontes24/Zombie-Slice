@@ -182,13 +182,14 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
     // Update is called once per frame
     void Update()
     {
+        
         if (currHealth > 0)
         {
-            attackCounter++;
-            
+
+            // attackCounter++;
 
             // we are alive to lets check if we can attack
-            if(canWeSeeThePlayer() && playerInRange)
+            if (canWeSeeThePlayer() && playerInRange)
             {
                 
                 if (audioCounter >= 750)
@@ -202,6 +203,7 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
                 else
                 {
                     audioCounter++;
+                    attackCounter++;
                 }
             }
             // we check blight storm before we check blight ball
