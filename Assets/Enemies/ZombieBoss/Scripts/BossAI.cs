@@ -141,6 +141,7 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
             // set our navmesh agent towards the players position
             // agent.SetDestination(GameManager.instance.player.transform.position);
             agent.SetDestination(GameManager.instance.player.transform.position);
+            animator.SetFloat("Speed", 1);
 
             if (currHealth <= 0)
             {
@@ -246,7 +247,7 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
 
                 agent.SetDestination(GameManager.instance.player.transform.position);
 
-                    animator.SetFloat("Speed", speed);
+                    animator.SetFloat("Speed", 1);
 
 
                 // face the target
