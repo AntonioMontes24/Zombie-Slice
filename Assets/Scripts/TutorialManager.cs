@@ -1,3 +1,5 @@
+
+
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ public class TutorialManager : MonoBehaviour
         public Transform target;
         public float triggerRadius;
 
-        
+
         public bool requireKeyPress = false;
         public bool requireProximity = false;
 
@@ -38,7 +40,7 @@ public class TutorialManager : MonoBehaviour
             ShowCurrentStep();
         }
 
-        
+
     }
 
     // Update is called once per frame
