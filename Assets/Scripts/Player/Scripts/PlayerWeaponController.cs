@@ -313,21 +313,22 @@ public class PlayerWeaponManager : MonoBehaviour
             if (dmg != null)
                 dmg.takeDamage(melee.damage);
 
-            if (hit.collider.CompareTag("Enemy"))
+            bool isZombie = hit.collider.CompareTag("Enemy");
+
+            if (isZombie)
             {
-                aud.PlayOneShot(melee.hitSound);//TESTING THIS 
+                if (melee.zombieHit != null)
+                    aud.PlayOneShot(melee.zombieHit);
+
                 iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
                 if (enemyHealth != null)
-                {
                     GameManager.instance.SetCurrentEnemy(enemyHealth);
-                }
             }
-
-            if (melee.hitEffect != null)
-                Instantiate(melee.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
-
-            if (melee.hitSound != null)
-                aud.PlayOneShot(melee.hitSound);
+            else
+            {
+                if (melee.otherHit != null)
+                    aud.PlayOneShot(melee.otherHit);
+            }
         }
     }
 
