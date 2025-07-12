@@ -4347,7 +4347,7 @@ MonoBehaviour:
     requiredKeys: 77000000610000007300000064000000
   - message: Time to see what's causing commotion outside
     target: {fileID: 2137389074}
-    triggerRadius: 7
+    triggerRadius: 7.5
     requireKeyPress: 0
     requireProximity: 1
     requiredKeys: 77000000610000007300000064000000
@@ -5045,99 +5045,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8191328693083562740, guid: 27db3cba8c86e446e8f4641874116de7, type: 3}
   m_PrefabInstance: {fileID: 301286786}
   m_PrefabAsset: {fileID: 0}
---- !u!218 &363438634418916195
-Terrain:
+--- !u!1001 &558229474630668804
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170422466268774881}
-  m_Enabled: 1
-  serializedVersion: 6
-  m_TerrainData: {fileID: 15600000, guid: dd9bf89b0f30d50489658db7e803f99b, type: 2}
-  m_TreeDistance: 5000
-  m_TreeBillboardDistance: 50
-  m_TreeCrossFadeLength: 5
-  m_TreeMaximumFullLODCount: 50
-  m_DetailObjectDistance: 57
-  m_DetailObjectDensity: 1
-  m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
-  m_HeightmapMinimumLODSimplification: 0
-  m_HeightmapMaximumLOD: 0
-  m_ShadowCastingMode: 2
-  m_DrawHeightmap: 1
-  m_DrawInstanced: 0
-  m_DrawTreesAndFoliage: 1
-  m_StaticShadowCaster: 0
-  m_IgnoreQualitySettings: 0
-  m_ReflectionProbeUsage: 1
-  m_MaterialTemplate: {fileID: 10652, guid: 0000000000000000f000000000000000, type: 0}
-  m_BakeLightProbesForTrees: 1
-  m_PreserveTreePrototypeLayers: 0
-  m_DeringLightProbesForTrees: 1
-  m_ReceiveGI: 1
-  m_ScaleInLightmap: 0.0256
-  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
-  m_GroupingID: 0
-  m_RenderingLayerMask: 1
-  m_AllowAutoConnect: 1
-  m_EnableHeightmapRayTracing: 1
-  m_EnableTreesAndDetailsRayTracing: 0
-  m_TreeMotionVectorModeOverride: 3
---- !u!1 &1170422466268774881
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3932582448159412215}
-  - component: {fileID: 363438634418916195}
-  - component: {fileID: 5079881412794031389}
-  m_Layer: 0
-  m_Name: Forest Terr
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!4 &3932582448159412215
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170422466268774881}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -48.370327, y: 0, z: 17.351082}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!154 &5079881412794031389
-TerrainCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170422466268774881}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_TerrainData: {fileID: 15600000, guid: dd9bf89b0f30d50489658db7e803f99b, type: 2}
-  m_EnableTreeColliders: 1
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1793715831246407365, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_Name
+      value: Tutorial Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933872916711788764, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -48.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933872916711788764, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933872916711788764, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 17.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933872916711788764, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933872916711788764, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933872916711788764, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933872916711788764, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933872916711788764, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933872916711788764, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933872916711788764, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e39af06f72238c341a3fab933a9911ea, type: 3}
 --- !u!220 &6058442938663351080
 LightProbeGroup:
   m_ObjectHideFlags: 0
@@ -18536,7 +18500,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1153731424}
   - {fileID: 882621935}
-  - {fileID: 3932582448159412215}
   - {fileID: 6277197716350042726}
   - {fileID: 2020279493}
   - {fileID: 1382023728}
@@ -18550,3 +18513,4 @@ SceneRoots:
   - {fileID: 916607019}
   - {fileID: 1745481563}
   - {fileID: 407943174}
+  - {fileID: 558229474630668804}
