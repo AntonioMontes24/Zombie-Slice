@@ -107,6 +107,12 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1, bool autoEquip = true)// Optional Parameters to modify starting ammo and auto equip
     {
+        if (HasGun(gun.weaponNameId))
+        {
+            AddAmmoToReserve(gun.weaponNameId, reserveAmmo >= 0 ? reserveAmmo : Random.Range(5, 30));
+            return;
+        }
+
         WeaponStats runtimeWeapon = Instantiate(gun);
 
         if (runtimeWeapon is FireArmStats firearm)
@@ -421,10 +427,14 @@ public class PlayerWeaponManager : MonoBehaviour
                 aud.PlayOneShot(currentGun.fireModeSwitchSound);
         }
     }
-
-    public bool HasGun()//Checks if there is a current gun
+    public bool HasGun() // This checks if player has any weapon
     {
         return weaponList.Count > 0;
+    }
+
+    public bool HasGun(string weaponId)//This checks if player has a weapon with specific id 
+    {
+        return weaponList.Any(w => w.weaponNameId == weaponId);
     }
 
     public FireArmStats CurrentGun
@@ -437,9 +447,9 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void AddAmmoToReserve(int ammoCount)
+    public void AddAmmoToReserve(string weaponId,int ammoCount)
     {
-        var gun = CurrentGun;
+        var gun = weaponList.FirstOrDefault( w => w.weaponNameId == weaponId) as FireArmStats;
         if (gun == null) return;
         gun.ammoReserve += ammoCount;
         gun.ammoReserve = Mathf.Min(gun.ammoReserve, gun.maxAmmoReserve);

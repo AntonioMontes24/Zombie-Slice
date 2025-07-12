@@ -16,7 +16,7 @@ public class AmmoPickup : PickupBase
 
         if(weapon.CurrentGun.ammoReserve >= weapon.CurrentGun.maxAmmoReserve)
             return;
-        weapon.AddAmmoToReserve(bullets);
+        weapon.AddAmmoToReserve(weapon.CurrentGun.weaponNameId,bullets);
         sourceAudio.PlayOneShot(pickUpSoundAmmo, pickUpSoundVol);
         Destroy(transform.gameObject, pickUpSoundAmmo.length);
     }
