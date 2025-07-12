@@ -168,7 +168,7 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
     void Start()
     {
         currHealth = _maxHealth;
-        audioCounter = 999;
+        audioCounter = 749;
 
         animator = GetComponent<Animator>();
 
