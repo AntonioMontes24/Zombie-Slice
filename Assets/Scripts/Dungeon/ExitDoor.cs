@@ -7,6 +7,7 @@ public class ExitDoor : MonoBehaviour
 
     [SerializeField] private ExitType exitType;
     [SerializeField] private string specificSceneName = ""; // Only used if ExitType is LoadSpecificScene
+    [SerializeField] string spawnPointName = "";//Choose a specific spawn point location 
 
     private bool playerInRange = false;
 
@@ -14,19 +15,21 @@ public class ExitDoor : MonoBehaviour
     {
         if (playerInRange && Input.GetKeyDown(KeyCode.F))
         {
+            if (!string.IsNullOrEmpty(spawnPointName))
+                PlayerPrefs.SetString("LastSpawnPoint", spawnPointName);
             switch (exitType)
-            {
-                case ExitType.LoadNextScene:
-                    LoadNext();
-                    break;
-                case ExitType.LoadPreviousScene:
-                    LoadPrevious();
-                    break;
-                case ExitType.LoadSpecificScene:
-                    if (!string.IsNullOrEmpty(specificSceneName))
-                        SceneManager.LoadScene(specificSceneName);
-                    break;
-            }
+                {
+                    case ExitType.LoadNextScene:
+                        LoadNext();
+                        break;
+                    case ExitType.LoadPreviousScene:
+                        LoadPrevious();
+                        break;
+                    case ExitType.LoadSpecificScene:
+                        if (!string.IsNullOrEmpty(specificSceneName))
+                            SceneManager.LoadScene(specificSceneName);
+                        break;
+                }
         }
     }
 
