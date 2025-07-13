@@ -3421,55 +3421,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1831547023}
   m_Mesh: {fileID: 4300000, guid: af2adddd1877e4b409b5d3e0c5896079, type: 3}
---- !u!1 &1833722457
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1833722458}
-  - component: {fileID: 1833722459}
-  m_Layer: 0
-  m_Name: ButtonFunctions
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1833722458
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833722457}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7225158, z: -0, w: 0.69135445}
-  m_LocalPosition: {x: 0.69995934, y: 1.28836, z: -0.8588653}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3667211753715026924}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1833722459
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833722457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ca81ae87ee633c4a92cccabe087ec2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  holdDuration: 1
-  sceneBuildIndex: 3
-  interactKey: 120
-  InteractText: {fileID: 0}
-  interactPrompt: {fileID: 0}
 --- !u!1001 &1851129042
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10236,6 +10187,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3667211753715026924}
+  - component: {fileID: 3667211753715026926}
   - component: {fileID: 3667211753715026925}
   m_Layer: 0
   m_Name: Simple Retro Car
@@ -10391,7 +10343,6 @@ Transform:
   - {fileID: 7783998986116765209}
   - {fileID: 7833293775682838333}
   - {fileID: 286543582649037508}
-  - {fileID: 1833722458}
   m_Father: {fileID: 314143638}
   m_LocalEulerAnglesHint: {x: 0, y: -92.525, z: 0}
 --- !u!65 &3667211753715026925
@@ -10415,6 +10366,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4, y: 2, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3667211753715026926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3638911071020136055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0977e3f2f4a8de4aaf4b319541ce34f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  exitType: 0
+  specificSceneName: Crimson Town
+  spawnPointName: Street Barricades
 --- !u!1 &4576468817411142134
 GameObject:
   m_ObjectHideFlags: 0
@@ -10870,6 +10836,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5342622149719370376}
+  - component: {fileID: 5394687526669108469}
   - component: {fileID: 5351019607154029834}
   - component: {fileID: 5359645212190928402}
   - component: {fileID: 5394687526669108468}
@@ -11039,6 +11006,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.030322393, y: 0.019999996, z: 0.015128064}
   m_Center: {x: -0.0051611895, y: -0.000000030267984, z: -0.002458313}
+--- !u!114 &5394687526669108469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5346682700586254656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ee5bb707b3a9d4a8b18836162e0a37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyID: 5
 --- !u!114 &5482181064396849194
 MonoBehaviour:
   m_ObjectHideFlags: 0
