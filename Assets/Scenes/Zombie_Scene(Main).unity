@@ -15022,7 +15022,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: f216e63967c76493196bc8dc075bb684, type: 3}
       insertIndex: 1
-      addedObject: {fileID: 1033423331}
+      addedObject: {fileID: 1033423329}
     - targetCorrespondingSourceObject: {fileID: 100000, guid: f216e63967c76493196bc8dc075bb684, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1033423327}
@@ -21694,7 +21694,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.5, y: 3, z: 6}
   m_Center: {x: 0, y: 1.9331006, z: 0.4700904}
---- !u!114 &1033423331
+--- !u!114 &1033423329
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -21703,14 +21703,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 699879898}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ca81ae87ee633c4a92cccabe087ec2b, type: 3}
+  m_Script: {fileID: 11500000, guid: d0977e3f2f4a8de4aaf4b319541ce34f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdDuration: 2
-  sceneBuildIndex: 2
-  interactKey: 120
-  InteractText: {fileID: 0}
-  interactPrompt: {fileID: 0}
+  exitType: 0
+  specificSceneName: Crypt
+  spawnPointName: Descending into hell
 --- !u!4 &1035254185 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6608563071680767752, guid: 459ba30304f03c74a8bc1da9f16449e3, type: 3}
