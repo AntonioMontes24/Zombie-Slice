@@ -1,4 +1,3 @@
-using System.Collections;
 using JetBrains.Annotations;
 using UnityEditor.Analytics;
 using UnityEngine;
@@ -12,13 +11,13 @@ public class v2Mover : MonoBehaviour
     [SerializeField] float stopDistPlayer;
     [SerializeField] float facePlayerSpeed;
     [SerializeField] int stopDist;
-
-    // public GameObject playerObj;
-
+  
+    public GameObject playerObj;
+    
     bool playerInRange;
     bool isDead;
     float roamTime;
-
+  
 
     Vector3 startingPos;
 
@@ -26,28 +25,23 @@ public class v2Mover : MonoBehaviour
     void Start()
     {
         startingPos = transform.position;
-        //ObjectiveManager.instance.updateZombieCount(1);
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isDead)
+        if (agent.remainingDistance < 0.01f)
         {
-            if (agent.remainingDistance < 0.01f)
-            {
-                roamTime += Time.deltaTime;
-            }
+            roamTime += Time.deltaTime;
+        }
 
-            if (!playerInRange)
-            {
-                roamCheck();
-            }
-            else
-            {
-                chasePlayer();
-            }
+        if (!playerInRange)
+        {
+            roamCheck();
+        }
+        else
+        {
+            chasePlayer();
         }
     }
 
@@ -91,8 +85,8 @@ public class v2Mover : MonoBehaviour
 
     void chasePlayer()
     {
-        if (GameManager.instance.player.transform.position == null || isDead) return;
-        Vector3 playerGroundPOS = new Vector3(GameManager.instance.player.transform.position.x, 0, GameManager.instance.player.transform.position.z);
+        if (playerObj == null || isDead) return;
+        Vector3 playerGroundPOS = new Vector3(playerObj.transform.position.x, 0, playerObj.transform.position.z);
         Vector3 directionPlayer = playerGroundPOS - transform.position;
         Vector3 dirFlat = new Vector3(directionPlayer.x, 0, directionPlayer.z);//Was moving upwards as it got closer to the player
         Vector3 direction = playerGroundPOS - transform.position;
@@ -124,36 +118,15 @@ public class v2Mover : MonoBehaviour
         playerInRange = true;
         roamTime = 0f;
 
-        if (GameManager.instance.player.transform != null)
+        if (playerObj != null)
         {
-            Vector3 playerGroundPOS = new Vector3(GameManager.instance.player.transform.transform.position.x, 0, GameManager.instance.player.transform.transform.position.z);
+            Vector3 playerGroundPOS = new Vector3(playerObj.transform.position.x, 0, playerObj.transform.position.z);
             agent.stoppingDistance = stopDist;
             agent.SetDestination(playerGroundPOS);
-            agent.speed = 6.0f;
         }
     }
-    //After death zombie sinks into ground before being destroyed
-    private IEnumerator forceDeathSink()
-    {
-        agent.enabled = false;
-        transform.Translate(Vector3.down * 1.0f * Time.deltaTime);
-        yield return new WaitForSeconds(2.0f);
-        Destroy(gameObject, 2.0f);
-        // ObjectiveManager.instance.updateZombieCount(-1); //Calls this too many times. not sure why
 
-    }
-
-    public void SinkingZombie()
-    {
-        StartCoroutine(forceDeathSink());
-    }
-
-    public void forceStop()
-    {
-        agent.isStopped = true;
-        agent.speed = 0;
-        isDead = true;
-    }
+    
 
 
 }

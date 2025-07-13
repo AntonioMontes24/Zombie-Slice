@@ -82,7 +82,7 @@ public class ButtonFunctions : MonoBehaviour
     [SerializeField] private KeyCode interactKey = KeyCode.X;
     [SerializeField] private TMP_Text InteractText;
 
-    private float holdTimer = 0f;
+    //private float holdTimer = 0f;
     private bool isPlayerNearDoor = false;
 
     private void Update()
@@ -133,7 +133,7 @@ public class ButtonFunctions : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerNearDoor = false;
-            holdTimer = 0f;
+            //holdTimer = 0f;
         }
     }
 }

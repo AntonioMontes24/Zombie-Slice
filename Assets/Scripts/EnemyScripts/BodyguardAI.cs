@@ -28,13 +28,13 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
     float angle_to_player;                                  // the angle to the player 
 
     // punch attack 
-    int punchCounter;                                       // keeps count until we can punch
-    [SerializeField] int punchRate;                         // how often we punch
+    // int punchCounter;                                       // keeps count until we can punch
+    // [SerializeField] int punchRate;                         // how often we punch
     [SerializeField] int punchDamage;                       // how hard we punch
 
     // combo attack
-    int comboAttackCounter;                                 // keep count until we can combo
-    [SerializeField] int comboAttackRate;                   // how often we combo attack
+    // int comboAttackCounter;                                 // keep count until we can combo
+    // [SerializeField] int comboAttackRate;                   // how often we combo attack
     [SerializeField] int comboAttackDamage;                 // how much damage does a combo do   
 
     
@@ -47,6 +47,19 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
 
     [SerializeField] int animSpeedTransition;               // for the LERP on transitions
 
+    int attackCounter;                                       // incremented until we hit the attackRate
+    [SerializeField] int attackRate;                         // our Attack is on cooldown
+    [SerializeField] int attackDamage;                       // how much damage do we do
+    int attackToDo;
+
+    // sound
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip aud_clip_idle;
+    [SerializeField] AudioClip aud_clip_attack;
+    [SerializeField] AudioClip aud_clip_punch;
+    [SerializeField] AudioClip aud_clip_combo;
+    [SerializeField] AudioClip aud_clip_death;
+    [SerializeField] int audioCounter;
 
     public int CurrentHealth
     {
@@ -75,6 +88,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
             // set our navmesh agent towards the players position
             // agent.SetDestination(GameManager.instance.player.transform.position);
             agent.SetDestination(GameManager.instance.player.transform.position);
+            animator.SetFloat("Speed", 1);
 
             if (currHealth <= 0)
             {
@@ -87,10 +101,12 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
 
     IEnumerator removeCorpse()
     {
+        agent.isStopped = true;
+
         if (animator != null && animator.runtimeAnimatorController != null)
             animator.SetTrigger("isDead");
         // wait 2 seconds
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(4);
 
         Destroy(gameObject);
 
@@ -98,33 +114,53 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
         ObjectiveManager.instance.updateZombieCount(-1);
     }
 
-    public void punchAttack()
+    IEnumerator punchAttack()
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
-            punchCounter = 0;
+            attackCounter = 0;
 
             animator.SetTrigger("punch");
 
-            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
-            player_dmg.takeDamage(punchDamage);
+            // IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+            // player_dmg.takeDamage(punchDamage);
+
+            yield return new WaitForSeconds(1);
+
+            
 
         }
 
     }
 
-    public void comboAttack()
+    IEnumerator comboAttack()
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
-            comboAttackCounter = 0;
+            attackCounter = 0;
 
             animator.SetTrigger("ComboAttack");
 
-            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
-            player_dmg.takeDamage(comboAttackDamage);
+            // IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+            // player_dmg.takeDamage(comboAttackDamage);
+
+            yield return new WaitForSeconds(5);
+
+            // player_dmg.takeDamage(comboAttackDamage);
         }
 
+    }
+
+    public void assignComboDamage()
+    {
+        IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+        player_dmg.takeDamage(comboAttackDamage);
+    }
+
+    public void assignPunchDamage()
+    {
+        IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+        player_dmg.takeDamage(punchDamage);
     }
 
     public void clawColliderOn()
@@ -162,47 +198,98 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
         // start with a disabled claw
         clawCollider.enabled = false;
 
+        audioCounter = 399;
+        attackCounter = attackRate - 1;
+
+    }
+
+    public int chooseAttack()
+    {
+        return Random.Range(0, 10);
+    }
+
+    public void playAudioPunch()
+    {
+        if (aud_clip_punch != null)
+            aud.PlayOneShot(aud_clip_punch);
+    }
+
+    public void playAudioCombo()
+    {
+        if (aud_clip_combo != null)
+            aud.PlayOneShot(aud_clip_combo);
+    }
+
+    public void playAudioIdle()
+    {
+        if (aud_clip_idle != null)
+            aud.PlayOneShot(aud_clip_idle);
+    }
+
+    public void playAudioDeath()
+    {
+        aud.Stop();
+        if (aud_clip_death != null)
+            aud.PlayOneShot(aud_clip_death);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-
-        comboAttackCounter++;
-        punchCounter++;
-
         if (currHealth >= 0)
         {
             
             if (playerInRange && canWeSeeThePlayer())
             {
-  
+                // handle audio
+                if (audioCounter >= 400)
+                {
+                    audioCounter = 0;
+
+                    aud.Stop();
+
+                    // play sound
+                    if (aud_clip_attack != null)
+                        aud.PlayOneShot(aud_clip_attack);
+
+                }
+                else
+                {
+                    audioCounter++;
+                    // attackCounter++;
+                }
+
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     // we need to face the player
                     faceTarget();
 
-                    // set my bool for animator
-                    // animator.SetBool("inMeleeRange", true);
-
-                    // need to check for punch
-                    if (punchCounter >= punchRate)
+                    // can we attack
+                    if (attackCounter >= attackRate)
                     {
 
-                        // punch animation
-                        punchAttack();
+                        // choose an attack 
+                        attackToDo = chooseAttack();
 
+                        if (attackToDo >= 4)
+                        {
+                            // animate the swipe
+                            StartCoroutine(punchAttack());
+
+                        }
+                        // need to check for combo
+                        else
+                        {
+                            // animate the bite
+                            StartCoroutine(comboAttack());
+
+                        }
                     }
-
-                    // need to check for swipeAttack 
-                    if (comboAttackCounter >= comboAttackRate)
+                    else
                     {
-                        // animate the swipe
-                        comboAttack();
-
+                        // no attack but increment the counter
+                        attackCounter++;
                     }
-
                 }
                 
             }
@@ -261,7 +348,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
                 // agent.SetDestination(GameManager.instance.player.transform.position);
 
                 agent.SetDestination(GameManager.instance.player.transform.position);
-                animator.SetFloat("Speed", speed);
+                animator.SetFloat("Speed", 1);
 
                 // face the target
                 if (agent.remainingDistance <= agent.stoppingDistance)
