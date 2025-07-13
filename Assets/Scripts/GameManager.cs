@@ -385,4 +385,13 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Main Menu");
     }
 
+    public void ResetBarriers()
+    {
+        ProgressionBarriers[] barriers = FindObjectsOfType<ProgressionBarriers>();
+        foreach (var barrier in barriers)
+        {
+            barrier.ResetBarrier();
+        }
+    }
+
 }
