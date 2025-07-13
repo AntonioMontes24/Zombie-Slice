@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using EasyRoads3Dv3;
+
 
 
 public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
