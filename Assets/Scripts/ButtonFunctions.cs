@@ -101,36 +101,50 @@ public class ButtonFunctions : MonoBehaviour
     [SerializeField] private KeyCode interactKey = KeyCode.X;
     [SerializeField] private TMP_Text InteractText;
 
-    //private float holdTimer = 0f;
+    [Header("UI")]
+    [SerializeField] private TMP_Text interactPrompt;
+
+    private float holdTimer = 0f;
     private bool isPlayerNearDoor = false;
+
+    private void Start()
+    {
+        if (interactPrompt != null)
+        {
+
+            interactPrompt.gameObject.SetActive(false);
+        }
+
+    }
+
 
     private void Update()
     {
-        //if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() <= 1)
-        //{
-        //    InteractText.gameObject.SetActive(true);
+        if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() == 0)
+        {
+            InteractText.gameObject.SetActive(true);
 
-        //    if (Input.GetKey(interactKey))
-        //    {
-        //        holdTimer += Time.deltaTime;
+            if (Input.GetKey(interactKey))
+            {
+                holdTimer += Time.deltaTime;
 
-        //        if (holdTimer >= holdDuration)
-        //        {
-        //            LoadTargetScene();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        holdTimer = 0f;
-        //    }
-        //}
+                if (holdTimer >= holdDuration)
+                {
+                    LoadTargetScene();
+                }
+            }
+            else
+            {
+                holdTimer = 0f;
+            }
+        }
 
-        //else
-        //{
-        //    InteractText.gameObject.SetActive(false);
-        //    holdTimer = 0f;
-        //}
-        
+        else
+        {
+            InteractText.gameObject.SetActive(false);
+            holdTimer = 0f;
+        }
+
     }
 
     private void LoadTargetScene()
