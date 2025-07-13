@@ -2083,17 +2083,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 563392340}
   m_CullTransparentMesh: 1
---- !u!114 &566164389 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9084551283901782102, guid: f0850873843947c47a5a4d9dadbe57de, type: 3}
-  m_PrefabInstance: {fileID: 266958202}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &570350784 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1314193541681366, guid: 361e3d5cdb2eadb43a7e7bacd9accd86, type: 3}
@@ -4465,19 +4454,19 @@ MonoBehaviour:
     triggerRadius: 1
     requireKeyPress: 0
     requireProximity: 1
-    requiredKeys: 77000000610000007300000064000000
+    requiredKeys: 
   - message: Now we'll need some ammo for our weapons
     target: {fileID: 493669217}
     triggerRadius: 1
     requireKeyPress: 0
     requireProximity: 1
-    requiredKeys: 77000000610000007300000064000000
-  - message: Time to see what's causing commotion outside
-    target: {fileID: 2137389074}
-    triggerRadius: 7.5
-    requireKeyPress: 0
-    requireProximity: 1
-    requiredKeys: 77000000610000007300000064000000
+    requiredKeys: 
+  - message: Use F to interact and get outside
+    target: {fileID: 0}
+    triggerRadius: 0
+    requireKeyPress: 1
+    requireProximity: 0
+    requiredKeys: 66000000
   - message: Try leaning with Q and E
     target: {fileID: 0}
     triggerRadius: 0
@@ -4496,7 +4485,7 @@ MonoBehaviour:
     requireKeyPress: 0
     requireProximity: 1
     requiredKeys: 
-  - message: Now let's get out of here! Hold X on that car to leave
+  - message: Now let's get out of here! Hold F on that car to leave
     target: {fileID: 2137389074}
     triggerRadius: 0
     requireKeyPress: 1
@@ -5177,14 +5166,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2137389072}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ca81ae87ee633c4a92cccabe087ec2b, type: 3}
+  m_Script: {fileID: 11500000, guid: d0977e3f2f4a8de4aaf4b319541ce34f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdDuration: 1
-  sceneBuildIndex: 2
-  interactKey: 120
-  InteractText: {fileID: 566164389}
-  interactPrompt: {fileID: 566164389}
+  exitType: 0
+  specificSceneName: Abandoned FarmHouse
+  spawnPointName: Outside of Car
 --- !u!1 &2142467083 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5185380206506086631, guid: 27db3cba8c86e446e8f4641874116de7, type: 3}
@@ -5526,28 +5513,6 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 12709353e370e4af68a69b655ab66625, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!95 &6218507986321715292
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6277625979950494664}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: db3c458dc081c49348506c648e9c5fd4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -6520,18 +6485,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6235256186845706522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6277625979950494664}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6235256186865860792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6827,18 +6780,6 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6277625980378501888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6235256192669741796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6277625979950494664}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
@@ -10648,8 +10589,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6274398209519160370}
   - component: {fileID: 6298331659086920838}
-  - component: {fileID: 6290579195829581504}
   - component: {fileID: 6339937127194153312}
+  - component: {fileID: 6290579195829581504}
   - component: {fileID: 6339937127194153310}
   - component: {fileID: 6339937127194153311}
   m_Layer: 8
@@ -10762,9 +10703,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6274398209939152672}
   - component: {fileID: 6339937130320792800}
-  - component: {fileID: 6218507986321715292}
-  - component: {fileID: 6235256192669741796}
-  - component: {fileID: 6235256186845706522}
   m_Layer: 8
   m_Name: PFB_DoorDouble
   m_TagString: Untagged
@@ -10985,9 +10923,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6274398207159696438}
+  - component: {fileID: 6339937130689455086}
   - component: {fileID: 6298331661367994722}
   - component: {fileID: 6290579202393799930}
-  - component: {fileID: 6339937130689455086}
   - component: {fileID: 6339937130689455084}
   - component: {fileID: 6339937130689455085}
   m_Layer: 8
@@ -16799,10 +16737,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6277625979776440598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3f7dadc208c4a7418ee0f41a39f420f, type: 3}
+  m_Script: {fileID: 11500000, guid: fb42f8432d85c2246986468b2a5db32c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorModel: {fileID: 6277625979776440598}
+  doorType: 0
+  openCode: 102
+  openSpeed: 20
+  requiredKeyID: 
+  enemyRoom: {fileID: 0}
+  doorHinge: {fileID: 6277625979776440598}
+  openAngleOffsetY: 90
 --- !u!65 &6339937127563840890
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17169,10 +17113,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6277625980137998776}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3f7dadc208c4a7418ee0f41a39f420f, type: 3}
+  m_Script: {fileID: 11500000, guid: fb42f8432d85c2246986468b2a5db32c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorModel: {fileID: 6277625980137998776}
+  doorType: 0
+  openCode: 102
+  openSpeed: 20
+  requiredKeyID: 
+  enemyRoom: {fileID: 0}
+  doorHinge: {fileID: 6277625980137998776}
+  openAngleOffsetY: -90
 --- !u!65 &6339937130706937512
 BoxCollider:
   m_ObjectHideFlags: 0
