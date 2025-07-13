@@ -19,6 +19,12 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float range;
     [SerializeField] int waveCount;
     [SerializeField] int minWaveSize, maxWaveSize;
+    //Code added from William for Dungeon
+    public List<ISpawnComponent> GetSpawnComponents() => components;
+    public float GetTotalSpawnArea() => components.Sum(c => c.GetSize());
+    public GameObject PickEnemy() => enemies.PickEnemy();
+    
+    //End William's Code
     int waveIdx;
 
     public void SetEnemiesTable(EnemySpawnTable newEnemies) => enemies = newEnemies;
