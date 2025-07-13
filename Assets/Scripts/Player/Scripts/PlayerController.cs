@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, IOpen//Added open interface for crypt door
 {
     [SerializeField] private PlayerMovement playerMovement;
-    //[SerializeField] private PlayerMoveRebind playerMovement;
     [SerializeField] private PlayerWeaponManager weaponManager;
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] public GameObject armsModel;
