@@ -6,4 +6,7 @@ public abstract class WeaponStats : ScriptableObject
     [SerializeField] public GameObject weaponModel;
     [SerializeField] public Sprite weaponIcon;
     public bool isOneHanded;
+
+    [Header("Weapon ID")]
+    public string weaponNameId;
 }
