@@ -281,6 +281,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void HandleMeleeAttack()//Handles melee attacks
     {
+        if (!canFire) return;
         if (!HasGun()) return;
 
         var weapon = weaponList[currentWeaponIndex];
