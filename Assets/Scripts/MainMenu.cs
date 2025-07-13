@@ -21,6 +21,12 @@ public class MainMenu : MonoBehaviour
         {
             optionsMenuPanel.SetActive(false);
         }
+
+        if(AudioManager.instance != null)
+        {
+            AudioManager.instance.ApplySavedVolumeToMixer();
+        }
+
     }
 
 

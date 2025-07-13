@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public float sens = 100f;
+    public float mouseSensitivity = 3.5f;
     public float lockVertMin = -90f;
     public float lockVertMax = 90f;
     public bool invertY = false;
@@ -12,37 +12,64 @@ public class CameraController : MonoBehaviour
 
     //rotate on X axis looks up and down on Y axis, weird thing but REMEMBER THIS!!!
     float rotX = 0f;
+    float freeLookYaw = 0f;
+    private float freeLookClamp = 12.5f;
+
+    private bool isFreeLooking;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 3.5f);
+        MouseSensController.OnSensChanged += UpdateSensitivity;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        HandleFreeLookInput();
         // get input
-        float mouseX = Input.GetAxis("Mouse X") * sens * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * sens * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // give option to invert mouse look up and down
-        if (invertY)
-            rotX += mouseY;
-        else
-            rotX -= mouseY;
+        //give option to invert mouse look up and down
+        rotX += invertY ? mouseY : -mouseY;
+        rotX = Mathf.Clamp(rotX, lockVertMin, lockVertMax);// clamp camera on the x axis 
 
-        // clamp camera on the x-axis 
-        rotX = Mathf.Clamp(rotX, lockVertMin, lockVertMax);
-
-        // rotate camera on x-axis to look up and down
-        // we now rotate pitchTarget (CameraHolder) instead of this object directly
         if (pitchTarget != null)
-            pitchTarget.localRotation = Quaternion.Euler(rotX, 0, 0);
+            pitchTarget.localRotation = Quaternion.Euler(rotX, 0f, 0f);
 
-        // rotate player on y-axis to look left and right
-        playerBody.Rotate(Vector3.up * mouseX);
+        if (isFreeLooking)
+        {
+            // Rotate camera side-to-side, independent of player body
+            freeLookYaw += mouseX;
+            freeLookYaw = Mathf.Clamp(freeLookYaw, -freeLookClamp, freeLookClamp);
+            transform.localRotation = Quaternion.Euler(0f, freeLookYaw, 0f);
+        }
+        else
+        {
+            // Rotate the player body as normal
+            playerBody.Rotate(Vector3.up * mouseX);
+
+            // Reset freelook rotation
+            freeLookYaw = 0f;
+            transform.localRotation = Quaternion.identity;
+        }
+    }
+
+    void HandleFreeLookInput()
+    {
+        isFreeLooking = Input.GetMouseButton(2);
+    }
+
+    private void UpdateSensitivity(float newSens)
+    {
+        mouseSensitivity = newSens;
+        Debug.Log($"new sens: {mouseSensitivity}");
     }
 
 }

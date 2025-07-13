@@ -71,6 +71,12 @@ public class PlayerMovement : MonoBehaviour
     {
         if (animator != null && animator.runtimeAnimatorController != null && animator.gameObject.activeSelf)
         {
+            var weaponManager = GetComponent<PlayerWeaponManager>();
+            bool isKnifeEquipped = weaponManager != null &&
+                                   weaponManager.CurrentGun == null &&
+                                   weaponManager.HasGun(); // Check if holding  melee, plays a different animation
+
+            animator.SetBool("IsKnife", isKnifeEquipped);
 
             float targetSpeed = 0f;
 
