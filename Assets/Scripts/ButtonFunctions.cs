@@ -14,9 +14,12 @@ public class ButtonFunctions : MonoBehaviour
         //GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
         //GameManager.instance.stateUnpause();
 
-        SceneManager.sceneLoaded += OnSceneReloaded;
+        //SceneManager.sceneLoaded += OnSceneReloaded;
 
-        SceneManager.LoadScene("Zombie_Scene(Main)");
+        //SceneManager.LoadScene("Zombie_Scene(Main)");
+
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentSceneIndex);
 
         //if (KillManager.instance != null)
         //{
