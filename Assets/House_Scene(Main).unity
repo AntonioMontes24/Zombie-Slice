@@ -3148,50 +3148,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 11, y: 2, z: 0.1}
   m_Center: {x: 0, y: 1, z: 0}
---- !u!1 &1008321794
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1008321796}
-  - component: {fileID: 1008321795}
-  m_Layer: 0
-  m_Name: KillCounter
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1008321795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008321794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20bc3a152365f784ea65a6dd501454c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1008321796
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008321794}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1017414722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13572,7 +13528,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6276270539972702592}
-  - component: {fileID: 6296808974652643559}
   - component: {fileID: 6296808974652643558}
   - component: {fileID: 6288794552908728990}
   m_Layer: 0
@@ -13591,7 +13546,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6276270541439143086}
-  - component: {fileID: 6296808975534960505}
   - component: {fileID: 6296808975534960504}
   - component: {fileID: 6288794552174679266}
   m_Layer: 0
@@ -13648,11 +13602,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 2, z: 0.1}
+  m_Size: {x: 3, y: 2, z: 2}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &6276270540671181812
 MonoBehaviour:
@@ -13663,10 +13617,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6274766286082765112}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9538a97bb461630429136299a5b012e4, type: 3}
+  m_Script: {fileID: 11500000, guid: fb42f8432d85c2246986468b2a5db32c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  killsNeeded: 6
+  doorType: 0
+  openCode: 102
+  openSpeed: 20
+  requiredKeyID: 5
+  enemyRoom: {fileID: 0}
+  doorHinge: {fileID: 6274766286082765112}
+  openAngleOffsetY: -90
 --- !u!4 &6276270541439143086
 Transform:
   m_ObjectHideFlags: 0
@@ -13780,19 +13740,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6274766287351432356}
   m_Mesh: {fileID: 4300000, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
---- !u!114 &6296808974652643559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6274766287351432356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9538a97bb461630429136299a5b012e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  killsNeeded: 6
 --- !u!33 &6296808975534960504
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -13801,19 +13748,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6274766287750629166}
   m_Mesh: {fileID: 4300002, guid: 73c2999be80b3be4e816d348fea624e1, type: 3}
---- !u!114 &6296808975534960505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6274766287750629166}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9538a97bb461630429136299a5b012e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  killsNeeded: 6
 --- !u!65 &6341753029808996770
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18753,7 +18687,6 @@ SceneRoots:
   - {fileID: 314143638}
   - {fileID: 1194462592}
   - {fileID: 508591658}
-  - {fileID: 1008321796}
   - {fileID: 1726485159}
   - {fileID: 1730471878}
   - {fileID: 891839377}
