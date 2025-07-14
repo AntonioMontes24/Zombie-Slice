@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
 {
