@@ -26,10 +26,10 @@ public class pickup : PickupBase
                 if (weaponManager.HasGun(gun.weaponNameId))
                 {
                     // Only applies to firearms
-                    if (gun is FireArmStats)
+                    if (gun is FireArmStats fireArm)
                     {
                         int ammoToGive = Random.Range(minReserveAmmo, maxReserveAmmo + 1);
-                        weaponManager.AddAmmoToReserve(gun.weaponNameId, ammoToGive);
+                        weaponManager.AddAmmoToReserve(fireArm.ammoType, ammoToGive);
                     }
                 }
                 else

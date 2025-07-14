@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Audio;
 
 
 public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
@@ -276,21 +277,22 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
                     // attackCounter++;
                 }
 
+                // check for roam 
+                if (playerInRange && !canWeSeeThePlayer())
+                {
+                    roamCheck();
+                }
+                else if (!playerInRange)
+                {
+                    roamCheck();
+                }
+
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     // we need to face the player
                     faceTarget();
 
-                    // check for roam 
-                    if (playerInRange && !canWeSeeThePlayer())
-                    {
-                        roamCheck();
-                    }
-                    else if (!playerInRange)
-                    {
-                        roamCheck();
-                    }
-
+                    
                     // can we attack
                     if (attackCounter >= attackRate)
                     {
