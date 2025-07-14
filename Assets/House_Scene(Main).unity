@@ -4318,8 +4318,8 @@ MonoBehaviour:
     requiredKeys: 
   - message: Looks like there isn't much, but I did see a shed in the distance. I
       Wonder if there's any gas.
-    target: {fileID: 0}
-    triggerRadius: 3
+    target: {fileID: 4102685235448031}
+    triggerRadius: 6
     requireKeyPress: 0
     requireProximity: 1
     requiredKeys: 
@@ -13223,6 +13223,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6276270540671181808}
+  - component: {fileID: 6276270540671181812}
   - component: {fileID: 6183355824285533928}
   - component: {fileID: 6276270540671181811}
   m_Layer: 0
@@ -13323,6 +13324,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 2, z: 0.1}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &6276270540671181812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6274766286082765112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9538a97bb461630429136299a5b012e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  killsNeeded: 6
 --- !u!4 &6276270541439143086
 Transform:
   m_ObjectHideFlags: 0
