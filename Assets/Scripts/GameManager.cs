@@ -300,7 +300,7 @@ public class GameManager : MonoBehaviour
         {
             inGameUI.SetActive(false);
         }
-
+        AudioManager.instance.StopMusic();
         menuActive = menuLose;
         menuActive.SetActive(true);
         if(flashDamageScreen != null)
@@ -318,7 +318,7 @@ public class GameManager : MonoBehaviour
         {
             inGameUI.SetActive(false);
         }
-
+        AudioManager.instance.StopMusic();
         menuActive = menuNoTime;
         menuActive.SetActive(true);
         if(flashDamageScreen != null)
@@ -383,6 +383,15 @@ public class GameManager : MonoBehaviour
     {
         stateUnpause();
         SceneManager.LoadScene("Main Menu");
+    }
+
+    public void ResetBarriers()
+    {
+        ProgressionBarriers[] barriers = FindObjectsOfType<ProgressionBarriers>();
+        foreach (var barrier in barriers)
+        {
+            barrier.ResetBarrier();
+        }
     }
 
 }

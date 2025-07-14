@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.Audio;
 
 public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
 {
@@ -35,7 +35,7 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] GameObject blightBall;                 // our projectile
     bool canShootBlight;                                    // can we shoot our blight ball
     int blightBallCounter;                                  // increment to be able to shoot our blight ball
-    [SerializeField] int blightBallRate;                    // how often we can shoot our blight ball
+    // [SerializeField] int blightBallRate;                    // how often we can shoot our blight ball
     [SerializeField] int blightBallDamage;                  // how much damage does a blight ball do
     [SerializeField] float minShootDistance;                // minimum range to shoot blightball
 
@@ -43,6 +43,8 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
     int attackToUse;
     int attackCounter;
     [SerializeField] int attackRate;
+
+    public bool see_player;
 
     public int CurrentHealth
     {
@@ -72,10 +74,14 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
             // wait 1 second
             yield return new WaitForSeconds(1);
 
-            // assign damage to the player
-            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
-            player_dmg.takeDamage(powerAttackDamage);
         }
+    }
+
+    public void assignPowerAttackDamage()
+    {
+        // assign damage to the player
+        IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+        player_dmg.takeDamage(powerAttackDamage);
     }
 
     public void clawColliderOn()
@@ -94,20 +100,16 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
     {
         if (animator != null && animator.runtimeAnimatorController != null)
             animator.SetTrigger("isDead");
-       
-        transform.Translate(Vector3.down * 1.0f * Time.deltaTime);
-        yield return new WaitForSeconds(2.0f);
-        Destroy(gameObject, 2.0f);
 
-        /*
-        // wait 2 seconds
-        yield return new WaitForSeconds(2);
+        animator.SetFloat("Speed", 0);
 
+        clawColliderOff();
+        agent.enabled = false;
+        
+        yield return new WaitForSeconds(4.0f);
         Destroy(gameObject);
 
-        // update the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(-1);
-        */
+        
     }
 
     IEnumerator shootBlightBall()
@@ -136,6 +138,7 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
             // set our navmesh agent towards the players position
             // agent.SetDestination(GameManager.instance.player.transform.position);
             agent.SetDestination(GameManager.instance.player.transform.position);
+            animator.SetFloat("Speed", 1);
 
             if (currHealth <= 0)
             {
@@ -152,6 +155,10 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
         minShootDistance = agent.stoppingDistance + 20.0f;
         // increase the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(1);
+
+        attackCounter = attackRate - 1;
+
+        see_player = false;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -164,10 +171,12 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
     {
         if (currHealth > 0)
         {
+            see_player = canWeSeeThePlayer();
+
             if (playerInRange && canWeSeeThePlayer())
             {
                 attackCounter++;
-                if(attackCounter >= attackRate)
+                if(canWeSeeThePlayer() && playerInRange && attackCounter >= attackRate)
                 {
                     if (agent.remainingDistance <= agent.stoppingDistance)
                     {
@@ -238,8 +247,7 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
                 // agent.SetDestination(GameManager.instance.player.transform.position);
 
                 agent.SetDestination(GameManager.instance.player.transform.position);
-
-                    animator.SetFloat("Speed", speed);
+                animator.SetFloat("Speed", 1);
 
 
                 // face the target
@@ -253,9 +261,9 @@ public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
                 return true;
             }
 
+
         }
 
-        animator.SetFloat("Speed", 0);
         return false;
     }
 }

@@ -107,19 +107,29 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1, bool autoEquip = true)// Optional Parameters to modify starting ammo and auto equip
     {
+        if (HasGun(gun.weaponNameId))
+        {
+            if (gun is FireArmStats firearm)
+            {
+                AddAmmoToReserve(firearm.ammoType, reserveAmmo >= 0 ? reserveAmmo : Random.Range(5, 30));
+            }
+            return;
+        }
+
         WeaponStats runtimeWeapon = Instantiate(gun);
 
-        if (runtimeWeapon is FireArmStats firearm)
+        if (runtimeWeapon is FireArmStats newFirearm)
         {
-            firearm.ammoCur = (startingAmmo >= 0) ? startingAmmo : firearm.ammoMax;
-            firearm.ammoReserve = (reserveAmmo >= 0) ? reserveAmmo : firearm.maxAmmoReserve;
+            newFirearm.ammoCur = (startingAmmo >= 0) ? startingAmmo : newFirearm.ammoMax;
+            newFirearm.ammoReserve = (reserveAmmo >= 0) ? reserveAmmo : newFirearm.maxAmmoReserve;
         }
 
         weaponList.Add(runtimeWeapon);
 
-        if(autoEquip)
-        EquipWeapon(weaponList.Count - 1);
+        if (autoEquip)
+            EquipWeapon(weaponList.Count - 1);
     }
+
 
     public void HandleShooting()//Handles Shooting
     {
@@ -275,6 +285,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void HandleMeleeAttack()//Handles melee attacks
     {
+        if (!canFire) return;
         if (!HasGun()) return;
 
         var weapon = weaponList[currentWeaponIndex];
@@ -307,21 +318,22 @@ public class PlayerWeaponManager : MonoBehaviour
             if (dmg != null)
                 dmg.takeDamage(melee.damage);
 
-            if (hit.collider.CompareTag("Enemy"))
+            bool isZombie = hit.collider.CompareTag("Enemy");
+
+            if (isZombie)
             {
-                aud.PlayOneShot(melee.hitSound);//TESTING THIS 
+                if (melee.zombieHit != null)
+                    aud.PlayOneShot(melee.zombieHit);
+
                 iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
                 if (enemyHealth != null)
-                {
                     GameManager.instance.SetCurrentEnemy(enemyHealth);
-                }
             }
-
-            if (melee.hitEffect != null)
-                Instantiate(melee.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
-
-            if (melee.hitSound != null)
-                aud.PlayOneShot(melee.hitSound);
+            else
+            {
+                if (melee.otherHit != null)
+                    aud.PlayOneShot(melee.otherHit);
+            }
         }
     }
 
@@ -420,10 +432,14 @@ public class PlayerWeaponManager : MonoBehaviour
                 aud.PlayOneShot(currentGun.fireModeSwitchSound);
         }
     }
-
-    public bool HasGun()//Checks if there is a current gun
+    public bool HasGun() // This checks if player has any weapon
     {
         return weaponList.Count > 0;
+    }
+
+    public bool HasGun(string weaponId)//This checks if player has a weapon with specific id 
+    {
+        return weaponList.Any(w => w.weaponNameId == weaponId);
     }
 
     public FireArmStats CurrentGun
@@ -436,14 +452,33 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void AddAmmoToReserve(int ammoCount)
+    public bool AddAmmoToReserve(AmmoTypes ammoType, int ammoCount)
     {
-        var gun = CurrentGun;
-        if (gun == null) return;
-        gun.ammoReserve += ammoCount;
-        gun.ammoReserve = Mathf.Min(gun.ammoReserve, gun.maxAmmoReserve);
+        // Find all guns that use this ammo type
+        var matchingGuns = weaponList.OfType<FireArmStats>().Where(g => g.ammoType == ammoType).ToList();
+        if (matchingGuns.Count == 0) return false;
+
+        // Prefer the currently equipped gun if it matches
+        FireArmStats targetGun = matchingGuns.FirstOrDefault(g => g == CurrentGun && g.ammoType == ammoType)
+                                 ?? matchingGuns.OrderBy(g => g.ammoReserve).First();
+
+        if (targetGun.ammoReserve >= targetGun.maxAmmoReserve)
+        {
+            Debug.Log($"[PlayerWeaponManager] {ammoType} ammo already full.");
+            return false;
+        }
+
+        targetGun.ammoReserve += ammoCount;
+        targetGun.ammoReserve = Mathf.Min(targetGun.ammoReserve, targetGun.maxAmmoReserve);
+
         StartCoroutine(AmmoFlash());
+        return true;
     }
+    public bool HasWeaponWithAmmoType(AmmoTypes type)
+    {
+        return weaponList.OfType<FireArmStats>().Any(g => g.ammoType == type);
+    }
+
 
     IEnumerator AmmoFlash()
     {

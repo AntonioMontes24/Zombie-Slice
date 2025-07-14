@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using EasyRoads3Dv3;
-
+using UnityEngine.Audio;
 
 public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 {
@@ -18,8 +17,6 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] NavMeshAgent agent;                    // NavMeshAgent to traverse our navmesh
     [SerializeField] Animator animator;                     // this will handle our animations
 
-    private Rigidbody rb;
-
     [SerializeField] bool playerInRange;                    // is our player in range to be chased
     Vector3 playerDirection;                                // Direction of our player
     [SerializeField] int field_of_view;                     // the number of degrees our of enemy can see
@@ -27,13 +24,27 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     float angle_to_player;                                  // the angle to the player 
 
     // attack fields
-    bool canAttack;                                          // can we attack
+    // bool canAttack;                                          // can we attack
     int attackCounter;                                       // incremented until we hit the attackRate
     [SerializeField] int attackRate;                         // our Attack is on cooldown
     [SerializeField] int attackDamage;                       // how much damage do we do
+     
 
-    //Bool to track enemy death for enemy health bar to be hidden
-    private bool isDead = false;
+    [SerializeField] Collider clawCollider;                 // claw collider
+
+    [SerializeField] int roamDistance;                      // max distance he can roam from start position
+    [SerializeField] int roamStopTimer;                     // how long before he roams again
+    Vector3 startingPostion;                                // where his spawn position is
+    float roamTime;                                         // counter to see if he can roam 
+    float stoppingDistanceOriginal;                         // cache off the original stopping distance
+
+    // sound
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip aud_clip_idle;
+    [SerializeField] AudioClip aud_clip_attack;
+    [SerializeField] AudioClip aud_clip_death;
+    [SerializeField] AudioClip aud_clip_swipe;
+    [SerializeField] int audioCounter;
 
     public int CurrentHealth
     {
@@ -45,80 +56,26 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         get { return _maxHealth; }
     }
 
-    // using awake to get component references soon as instance is being used
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody>();
-        if(rb == null)
-        {
-            Debug.Log($"Rigidbody NOT FOUND!! on {gameObject.name}.");
-        }
-
-        if (rb != null)
-        {
-            rb.isKinematic = true;
-            rb.useGravity = false;
-        }
-    }
-
 
     public void takeDamage(int amount)
     {
-        if (isDead)
+        if (currHealth > 0)
         {
-            GameManager.instance.HideEnemyUI();
-            return;
-        }
+            currHealth -= amount;
 
-        // redoing this section to set a clamp on health to ensure it doesnt go below 0.
-        currHealth -= amount;
-        currHealth = Mathf.Max(0, currHealth);
+            GameManager.instance.UpdateEnemyHealthBar(this);
 
-        // constantly update health bar
-        GameManager.instance.UpdateEnemyHealthBar(this);
+            // we took damage so we need to head towards the player
+            // set our navmesh agent towards the players position
+            // agent.SetDestination(GameManager.instance.player.transform.position);
+            agent.SetDestination(GameManager.instance.player.transform.position);
+            animator.SetFloat("Speed", 1);
 
-        //if currhealth is exactly 0 and not already dead
-        if(currHealth <= 0 && !isDead)
-        {
-            isDead = true;
-            GameManager.instance.HideEnemyUI();
-
-
-            //stop nav mesh instantly
-            if(agent != null && agent.enabled)
+            if (currHealth <= 0)
             {
-                agent.isStopped = true;
-                agent.enabled = false;
-            }
-
-            if(rb != null)
-            {
-                rb.isKinematic = false;
-                rb.useGravity = true;
-
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-
-                rb.AddForce(Vector3.down * 10f, ForceMode.Impulse);
-
-            }
-
-            if(animator != null)
-            {
-                animator.applyRootMotion = false;
-                if(animator.runtimeAnimatorController != null)
-                {
-                    animator.SetTrigger("isDead");
-                }
-            }
-
-            StartCoroutine(removeCorpse());
-
-        } else if (currHealth > 0)
-        {
-            if(agent != null && agent.enabled && !agent.isStopped)
-            {
-                agent.SetDestination(GameManager.instance.player.transform.position);
+                // remove the corpse by destroying the gameObject
+                StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
             }
         }
     }
@@ -126,12 +83,12 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     IEnumerator removeCorpse()
     {
 
-        yield return null;
+        if (animator != null && animator.runtimeAnimatorController != null)
+            agent.isStopped = true;
+            animator.SetTrigger("isDead");
 
-
-        yield return new WaitForSeconds(2.0f);
-
-        GameManager.instance.HideEnemyUI();
+        // wait 4 seconds
+        yield return new WaitForSeconds(4);
 
         Destroy(gameObject);
 
@@ -144,19 +101,57 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
-            animator.SetBool("canAttack", true);
+            animator.SetTrigger("swipe");
 
             // wait 1 second
             yield return new WaitForSeconds(1);
 
-            animator.SetBool("canAttack", false);
-
-            // assign damage to the player
-            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
-            player_dmg.takeDamage(attackDamage);
+            
         }
 
     }
+
+    public void assignAttackDamage()
+    {
+        // assign damage to the player
+        IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+        player_dmg.takeDamage(attackDamage);
+    }
+
+    public void playAudioDeath()
+    {
+        aud.Stop();
+
+        if (aud_clip_death != null)
+            aud.PlayOneShot(aud_clip_death);
+    }
+
+    public void playAudioIdle()
+    {
+        if (aud_clip_idle != null)
+            aud.PlayOneShot(aud_clip_idle);
+    }
+
+    public void playAudioSwipe()
+    {
+        aud.Stop();
+
+        if (aud_clip_swipe != null)
+            aud.PlayOneShot(aud_clip_swipe);
+    }
+
+    public void clawColliderOn()
+    {
+        if (clawCollider)
+            clawCollider.enabled = true;
+    }
+
+    public void clawColliderOff()
+    {
+        if (clawCollider)
+            clawCollider.enabled = false;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -165,25 +160,62 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         ObjectiveManager.instance.updateZombieCount(1);
     }
 
+
+    private void Awake()
+    {
+        // set our starting position so that we know how far we can roam. This is the point we will check from
+        startingPostion = transform.position;
+
+        // set our stopping distance to the stopping distance in Unity
+        stoppingDistanceOriginal = agent.stoppingDistance;
+
+        audioCounter = 799;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        //if dead, no AI logic is to be ran
-        if(isDead) return;
-
-
         if (currHealth >= 0)
         {
+            // check if we need to increment our roam or just roam
+            if (agent.remainingDistance < 0.01f)
+            {
+                roamTime += Time.deltaTime;
+                animator.SetFloat("Speed", 0);
+            }
+            if (playerInRange && !canWeSeeThePlayer())
+            {
+                roamCheck();
+            }
+            else if (!playerInRange)
+            {
+                roamCheck();
+            }
+
+
+            // check if we can see the player and we are in range
             if (playerInRange && canWeSeeThePlayer())
             {
-                
+                // reset the stopping distance
+                agent.stoppingDistance = stoppingDistanceOriginal;
+                if (audioCounter >= 800)
+                {
+                    audioCounter = 0;
+                    // play sound
+                    if (aud_clip_attack != null)
+                        aud.PlayOneShot(aud_clip_attack);
+
+                }
+                else
+                {
+                    audioCounter++;
+                    attackCounter++;
+                }
+
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     // we need to face the player
                     faceTarget();
-
-                    // set my bool for animator
-                    animator.SetBool("inMeleeRange", true);
 
                     // need to check for biteAttack 
                     if (attackCounter >= attackRate)
@@ -198,14 +230,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
                 }
                 else
                 {
-                    attackCounter++;
-                    animator.SetBool("inMeleeRange", false);
-
-                    // make sure path is still set if player is visible and not in range
-                    if(agent.enabled && !agent.isStopped)
-                    {
-                        agent.SetDestination(GameManager.instance.player.transform.position);
-                    }
+                    // attackCounter++;
                 }
             }
         }
@@ -260,13 +285,13 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 
                 agent.SetDestination(GameManager.instance.player.transform.position);
 
-                if (animator != null && animator.runtimeAnimatorController != null)
-                    animator.SetBool("isWalking", true);
+                animator.SetFloat("Speed", 1);
 
                 // face the target
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     faceTarget();
+                    animator.SetFloat("Speed", 0);
                 }
 
                 // we need to return true since we found the player
@@ -276,7 +301,36 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         }
 
         // we did not hit the player
-        animator.SetBool("isWalking", false);
         return false;
+    }
+
+    void roam()
+    {
+        // reset the timer
+        roamTime = 0;
+
+        // make sure he is able to get to the location and not stop short
+        agent.stoppingDistance = 0;
+
+        // grab a random spot in our sphere on the navmesh
+        Vector3 randPos = Random.insideUnitSphere * roamDistance;
+        randPos += startingPostion;
+
+        // check if the position is on the navmesh
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randPos, out hit, roamDistance, 1);
+
+        // move
+        agent.SetDestination(hit.position);
+        animator.SetFloat("Speed", 1);
+    }
+
+    void roamCheck()
+    {
+        // can i roam and am I stopped. 
+        if (roamTime >= roamStopTimer && agent.remainingDistance < 0.1f)
+        {
+            roam();
+        }
     }
 }

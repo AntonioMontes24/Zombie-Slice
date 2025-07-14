@@ -41,71 +41,115 @@ public class AudioManager : MonoBehaviour
             }
 
             // button audio sources
-            if(buttonHoverSource == null)
-            {
-                //GameObject hover = GameObject.Find("ButtonHover");
-                Transform hoverTransform = transform.Find("ButtonHover");
-                if(hoverTransform != null)
-                {
-                    buttonHoverSource = hoverTransform.GetComponent<AudioSource>();
-                    if(buttonHoverSource == null)
-                    {
-                        //buttonHoverSource= gameObject.AddComponent<AudioSource>();
-                        buttonHoverSource = hoverTransform.gameObject.AddComponent<AudioSource>();
-                    }
-                }else
-                {
-                    Debug.LogWarning("AudioManager: button hover gameobject not found");
-                }
-            }
+            //if(buttonHoverSource == null)
+            //{
+            //    //GameObject hover = GameObject.Find("ButtonHover");
+            //    Transform hoverTransform = transform.Find("ButtonHover");
+            //    if(hoverTransform != null)
+            //    {
+            //        buttonHoverSource = hoverTransform.GetComponent<AudioSource>();
+            //        if(buttonHoverSource == null)
+            //        {
+            //            //buttonHoverSource= gameObject.AddComponent<AudioSource>();
+            //            buttonHoverSource = hoverTransform.gameObject.AddComponent<AudioSource>();
+            //        }
+            //    }else
+            //    {
+            //        Debug.LogWarning("AudioManager: button hover gameobject not found");
+            //    }
+            //}
 
-            if(buttonSelectClip == null)
-            {
-                Transform selectTransform = transform.Find("ButtonSelect");
-                //GameObject select = GameObject.Find("ButtonSelect");
-                if(selectTransform != null)
-                {
-                    buttonSelectSource = selectTransform.GetComponent<AudioSource>();
-                    if(buttonSelectSource == null)
-                    {
-                        //buttonSelectSource= gameObject.AddComponent<AudioSource>();
-                        buttonSelectSource = selectTransform.gameObject.AddComponent<AudioSource>();
-                    }
-                }else
-                {
-                    Debug.LogWarning("AudioManager: button select gameobject not found!");
-                }
-            }
+            //if(buttonSelectClip == null)
+            //{
+            //    Transform selectTransform = transform.Find("ButtonSelect");
+            //    //GameObject select = GameObject.Find("ButtonSelect");
+            //    if(selectTransform != null)
+            //    {
+            //        buttonSelectSource = selectTransform.GetComponent<AudioSource>();
+            //        if(buttonSelectSource == null)
+            //        {
+            //            //buttonSelectSource= gameObject.AddComponent<AudioSource>();
+            //            buttonSelectSource = selectTransform.gameObject.AddComponent<AudioSource>();
+            //        }
+            //    }else
+            //    {
+            //        Debug.LogWarning("AudioManager: button select gameobject not found!");
+            //    }
+            //}
 
-            if(buttonHoverSource != null && mixer != null)
-            {
-                string menuGroupName = "Menu";
-                AudioMixerGroup[] menuGroups = mixer.FindMatchingGroups(menuGroupName);
-                if(menuGroups.Length > 0)
-                {
-                    buttonHoverSource.outputAudioMixerGroup = menuGroups[0];
-                }
-                //buttonHoverSource.outputAudioMixerGroup = mixer.FindMatchingGroups("Menu")[0];
-            }
-            if(buttonSelectSource != null && mixer != null)
-            {
-                string menuGroupName = "Menu";
-                AudioMixerGroup[] menuGroups = mixer.FindMatchingGroups(menuGroupName);
+            //if(buttonHoverSource != null && mixer != null)
+            //{
+            //    string menuGroupName = "Menu";
+            //    AudioMixerGroup[] menuGroups = mixer.FindMatchingGroups(menuGroupName);
+            //    if(menuGroups.Length > 0)
+            //    {
+            //        buttonHoverSource.outputAudioMixerGroup = menuGroups[0];
+            //    }
+            //    //buttonHoverSource.outputAudioMixerGroup = mixer.FindMatchingGroups("Menu")[0];
+            //}
+            //if(buttonSelectSource != null && mixer != null)
+            //{
+            //    string menuGroupName = "Menu";
+            //    AudioMixerGroup[] menuGroups = mixer.FindMatchingGroups(menuGroupName);
 
-                if(menuGroups.Length > 0)
-                {
-                    buttonSelectSource.outputAudioMixerGroup = menuGroups[0];
-                }
-                //buttonSelectSource.outputAudioMixerGroup = mixer.FindMatchingGroups("Menu")[0];
-            }
+            //    if(menuGroups.Length > 0)
+            //    {
+            //        buttonSelectSource.outputAudioMixerGroup = menuGroups[0];
+            //    }
+            //    //buttonSelectSource.outputAudioMixerGroup = mixer.FindMatchingGroups("Menu")[0];
+            //}
+
+            SetupButtonAudioSource(ref buttonHoverSource, "ButtonHover", buttonHoverClip, MENU_KEY);
+            SetupButtonAudioSource(ref buttonSelectSource, "ButtonSelect", buttonSelectClip, MENU_KEY);
+
+            ApplySavedVolumeToMixer();
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
 
         } else
         {
             Destroy(gameObject);
         }
 
-        LoadVolume();
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        //LoadVolume();
+        //SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void SetupButtonAudioSource(ref AudioSource source, string name, AudioClip clip, string mixerGroupKey)
+    {
+
+        if(source == null)
+        {
+            Transform existingTransform = transform.Find(name);
+            if (existingTransform != null)
+            {
+                source = existingTransform.GetComponent<AudioSource>();
+                if(source == null)
+                {
+                    source = existingTransform.gameObject.AddComponent<AudioSource>();
+                }
+            }
+            else
+            {
+                GameObject newGO = new GameObject(name);
+                newGO.transform.SetParent(this.transform);
+                source = newGO.AddComponent<AudioSource>();
+            }
+
+            source.clip = clip;
+
+            if(mixer != null)
+            {
+                AudioMixerGroup[] groups = mixer.FindMatchingGroups(mixerGroupKey);
+                if(groups.Length > 0)
+                {
+                    source.outputAudioMixerGroup = groups[0];
+                }else
+                {
+                    Debug.LogWarning($"AudioManager: no mixer group found for key: {mixerGroupKey}");
+                }
+            }
+        }
     }
 
     private void OnDestroy()
@@ -182,16 +226,33 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-
-    // volume saved in volumesettings.cs
-    void LoadVolume()
+    public void ApplySavedVolumeToMixer()
     {
         float musicVolume = PlayerPrefs.GetFloat(MUSIC_KEY, 1f);
         float sfxVolume = PlayerPrefs.GetFloat(SFX_KEY, 1f);
         float menuVolume = PlayerPrefs.GetFloat(MENU_KEY, 1f);
 
-        mixer.SetFloat(VolumeSettings.MIXER_MUSIC, Mathf.Log10(musicVolume) * 20);
-        mixer.SetFloat(VolumeSettings.MIXER_SFX, Mathf.Log10(sfxVolume) * 20);
-        mixer.SetFloat(VolumeSettings.MIXER_MENU, Mathf.Log10(menuVolume) * 20);
+        mixer.SetFloat(VolumeSettings.MIXER_MUSIC, (musicVolume > 0) ? Mathf.Log10(musicVolume) * 20 : -80f);
+        mixer.SetFloat(VolumeSettings.MIXER_SFX, (sfxVolume > 0) ? Mathf.Log10(sfxVolume) * 20 : -80f);
+        mixer.SetFloat(VolumeSettings.MIXER_MENU, (menuVolume > 0) ? Mathf.Log10(menuVolume) * 20 : -80f);
+
     }
+
+    public float GetMusicVolume() { return PlayerPrefs.GetFloat (MUSIC_KEY, 1f); }
+    public float GetSFXVolume() { return PlayerPrefs.GetFloat(SFX_KEY, 1f); }
+    public float GetMenuVolume() { return PlayerPrefs.GetFloat(MENU_KEY, 1f); }
+
+
+
+    // volume saved in volumesettings.cs
+    //void LoadVolume()
+    //{
+    //    float musicVolume = PlayerPrefs.GetFloat(MUSIC_KEY, 1f);
+    //    float sfxVolume = PlayerPrefs.GetFloat(SFX_KEY, 1f);
+    //    float menuVolume = PlayerPrefs.GetFloat(MENU_KEY, 1f);
+
+    //    mixer.SetFloat(VolumeSettings.MIXER_MUSIC, Mathf.Log10(musicVolume) * 20);
+    //    mixer.SetFloat(VolumeSettings.MIXER_SFX, Mathf.Log10(sfxVolume) * 20);
+    //    mixer.SetFloat(VolumeSettings.MIXER_MENU, Mathf.Log10(menuVolume) * 20);
+    //}
 }

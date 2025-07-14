@@ -14,6 +14,7 @@ public class FireArmStats : WeaponStats
     [SerializeField] public float reloadTime;
     [SerializeField] public int ammoReserve;
     [SerializeField] public int maxAmmoReserve;
+    [SerializeField] public AmmoTypes ammoType;
 
     [Header("Fire modes")]
     [SerializeField] public bool canSwitchFireMode;
@@ -30,7 +31,6 @@ public class FireArmStats : WeaponStats
     [SerializeField] public AudioClip shootSound;
     [SerializeField] public AudioClip reloadSound;
     [SerializeField] public AudioClip emptySound;
-    //[SerializeField] public float shootVol;
     [SerializeField] public AudioClip fireModeSwitchSound;
     [SerializeField] public AudioClip reloadFreakingZombie;
 
