@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Audio;
 
 
 public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
