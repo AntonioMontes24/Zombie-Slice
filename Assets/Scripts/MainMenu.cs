@@ -30,7 +30,7 @@ public class MainMenu : MonoBehaviour
     }
 
 
-    public void PlayGame(string level)
+    public void PlayGame()
     {
 
         if(AudioManager.instance != null)
@@ -38,7 +38,7 @@ public class MainMenu : MonoBehaviour
             AudioManager.instance.StopMusic();
         }
 
-        SceneManager.LoadScene(level);
+        SceneManager.LoadScene(1);
 
 
     }
