@@ -290,7 +290,7 @@ namespace UnityEngine.InputSystem.Samples.RebindUI
                 action.actionMap.Enable();
                 m_UIInputActionMap?.Enable();
                 m_Action.action.Enable();
-                SaveActionBinding();
+
             }
 
             // An "InvalidOperationException: Cannot rebind action x while it is enabled" will
