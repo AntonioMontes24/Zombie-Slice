@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class UnusedAssetCleaner : EditorWindow
 {
+    // Stores info for each unused asset
     private class AssetInfo
     {
         public string path;
@@ -13,7 +14,7 @@ public class UnusedAssetCleaner : EditorWindow
         public string extension => Path.GetExtension(path).ToLowerInvariant();
     }
 
-    private enum SortType//Enumerator for the different types of selection we can use
+    private enum SortType // Enumerator for the different types of sorting we can use
     {
         NameAsc,
         NameDesc,
@@ -29,13 +30,15 @@ public class UnusedAssetCleaner : EditorWindow
     private List<AssetInfo> unusedAssets = new List<AssetInfo>();
     private SortType currentSort = SortType.NameAsc;
 
+    private const int rowHeight = 22; // Approximate row height for scrolling
+
     [MenuItem("Tools/Unused Asset Cleaner")]
-    public static void OpenWindow()//Opens a window for the tool 
+    public static void OpenWindow() // Opens a window for the tool
     {
         GetWindow<UnusedAssetCleaner>("Unused Asset Cleaner");
     }
 
-    private void OnGUI()//Displays the results 
+    private void OnGUI() // Displays the results
     {
         GUILayout.Space(10);
         if (GUILayout.Button("Scan for Unused Assets", GUILayout.Height(30)))
@@ -47,6 +50,7 @@ public class UnusedAssetCleaner : EditorWindow
 
         if (unusedAssets.Count > 0)
         {
+            // Sorting and delete all buttons
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Sort by:", GUILayout.Width(60));
             currentSort = (SortType)EditorGUILayout.EnumPopup(currentSort);
@@ -54,6 +58,7 @@ public class UnusedAssetCleaner : EditorWindow
             {
                 SortAssets();
             }
+
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Delete All", GUILayout.Width(100)))
             {
@@ -65,40 +70,25 @@ public class UnusedAssetCleaner : EditorWindow
                     }
                     AssetDatabase.Refresh();
                     unusedAssets.Clear();
+                    return;
                 }
             }
             EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(10);
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
 
-            foreach (var asset in unusedAssets)
+            int totalCount = unusedAssets.Count;
+            int viewHeight = Mathf.FloorToInt(position.height) - 120;
+            int visibleCount = Mathf.FloorToInt(viewHeight / rowHeight);
+            int scrollOffset = Mathf.FloorToInt(scrollPos.y / rowHeight);
+
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(viewHeight));
+            GUILayout.Space(totalCount * rowHeight); // Reserve scroll space
+
+            for (int i = scrollOffset; i < Mathf.Min(totalCount, scrollOffset + visibleCount + 5); i++)
             {
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label(asset.extension, GUILayout.Width(50));
-                GUILayout.Label(Path.GetFileName(asset.path), GUILayout.Width(200));
-                GUILayout.Label(asset.path, GUILayout.Width(300));
-                GUILayout.Label(FormatSize(asset.size), GUILayout.Width(80));
-
-                if (GUILayout.Button("Select", GUILayout.Width(60)))
-                {
-                    var obj = AssetDatabase.LoadMainAssetAtPath(asset.path);
-                    Selection.activeObject = obj;
-                    EditorGUIUtility.PingObject(obj);
-                }
-
-                if (GUILayout.Button("Delete", GUILayout.Width(60)))
-                {
-                    if (EditorUtility.DisplayDialog("Delete Asset", $"Are you sure you want to delete {asset.path}?", "Yes", "No"))
-                    {
-                        AssetDatabase.DeleteAsset(asset.path);
-                        AssetDatabase.Refresh();
-                        unusedAssets.Remove(asset);
-                        break;
-                    }
-                }
-
-                EditorGUILayout.EndHorizontal();
+                Rect rowRect = new Rect(0, i * rowHeight, position.width - 20, rowHeight);
+                DrawRow(unusedAssets[i], rowRect);
             }
 
             EditorGUILayout.EndScrollView();
@@ -109,17 +99,52 @@ public class UnusedAssetCleaner : EditorWindow
         }
     }
 
-    private void ScanForUnusedAssets() // Scan method that searches unsued assets based on the scenes selected on the EdtitorBuildScene
+    private void DrawRow(AssetInfo asset, Rect rect)// Draws a single row inside the scroll view for one asset
+
+    {
+        GUILayout.BeginArea(rect);
+        EditorGUILayout.BeginHorizontal();
+
+        GUILayout.Label(asset.extension, GUILayout.Width(50));
+        GUILayout.Label(Path.GetFileName(asset.path), GUILayout.Width(200));
+        GUILayout.Label(asset.path, GUILayout.Width(300));
+        GUILayout.Label(FormatSize(asset.size), GUILayout.Width(80));
+
+        if (GUILayout.Button("Select", GUILayout.Width(60)))
+        {
+            var obj = AssetDatabase.LoadMainAssetAtPath(asset.path);
+            Selection.activeObject = obj;
+            EditorGUIUtility.PingObject(obj);
+        }
+
+        if (GUILayout.Button("Delete", GUILayout.Width(60)))
+        {
+            if (EditorUtility.DisplayDialog("Delete Asset", $"Are you sure you want to delete {asset.path}?", "Yes", "No"))
+            {
+                AssetDatabase.DeleteAsset(asset.path);
+                AssetDatabase.Refresh();
+                unusedAssets.Remove(asset);
+            }
+        }
+
+        EditorGUILayout.EndHorizontal();
+        GUILayout.EndArea();
+    }
+
+ 
+    private void ScanForUnusedAssets()// Scan method that searches unused assets based on the scenes selected in EditorBuildSettings
     {
         string[] allAssetPaths = AssetDatabase.GetAllAssetPaths()
             .Where(p => p.StartsWith("Assets") && !AssetDatabase.IsValidFolder(p))
             .ToArray();
 
-        string[] usedAssets = AssetDatabase.GetDependencies(EditorBuildSettings.scenes.Select(s => s.path).ToArray(), true);
+        string[] usedAssets = AssetDatabase.GetDependencies(
+            EditorBuildSettings.scenes.Select(s => s.path).ToArray(), true);
 
         HashSet<string> usedSet = new HashSet<string>(usedAssets);
+
         unusedAssets = allAssetPaths
-            .Where(p => !usedSet.Contains(p) && !p.EndsWith(".cs"))
+            .Where(p => !usedSet.Contains(p) && !p.EndsWith(".cs") && !p.EndsWith(".meta"))
             .Select(p => new AssetInfo
             {
                 path = p,
@@ -129,7 +154,8 @@ public class UnusedAssetCleaner : EditorWindow
         SortAssets();
     }
 
-    private void SortAssets()// swicthc case depeneding on selection 
+ 
+    private void SortAssets()// Sorts the list of unused assets based on selected sort option
     {
         switch (currentSort)
         {
@@ -160,7 +186,8 @@ public class UnusedAssetCleaner : EditorWindow
         }
     }
 
-    private string FormatSize(long sizeInBytes)//Format and display correct size
+   
+    private string FormatSize(long sizeInBytes)// Format and display file size in readable units
     {
         float size = sizeInBytes;
         string[] sizes = { "B", "KB", "MB", "GB" };
