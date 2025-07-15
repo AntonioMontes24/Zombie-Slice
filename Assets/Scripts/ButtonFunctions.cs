@@ -10,18 +10,82 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void restart()
     {
-        GameManager.instance.respawnHook?.Invoke();
-        GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
-        GameManager.instance.stateUnpause();
+        //GameManager.instance.respawnHook?.Invoke();
+        //GameManager.instance.player.GetComponent<PlayerController>().SpawnPlayer();
+        //GameManager.instance.stateUnpause();
 
-        if(KillManager.instance != null)
+        //SceneManager.sceneLoaded += OnSceneReloaded;
+
+        //SceneManager.LoadScene("Zombie_Scene(Main)");
+
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentSceneIndex);
+
+        //if (KillManager.instance != null)
+        //{
+        //    KillManager.instance.ResetKills();
+        //}
+    }
+
+   private void OnSceneReloaded(Scene scene, LoadSceneMode mode)  //makes sure you reload the scene with the barriers getting reset
+    {
+
+        SceneManager.sceneLoaded -= OnSceneReloaded;
+
+        if (KillManager.instance != null)
         {
             KillManager.instance.ResetKills();
         }
-    }
+
+        if (GameManager.instance != null) {
+
+            GameManager.instance.ResetBarriers();
+            GameManager.instance.stateUnpause();
+
+        
+        }
+   }
+
+
     public void options()
     {
-        GameManager.instance.OptionsMenu();
+        // saving this for later
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OpenOptionsMenu();
+        }
+    }
+
+    public void audioOptions()
+    {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OpenAudioOptionsMenu();
+        }
+        {
+            
+        }
+    }
+
+    public void videoOptions()
+    {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OpenVideoOptionsMenu();
+        }
+        {
+
+        }
+    }
+    public void controlsOptions()
+    {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OpenControlsOptionsMenu();
+        }
+        {
+
+        }
     }
 
     public void quit()
@@ -35,57 +99,77 @@ public class ButtonFunctions : MonoBehaviour
     }
 
     [Header("Door Interaction")]
-    [SerializeField] private float holdDuration = 2f;
+    [SerializeField] private float holdDuration = 1f;
     [SerializeField] private int sceneBuildIndex = 2;
     [SerializeField] private KeyCode interactKey = KeyCode.X;
     [SerializeField] private TMP_Text InteractText;
 
-    private float holdTimer = 0f;
+    [Header("UI")]
+    [SerializeField] private TMP_Text interactPrompt;
+
+   // private float holdTimer = 0f;
     private bool isPlayerNearDoor = false;
+
+    private void Start()
+    {
+        //if (interactPrompt != null)
+        //{
+
+        //    interactPrompt.gameObject.SetActive(false);
+        //}
+
+    }
+
 
     private void Update()
     {
-        if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() == 0)
-        {
-            InteractText.gameObject.SetActive(true);
+        //if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() == 0)
+        //{
+        //    InteractText.gameObject.SetActive(true);
 
-            if (Input.GetKey(interactKey))
-            {
-                holdTimer += Time.deltaTime;
+        //    if (Input.GetKey(interactKey))
+        //    {
+        //        holdTimer += Time.deltaTime;
 
-                if (holdTimer >= holdDuration)
-                {
-                    LoadTargetScene();
-                }
-            }
-            else
-            {
-                InteractText.gameObject.SetActive(false);
-                holdTimer = 0f;
-            }
-        }
+        //        if (holdTimer >= holdDuration)
+        //        {
+        //            LoadTargetScene();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        holdTimer = 0f;
+        //    }
+        //}
+
+        //else
+        //{
+        //    InteractText.gameObject.SetActive(false);
+        //    holdTimer = 0f;
+        //}
+
     }
 
-    private void LoadTargetScene()
-    {
-        Debug.Log("Loading scene: " + sceneBuildIndex);
-        SceneManager.LoadScene(sceneBuildIndex);
-    }
+    //private void LoadTargetScene()
+    //{
+    //    Debug.Log("Loading scene: " + sceneBuildIndex);
+    //    SceneManager.LoadScene(sceneBuildIndex);
+    //}
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerNearDoor = true;
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("Player"))
+    //    {
+    //        isPlayerNearDoor = true;
+    //    }
+    //}
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerNearDoor = false;
-            holdTimer = 0f;
-        }
-    }
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.CompareTag("Player"))
+    //    {
+    //        isPlayerNearDoor = false;
+    //        //holdTimer = 0f;
+    //    }
+    //}
 }

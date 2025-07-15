@@ -3,11 +3,13 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
-public class BossAI : MonoBehaviour, IDamage
+public class BossAI : MonoBehaviour, IDamage, iEnemyHealth
 {
     // create some serialized variables
-    [SerializeField] int currHealth;                        // the current health 
+    [SerializeField] int currHealth;                        // the current health
+    [SerializeField] int _maxHealth;                        // max health
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -33,137 +35,164 @@ public class BossAI : MonoBehaviour, IDamage
     [SerializeField] GameObject blightBall;                 // our projectile
     bool canShootBlight;                                    // can we shoot our blight ball
     int blightBallCounter;                                  // increment to be able to shoot our blight ball
-    [SerializeField] int blightBallRate;                    // how often we can shoot our blight ball
+    // [SerializeField] int blightBallRate;                    // how often we can shoot our blight ball
     [SerializeField] int blightBallDamage;                  // how much damage does a blight ball do
     [SerializeField] float minShootDistance;                // minimum range to shoot blightball
+
+    [SerializeField] Collider clawCollider;                 // Collider for the power attack
+    int attackToUse;
+    int attackCounter;
+    [SerializeField] int attackRate;
+
+    public bool see_player;
+
+    public int CurrentHealth
+    {
+        get { return currHealth; }
+    }
+
+    public int maxHealth
+    {
+        get { return _maxHealth; }
+    }
+
+    public int chooseAttack()
+    {
+        return Random.Range(0, 5);
+
+    }
 
     // coroutines 
     IEnumerator powerAttack()
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
-            animator.SetBool("canPowerAttack", true);
+            attackCounter = 0;
+
+            animator.SetTrigger("Attack");
 
             // wait 1 second
             yield return new WaitForSeconds(1);
 
-            animator.SetBool("canPowerAttack", false);
-
-            // assign damage to the player
-            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
-            player_dmg.takeDamage(powerAttackDamage);
         }
+    }
+
+    public void assignPowerAttackDamage()
+    {
+        // assign damage to the player
+        IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+        player_dmg.takeDamage(powerAttackDamage);
+    }
+
+    public void clawColliderOn()
+    {
+        if (clawCollider)
+            clawCollider.enabled = true;
+    }
+
+    public void clawColliderOff()
+    {
+        if (clawCollider)
+            clawCollider.enabled = false;
     }
 
     IEnumerator removeCorpse()
     {
         if (animator != null && animator.runtimeAnimatorController != null)
             animator.SetTrigger("isDead");
-        // wait 2 seconds
-        yield return new WaitForSeconds(2);
 
+        animator.SetFloat("Speed", 0);
+
+        clawColliderOff();
+        agent.enabled = false;
+        
+        yield return new WaitForSeconds(4.0f);
         Destroy(gameObject);
 
-        // update the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(-1);
+        
     }
 
     IEnumerator shootBlightBall()
     {
-       
-        // set our bool for transition
-        animator.SetBool("canShootBlight", true);
-
+        attackCounter = 0;
+        animator.SetTrigger("Blightball");
         // wait 1 second
         yield return new WaitForSeconds(1);
 
-        // set our bool for transition
-        animator.SetBool("canShootBlight", false);
-
-        // possibly instantiate here
-        if (blightBall == null || !blightBall.activeInHierarchy)
-        {
-            Instantiate(blightBall, shootPosition.position, transform.rotation);
-        }
-        
+    }
+    public void createBlightBall()
+    {
+        // create one of our prefabs at the shoot position 
+        Instantiate(blightBall, shootPosition.position, transform.rotation);
     }
 
-     public void takeDamage(int amount)
+    public void takeDamage(int amount)
     {
         if (currHealth > 0)
         {
             currHealth -= amount;
 
+            GameManager.instance.UpdateEnemyHealthBar(this);
+
             // we took damage so we need to head towards the player
             // set our navmesh agent towards the players position
             // agent.SetDestination(GameManager.instance.player.transform.position);
             agent.SetDestination(GameManager.instance.player.transform.position);
+            animator.SetFloat("Speed", 1);
 
             if (currHealth <= 0)
             {
                 // remove the corpse by destroying the gameObject
                 StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
             }
         }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
+        currHealth = _maxHealth;
         minShootDistance = agent.stoppingDistance + 20.0f;
         // increase the number of zombies left in stage
         ObjectiveManager.instance.updateZombieCount(1);
+
+        attackCounter = attackRate - 1;
+
+        see_player = false;
+    }
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+    
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currHealth >= 0)
+        if (currHealth > 0)
         {
+            see_player = canWeSeeThePlayer();
+
             if (playerInRange && canWeSeeThePlayer())
             {
-                powerAttackCounter++;
-                blightBallCounter++;
-
-                if (agent.remainingDistance <= agent.stoppingDistance)
+                attackCounter++;
+                if(canWeSeeThePlayer() && playerInRange && attackCounter >= attackRate)
                 {
-                    // we need to face the player
-                    faceTarget();
-
-                    // set my bool for animator
-                    animator.SetBool("inMeleeRange", true);
-
-                    // need to check for biteAttack 
-                    if (powerAttackCounter >= powerAttackRate)
+                    if (agent.remainingDistance <= agent.stoppingDistance)
                     {
-                        // reset the counter
-                        powerAttackCounter = 0;
+                        // we need to face the player
+                        faceTarget();
 
-                        // animate the bite
+                        // melee attack
                         StartCoroutine(powerAttack());
                     }
-
-                }
-                else
-                {
-                    animator.SetBool("inMeleeRange", false);
-                }
-
-                // check if we are beyond minimum shoot distance
-                if(agent.remainingDistance <= minShootDistance)
-                {
-                    // we are in range but not in melee range
-                    if (blightBallCounter >= blightBallRate)
+                    else
                     {
-                        // reset our counter
-                        blightBallCounter = 0;
-
-                        // animate the blight ball
-                        StartCoroutine(shootBlightBall());
-
+                       // ranged attack
+                       StartCoroutine(shootBlightBall());
                     }
                 }
-                
+ 
             }
         }
     }
@@ -218,16 +247,14 @@ public class BossAI : MonoBehaviour, IDamage
                 // agent.SetDestination(GameManager.instance.player.transform.position);
 
                 agent.SetDestination(GameManager.instance.player.transform.position);
+                animator.SetFloat("Speed", 1);
 
-                if (animator != null && animator.runtimeAnimatorController != null)
-                    animator.SetBool("isWalking", true);
-
-            
 
                 // face the target
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     faceTarget();
+                    animator.SetFloat("Speed", 0);
                 }
 
                 // we need to return true since we found the player
@@ -237,8 +264,6 @@ public class BossAI : MonoBehaviour, IDamage
 
         }
 
-        // we did not hit the player
-        animator.SetBool("isWalking", false);
         return false;
     }
 }

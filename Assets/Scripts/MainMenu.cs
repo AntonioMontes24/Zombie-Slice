@@ -1,22 +1,58 @@
 using JetBrains.Annotations;
-using Unity.VisualScripting;
+using System.Collections;
+
+//using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] GameManager gameManager;
+    public GameObject mainMenuPanel;
+    public GameObject optionsMenuPanel;
 
-    public void PlayGame(string level)
+    private void Start()
     {
-        SceneManager.LoadScene(level);
+        if(mainMenuPanel != null)
+        {
+            mainMenuPanel.SetActive(true);
+        }
+        if(optionsMenuPanel != null)
+        {
+            optionsMenuPanel.SetActive(false);
+        }
+
+        if(AudioManager.instance != null)
+        {
+            AudioManager.instance.ApplySavedVolumeToMixer();
+        }
+
+    }
+
+
+    public void PlayGame()
+    {
+
+        if(AudioManager.instance != null)
+        {
+            AudioManager.instance.StopMusic();
+        }
+
+        SceneManager.LoadScene(1);
 
 
     }
 
     public void OptionsMenu()
     {
-        SceneManager.LoadScene(2);
+        if(mainMenuPanel != null)
+        {
+            mainMenuPanel.SetActive(false);
+        }
+        if(optionsMenuPanel != null)
+        {
+            optionsMenuPanel.SetActive(true);
+        }
     }
 
     public void QuitGame()
@@ -27,4 +63,7 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
 #endif
     }
+
+
+
 }

@@ -1,0 +1,336 @@
+using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
+
+public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
+{
+    // create some serialized variables
+    [SerializeField] int currHealth;                        // the current health 
+    [SerializeField] int _maxHealth;                         // the max health
+    [SerializeField] float speed;                           // the speed when walking normally
+    [SerializeField] float speedModifier;                   // the modifier if running or slowed
+    [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
+    [SerializeField] Renderer model;                        // Model we will use when we flash a new color on hit or when damaged.
+    [SerializeField] NavMeshAgent agent;                    // NavMeshAgent to traverse our navmesh
+    [SerializeField] Animator animator;                     // this will handle our animations
+
+    [SerializeField] bool playerInRange;                    // is our player in range to be chased
+    Vector3 playerDirection;                                // Direction of our player
+    [SerializeField] int field_of_view;                     // the number of degrees our of enemy can see
+    [SerializeField] Transform headPos;                     // for raycast to player. Can he see where we are at
+    float angle_to_player;                                  // the angle to the player 
+
+    // attack fields
+    // bool canAttack;                                          // can we attack
+    int attackCounter;                                       // incremented until we hit the attackRate
+    [SerializeField] int attackRate;                         // our Attack is on cooldown
+    [SerializeField] int attackDamage;                       // how much damage do we do
+     
+
+    [SerializeField] Collider clawCollider;                 // claw collider
+
+    [SerializeField] int roamDistance;                      // max distance he can roam from start position
+    [SerializeField] int roamStopTimer;                     // how long before he roams again
+    Vector3 startingPostion;                                // where his spawn position is
+    float roamTime;                                         // counter to see if he can roam 
+    float stoppingDistanceOriginal;                         // cache off the original stopping distance
+
+    // sound
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip aud_clip_idle;
+    [SerializeField] AudioClip aud_clip_attack;
+    [SerializeField] AudioClip aud_clip_death;
+    [SerializeField] AudioClip aud_clip_swipe;
+    [SerializeField] int audioCounter;
+
+    public int CurrentHealth
+    {
+        get { return currHealth; }
+    }
+
+    public int maxHealth
+    {
+        get { return _maxHealth; }
+    }
+
+
+    public void takeDamage(int amount)
+    {
+        if (currHealth > 0)
+        {
+            currHealth -= amount;
+
+            GameManager.instance.UpdateEnemyHealthBar(this);
+
+            // we took damage so we need to head towards the player
+            // set our navmesh agent towards the players position
+            // agent.SetDestination(GameManager.instance.player.transform.position);
+            agent.SetDestination(GameManager.instance.player.transform.position);
+            animator.SetFloat("Speed", 1);
+
+            if (currHealth <= 0)
+            {
+                // remove the corpse by destroying the gameObject
+                StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
+            }
+        }
+    }
+
+    IEnumerator removeCorpse()
+    {
+
+        if (animator != null && animator.runtimeAnimatorController != null)
+            agent.isStopped = true;
+            animator.SetTrigger("isDead");
+
+        // wait 4 seconds
+        yield return new WaitForSeconds(4);
+
+        Destroy(gameObject);
+
+        // update the number of zombies left in stage
+        ObjectiveManager.instance.updateZombieCount(-1);
+
+    }
+
+    IEnumerator attack()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            animator.SetTrigger("swipe");
+
+            // wait 1 second
+            yield return new WaitForSeconds(1);
+
+            
+        }
+
+    }
+
+    public void assignAttackDamage()
+    {
+        // assign damage to the player
+        IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+        player_dmg.takeDamage(attackDamage);
+    }
+
+    public void playAudioDeath()
+    {
+        aud.Stop();
+
+        if (aud_clip_death != null)
+            aud.PlayOneShot(aud_clip_death);
+    }
+
+    public void playAudioIdle()
+    {
+        if (aud_clip_idle != null)
+            aud.PlayOneShot(aud_clip_idle);
+    }
+
+    public void playAudioSwipe()
+    {
+        aud.Stop();
+
+        if (aud_clip_swipe != null)
+            aud.PlayOneShot(aud_clip_swipe);
+    }
+
+    public void clawColliderOn()
+    {
+        if (clawCollider)
+            clawCollider.enabled = true;
+    }
+
+    public void clawColliderOff()
+    {
+        if (clawCollider)
+            clawCollider.enabled = false;
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        currHealth = maxHealth;
+        // increase the number of zombies left in stage
+        ObjectiveManager.instance.updateZombieCount(1);
+    }
+
+
+    private void Awake()
+    {
+        // set our starting position so that we know how far we can roam. This is the point we will check from
+        startingPostion = transform.position;
+
+        // set our stopping distance to the stopping distance in Unity
+        stoppingDistanceOriginal = agent.stoppingDistance;
+
+        audioCounter = 799;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (currHealth >= 0)
+        {
+            // check if we need to increment our roam or just roam
+            if (agent.remainingDistance < 0.01f)
+            {
+                roamTime += Time.deltaTime;
+                animator.SetFloat("Speed", 0);
+            }
+            if (playerInRange && !canWeSeeThePlayer())
+            {
+                roamCheck();
+            }
+            else if (!playerInRange)
+            {
+                roamCheck();
+            }
+
+
+            // check if we can see the player and we are in range
+            if (playerInRange && canWeSeeThePlayer())
+            {
+                // reset the stopping distance
+                agent.stoppingDistance = stoppingDistanceOriginal;
+                if (audioCounter >= 800)
+                {
+                    audioCounter = 0;
+                    // play sound
+                    if (aud_clip_attack != null)
+                        aud.PlayOneShot(aud_clip_attack);
+
+                }
+                else
+                {
+                    audioCounter++;
+                    attackCounter++;
+                }
+
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    // we need to face the player
+                    faceTarget();
+
+                    // need to check for biteAttack 
+                    if (attackCounter >= attackRate)
+                    {
+                        // reset the counter
+                        attackCounter = 0;
+
+                        // animate the bite
+                        StartCoroutine(attack());
+                    }
+
+                }
+                else
+                {
+                    // attackCounter++;
+                }
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // the other object in range is Player
+        if (other.CompareTag("Player"))
+        {
+            // player is in range! 
+            playerInRange = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        // the other object leaving range is Player
+        if (other.CompareTag("Player"))
+        {
+            // player left our range
+            playerInRange = false;
+        }
+    }
+
+    void faceTarget()
+    {
+     
+        Quaternion rotate_val = (Quaternion.LookRotation(new Vector3(playerDirection.x, 0, playerDirection.z)));
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotate_val, Time.deltaTime * faceTargetSpeed);
+
+    }
+
+    bool canWeSeeThePlayer()
+    {
+        // take the players current position from the game manager and subtract our position
+        playerDirection = GameManager.instance.player.transform.position - headPos.position;
+
+        // get our angle to the player
+        angle_to_player = Vector3.Angle(playerDirection, transform.forward);
+
+        // make our Raycast to the player. If it hits the player, we have line of sight. 
+        RaycastHit hit_player;
+
+        if (Physics.Raycast(headPos.position, playerDirection, out hit_player))
+        {
+            // check if its the player we hit
+            if (angle_to_player <= field_of_view && hit_player.collider.CompareTag("Player"))
+            {
+                // we hit the player with the raycast and he is in our field of view
+                // agent.SetDestination(GameManager.instance.player.transform.position);
+
+                agent.SetDestination(GameManager.instance.player.transform.position);
+
+                animator.SetFloat("Speed", 1);
+
+                // face the target
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    faceTarget();
+                    animator.SetFloat("Speed", 0);
+                }
+
+                // we need to return true since we found the player
+                return true;
+            }
+
+        }
+
+        // we did not hit the player
+        return false;
+    }
+
+    void roam()
+    {
+        // reset the timer
+        roamTime = 0;
+
+        // make sure he is able to get to the location and not stop short
+        agent.stoppingDistance = 0;
+
+        // grab a random spot in our sphere on the navmesh
+        Vector3 randPos = Random.insideUnitSphere * roamDistance;
+        randPos += startingPostion;
+
+        // check if the position is on the navmesh
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randPos, out hit, roamDistance, 1);
+
+        // move
+        agent.SetDestination(hit.position);
+        animator.SetFloat("Speed", 1);
+    }
+
+    void roamCheck()
+    {
+        // can i roam and am I stopped. 
+        if (roamTime >= roamStopTimer && agent.remainingDistance < 0.1f)
+        {
+            roam();
+        }
+    }
+}
