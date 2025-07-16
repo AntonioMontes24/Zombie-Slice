@@ -43,15 +43,6 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleJump();
 
-
-        if (controller.isGrounded && playerVel.y < 0)
-        {
-            isJumped = false;
-            playerVel.y = 0f;
-            currentJumpCount = 0;
-        }
-
-
         moveDir = (Input.GetAxis("Horizontal") * transform.right) +
                   (Input.GetAxis("Vertical") * transform.forward);
         float currentSpeed = isSprinting ? walkSpeed * sprintMultiplier : walkSpeed;
@@ -59,12 +50,23 @@ public class PlayerMovement : MonoBehaviour
 
         SetAnimations();
 
-
         controller.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
 
         if (controller.isGrounded && moveDir.magnitude > 0.3f && !isPlayingStep)
             StartCoroutine(PlaySteps());
+
+        // NEW: Proper jump reset on landing
+        if (controller.isGrounded && !wasGrounded)
+        {
+            currentJumpCount = 0;
+            isJumped = false;
+
+            if (audioLand != null && audioLand.Length > 0)
+                aud.PlayOneShot(audioLand[Random.Range(0, audioLand.Length)]/*, audioLandVol*/);
+        }
+
+        wasGrounded = controller.isGrounded;
     }
 
     void SetAnimations()
