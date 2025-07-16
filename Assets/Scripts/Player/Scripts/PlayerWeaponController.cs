@@ -53,6 +53,11 @@ public class PlayerWeaponManager : MonoBehaviour
     [Header("Animations")]
     [SerializeField] Animator animator;
 
+    [Header("Fire mode Icons")]
+    [SerializeField] private Image fireModeIcon;
+    [SerializeField] private Sprite semiFireModeIcon;
+    [SerializeField] private Sprite fullFireModeIcon;
+
     [Header("Runtime State")]
     Transform currentHipPosition;
     Transform currentAdsPosition;
@@ -422,16 +427,18 @@ public class PlayerWeaponManager : MonoBehaviour
     public void ToggleFireMode()//Sets Firemode
     {
         if (weaponList.Count == 0) return;
-        FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
-        if (currentGun == null) return;
 
-        if (currentGun.canSwitchFireMode)
-        {
-            isAutomaticMode = !isAutomaticMode;
-            if (currentGun.fireModeSwitchSound != null)
-                aud.PlayOneShot(currentGun.fireModeSwitchSound);
-        }
+        FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
+        if (currentGun == null || !currentGun.canSwitchFireMode) return;
+
+        isAutomaticMode = !isAutomaticMode;
+
+        if (currentGun.fireModeSwitchSound != null)
+            aud.PlayOneShot(currentGun.fireModeSwitchSound);
+
+        UpdateFireModeUI();
     }
+
     public bool HasGun() // This checks if player has any weapon
     {
         return weaponList.Count > 0;
@@ -517,7 +524,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             isAutomaticMode = gun.isAutomaticDefault;
         }
-
+        UpdateFireModeUI();
         if (currentWeaponInstance != null)
             Destroy(currentWeaponInstance);
 
@@ -621,4 +628,23 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         canFire = value;
     }
+
+    private void UpdateFireModeUI()// Changes firemode ICon
+    {
+        if (fireModeIcon == null)
+            return;
+
+        FireArmStats gun = weaponList[currentWeaponIndex] as FireArmStats;
+
+        if (gun == null)
+        {
+            fireModeIcon.enabled = false; // Hide icon for melee or null
+        }
+        else
+        {
+            fireModeIcon.enabled = true;
+            fireModeIcon.sprite = isAutomaticMode ? fullFireModeIcon : semiFireModeIcon;
+        }
+    }
+
 }
