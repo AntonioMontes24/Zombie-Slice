@@ -190,7 +190,7 @@ public class PlayerWeaponManager : MonoBehaviour
             ray = gameplayCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         else
         {
-            float spreadAngle = 5f;
+            float spreadAngle = 2f;
             Vector3 spreadDir = Quaternion.Euler(
                 Random.Range(-spreadAngle, spreadAngle),
                 Random.Range(-spreadAngle, spreadAngle),
