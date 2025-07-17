@@ -26,6 +26,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float staminaRegenDelay;
     [SerializeField] private UnityEngine.UI.Slider staminaSlider;
 
+    [Header("Crouch Settings")]
+    [SerializeField] KeyCode crouchKey = KeyCode.LeftControl;
+    [SerializeField] float crouchHeight = 1f;
+    [SerializeField] float standHeight = 2f;
+    [SerializeField] float crouchSpeedMultiplier = 0.5f;
+    [SerializeField] Transform cameraTransform;
+    [SerializeField] float crouchCameraY = 0.8f;
+    [SerializeField] float standCameraY = 1.6f;
+
+    private bool isCrouching = false;
+    private float originalWalkSpeed;
+
     public float currentStamina;
     private float regenTimer;
     public bool canSprint => currentStamina > 0;
@@ -39,12 +51,18 @@ public class PlayerMovement : MonoBehaviour
     bool isPlayingStep;
     bool wasGrounded;
 
+    void Start()
+    {
+        originalWalkSpeed = walkSpeed;
+    }
+
     public void HandleMove()//Movement
     {
         HandleJump();
 
         moveDir = (Input.GetAxis("Horizontal") * transform.right) +
                   (Input.GetAxis("Vertical") * transform.forward);
+
         float currentSpeed = isSprinting ? walkSpeed * sprintMultiplier : walkSpeed;
         controller.Move(moveDir * currentSpeed * Time.deltaTime);
 
@@ -94,9 +112,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
     public void HandleSprint()//Sprint
     {
+        if (isCrouching) return;
+
         bool sprintInput = Input.GetButton("Sprint") && moveDir.magnitude > 0.1f;
 
         if (sprintInput && canSprint)
@@ -118,12 +137,11 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-       SetAnimations();
+        SetAnimations();
 
         if (staminaSlider != null)
             staminaSlider.value = currentStamina;
     }
-
 
     public void HandleJump()//Jump
     {
@@ -156,5 +174,24 @@ public class PlayerMovement : MonoBehaviour
         else
             yield return new WaitForSeconds(0.3f);
         isPlayingStep = false;
+    }
+
+    public void HandleCrouch()//Toggle crouch on key press
+    {
+        if (Input.GetKeyDown(crouchKey))
+        {
+            isCrouching = !isCrouching;
+
+            controller.height = isCrouching ? crouchHeight : standHeight;
+
+            if (cameraTransform != null)
+            {
+                Vector3 camPos = cameraTransform.localPosition;
+                camPos.y = isCrouching ? crouchCameraY : standCameraY;
+                cameraTransform.localPosition = camPos;
+            }
+
+            walkSpeed = isCrouching ? originalWalkSpeed * crouchSpeedMultiplier : originalWalkSpeed;
+        }
     }
 }

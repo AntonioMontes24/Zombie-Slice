@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         playerMovement.HandleLanding();// updates landing handling
         playerMovement.HandleJump();// Updates Jump handling
         weaponManager.HandleMeleeAttack();// Updates melee attacks
+        playerMovement.HandleCrouch();
 
         if (!GameManager.instance.isPaused)// If game is not paused player can shoot else player cannot shoot 
         {
