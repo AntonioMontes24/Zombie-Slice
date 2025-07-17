@@ -5,7 +5,8 @@ using UnityEngine;
 public class TextReaderController : MonoBehaviour
 {
     public TMP_Text narrationText;
-    public string filename = "StoryIntro";  //Intro file name
+    public string filename;  //Intro file name
+    // public string filename = "StoryIntro";  //Intro file name
     private string[] lines;
     private int currentLine = -1;//Default first line of text file
 
@@ -33,6 +34,7 @@ public class TextReaderController : MonoBehaviour
         if (currentLine < lines.Length)
         {
             narrationText.text = lines[currentLine];
+            Debug.Log("Showing line: " + currentLine);
         }
     }
 
