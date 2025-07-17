@@ -35,15 +35,14 @@ public class PlayerHealth : MonoBehaviour, IDamage
     bool isTakingDotDamage;
     public bool hasDied;
 
-    public int playerHP;
+
     private AudioSource audioSource;
 
     private void Start()
     {
         currentHealth = maxHealth;
         updatePlayerUI();
-        playerHP = currentHealth;
-        Debug.Log(playerHP);
+
         audioSource = GetComponent<AudioSource>();
 
         if(lowHealthFlashAnimator != null)

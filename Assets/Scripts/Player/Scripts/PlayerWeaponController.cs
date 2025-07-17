@@ -139,7 +139,7 @@ public class PlayerWeaponManager : MonoBehaviour
     public void HandleShooting()//Handles Shooting
     {
         if (!canFire) return;
-        if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
+        if (movement != null && movement.IsActuallySprinting())
             return;
 
         shootCooldown -= Time.deltaTime;

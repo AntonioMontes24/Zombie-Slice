@@ -55,6 +55,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject fpsCounter;
     [SerializeField] private Toggle fpsToggle;
 
+
+    [Header("Out of Bounds Settings")]
+    [SerializeField] float outOfBoundsY;
+    [SerializeField] bool killOnFall = false;
+
     public GameObject player;
     public PlayerController playerScript;
     public PlayerHealth playerHealth;
@@ -203,6 +208,20 @@ public class GameManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(remainingTime % 60);
         gameTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
+        if (player != null && player.transform.position.y < outOfBoundsY)
+        {
+            if (killOnFall)
+            {
+                if (playerHealth != null && !playerHealth.hasDied)
+                {
+                    playerHealth.takeDamage(9999);
+                }
+            }
+            else
+            {
+                RespawnAtCheckpoint();
+            }
+        }
     }
 
     public void statePause()
@@ -402,5 +421,19 @@ public class GameManager : MonoBehaviour
     {
         if (fpsCounter != null)
             fpsCounter.SetActive(isOn);
+    }
+
+    public void RespawnAtCheckpoint()
+    {
+        CharacterController cc = player.GetComponent<CharacterController>();
+        if (cc != null)
+        {
+            cc.enabled = false;
+            cc.transform.position = playerSpawnPoint;
+            cc.enabled = true;
+        }
+
+        if (playerHealth != null)
+            playerHealth.ResetHealth();
     }
 }

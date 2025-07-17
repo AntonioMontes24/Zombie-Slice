@@ -114,7 +114,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleSprint()//Sprint
     {
-        if (isCrouching) return;
+        if (isCrouching)// This flag checks if the player is crouching// If crouching forces isprinting to false; this will allow the player to hold sprint  button and still fire
+        {
+            isSprinting = false;
+            return;
+        }
 
         bool sprintInput = Input.GetButton("Sprint") && moveDir.magnitude > 0.1f;
 
@@ -193,5 +197,10 @@ public class PlayerMovement : MonoBehaviour
 
             walkSpeed = isCrouching ? originalWalkSpeed * crouchSpeedMultiplier : originalWalkSpeed;
         }
+    }
+
+    public bool IsActuallySprinting()
+    {
+        return isSprinting && !isCrouching;
     }
 }
