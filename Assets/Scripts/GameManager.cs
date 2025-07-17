@@ -49,8 +49,12 @@ public class GameManager : MonoBehaviour
     public Image enemyHPBar;
 
     [SerializeField] public TMP_Text zombieCountText;
-    [SerializeField] public TMP_Text objectiveText;   
-                              
+    [SerializeField] public TMP_Text objectiveText;
+
+    [Header("FPS System")]
+    [SerializeField] private GameObject fpsCounter;
+    [SerializeField] private Toggle fpsToggle;
+
     public GameObject player;
     public PlayerController playerScript;
     public PlayerHealth playerHealth;
@@ -362,7 +366,7 @@ public class GameManager : MonoBehaviour
             if(enemyHPBar != null)
             {
                 enemyHPBar.fillAmount = (float)en.CurrentHealth / en.maxHealth;
-            }  
+            }
         }
         else if (currentEnemy == en && en.CurrentHealth <= 0)
         {
@@ -394,4 +398,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ToggleFPSCounter(bool isOn)
+    {
+        if (fpsCounter != null)
+            fpsCounter.SetActive(isOn);
+    }
 }
