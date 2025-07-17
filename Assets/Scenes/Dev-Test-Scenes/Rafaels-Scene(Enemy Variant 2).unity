@@ -785,6 +785,86 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: aud
+      value: 
+      objectReference: {fileID: 2011277521593299339}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: agent
+      value: 
+      objectReference: {fileID: 2011277521593299341}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: headPos
+      value: 
+      objectReference: {fileID: 2011277521593299338}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 2011277521593299340}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: _maxHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: blightBall
+      value: 
+      objectReference: {fileID: 2554906872843287506, guid: ad4c2c4a93e73d04bb7ed717a568b42b, type: 3}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: currHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: fight_start
+      value: 
+      objectReference: {fileID: 8300000, guid: 496a55fe42ada9440a2a7e4c9088afee, type: 3}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: aud_clip_leap
+      value: 
+      objectReference: {fileID: 8300000, guid: 68f0099c20c478f4ba288e66f4fd8835, type: 3}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: aud_clip_roar
+      value: 
+      objectReference: {fileID: 8300000, guid: 6b13387a7205b3d4ebb8cc103fbeb299, type: 3}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: field_of_view
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: speedModifier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: aud_clip_death
+      value: 
+      objectReference: {fileID: 8300000, guid: 2f6065255618fea4485c18b96523a389, type: 3}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: aud_clip_charge
+      value: 
+      objectReference: {fileID: 8300000, guid: 463dc08e449a39e49a11e8a368f5b748, type: 3}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: faceTargetSpeed
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: aud_clip_engaged
+      value: 
+      objectReference: {fileID: 8300000, guid: 5f86a422841f50c4f804d4da90228fac, type: 3}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: blightBallDuration
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336140708468586394, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: aud_clip_heavy_attack
+      value: 
+      objectReference: {fileID: 8300000, guid: 78c0921cb072a5e419f462b86008886d, type: 3}
+    - target: {fileID: 1444568841775510853, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: a4ae81398e8e75a479104debe1e25c29, type: 2}
     - target: {fileID: 3840942446280092759, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -834,6 +914,26 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+--- !u!4 &2011277521593299338 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8140280780566945729, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+  m_PrefabInstance: {fileID: 2011277521593299337}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &2011277521593299339 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1103494714803495018, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+  m_PrefabInstance: {fileID: 2011277521593299337}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &2011277521593299340 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1444568841775510853, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+  m_PrefabInstance: {fileID: 2011277521593299337}
+  m_PrefabAsset: {fileID: 0}
+--- !u!195 &2011277521593299341 stripped
+NavMeshAgent:
+  m_CorrespondingSourceObject: {fileID: 6464568367058446246, guid: 1f0cce8c1c615cb4494df09b9b6b0ac2, type: 3}
+  m_PrefabInstance: {fileID: 2011277521593299337}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

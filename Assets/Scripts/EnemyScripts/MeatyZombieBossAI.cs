@@ -35,7 +35,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] Transform[] blight_pool_spawns;
     
     [SerializeField] AudioSource aud;
-    [SerializeField] AudioSource fight_start;
+    [SerializeField] AudioClip fight_start;
     [SerializeField] AudioClip aud_clip_engaged;
     [SerializeField] AudioClip aud_clip_leap;
     [SerializeField] AudioClip aud_clip_roar;
@@ -44,11 +44,15 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] AudioClip aud_clip_death;
 
     [SerializeField] int audioCounter;
+    public int CurrentHealth
+    {
+        get { return currHealth; }
+    }
 
-    public int CurrentHealth => throw new System.NotImplementedException();
-
-    public int maxHealth => throw new System.NotImplementedException();
-
+    public int maxHealth
+    {
+        get { return _maxHealth; }
+    }
     public void takeDamage(int amount)
     {
         throw new System.NotImplementedException();
