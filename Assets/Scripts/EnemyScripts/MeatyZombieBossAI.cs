@@ -32,6 +32,12 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] GameObject blightBall;                 // our projectile
     [SerializeField] int blightBallDuration;                // how long a blightball lasts
 
+    Vector3 initial_start_position;
+
+    [SerializeField] int search_distance;
+    bool executing_phase;
+    int current_phase;
+
     [SerializeField] Transform[] blight_pool_spawns;
     
     [SerializeField] AudioSource aud;
@@ -121,8 +127,12 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     IEnumerator startOfFight()
     {
         // boss will have an animation, maybe say something and move to phase 1 
+        aud.PlayOneShot(fight_start);
 
         yield return new WaitForSeconds(4);
+
+        // set the current phase to 1
+        current_phase = 1;
     }
 
     IEnumerator Phase1()
@@ -133,8 +143,27 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // leap animation
         // leave a blight pool at landing spot and fire off 12 blight balls in a circle around him
 
+        // set our bool so that we know we are executing a state
+        executing_phase = true;
+
+        // choose a spot and move to it
+        // grab a random spot in our sphere on the navmesh
+        Vector3 randPos = Random.insideUnitSphere * search_distance;
+        randPos += initial_start_position;
+
+        // check if the position is on the navmesh
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randPos, out hit, search_distance, 1);
+
+        // move
+        agent.SetDestination(hit.position);
+        animator.SetFloat("Speed", 1);
+
+
 
         yield return new WaitForSeconds(4);
+
+        executing_phase = false;
     }
 
     IEnumerator Phase2()
@@ -160,18 +189,59 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
     private void Awake()
     {
+        // set our data here
+        
+        currHealth = maxHealth;
+        initial_start_position = transform.position;
+        executing_phase = false;
         
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        StartCoroutine(startOfFight());
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (currHealth > 0)
+        {
+            switch(current_phase)
+            {
+                case 1:
+                    {
+                        if(!executing_phase)
+                        {
+                            StartCoroutine(Phase1());
+                        }
+                        
+                        break;
+                    }
+                case 2:
+                    {
+                        if(!executing_phase)
+                        {
+                            StartCoroutine(Phase2());
+                        }
+                        
+                        break;
+                    }
+                case 3:
+                    {
+                        if(!executing_phase)
+                        {
+                            StartCoroutine(Phase3());
+                        }
+                        
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
     }
 }

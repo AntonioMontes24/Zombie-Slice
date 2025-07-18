@@ -658,28 +658,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24a5eb2d390acb64bafc62a207c6cb97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currHealth: 0
-  _maxHealth: 0
-  speed: 0
-  speedModifier: 0
-  faceTargetSpeed: 0
-  model: {fileID: 0}
-  agent: {fileID: 0}
-  animator: {fileID: 0}
-  field_of_view: 0
-  headPos: {fileID: 0}
+  currHealth: 100
+  _maxHealth: 100
+  speed: 5
+  speedModifier: 1
+  faceTargetSpeed: 90
+  model: {fileID: 5742342947775379487}
+  agent: {fileID: 6464568367058446246}
+  animator: {fileID: 1444568841775510853}
+  field_of_view: 180
+  headPos: {fileID: 8140280780566945729}
   shootPositions: []
-  blightBall: {fileID: 0}
-  blightBallDuration: 0
+  blightBall: {fileID: 2554906872843287506, guid: ad4c2c4a93e73d04bb7ed717a568b42b, type: 3}
+  blightBallDuration: 100
+  search_distance: 0
   blight_pool_spawns: []
-  aud: {fileID: 0}
-  fight_start: {fileID: 0}
-  aud_clip_engaged: {fileID: 0}
-  aud_clip_leap: {fileID: 0}
-  aud_clip_roar: {fileID: 0}
-  aud_clip_charge: {fileID: 0}
-  aud_clip_heavy_attack: {fileID: 0}
-  aud_clip_death: {fileID: 0}
+  aud: {fileID: 1103494714803495018}
+  fight_start: {fileID: 8300000, guid: 496a55fe42ada9440a2a7e4c9088afee, type: 3}
+  aud_clip_engaged: {fileID: 8300000, guid: 5f86a422841f50c4f804d4da90228fac, type: 3}
+  aud_clip_leap: {fileID: 8300000, guid: 68f0099c20c478f4ba288e66f4fd8835, type: 3}
+  aud_clip_roar: {fileID: 8300000, guid: 6b13387a7205b3d4ebb8cc103fbeb299, type: 3}
+  aud_clip_charge: {fileID: 8300000, guid: 463dc08e449a39e49a11e8a368f5b748, type: 3}
+  aud_clip_heavy_attack: {fileID: 8300000, guid: 78c0921cb072a5e419f462b86008886d, type: 3}
+  aud_clip_death: {fileID: 8300000, guid: 2f6065255618fea4485c18b96523a389, type: 3}
   audioCounter: 0
 --- !u!137 &5742342947775379487
 SkinnedMeshRenderer:
@@ -814,7 +815,7 @@ Animator:
   m_GameObject: {fileID: 7173776775950012064}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a4ae81398e8e75a479104debe1e25c29, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
