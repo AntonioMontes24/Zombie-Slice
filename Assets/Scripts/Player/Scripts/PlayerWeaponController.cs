@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine.UI;
 using NUnit.Framework;
 using UnityEngine.Audio;
+using UnityEngine.InputSystem;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
@@ -82,6 +83,9 @@ public class PlayerWeaponManager : MonoBehaviour
     private Vector3 currentLeftHandOffset;
     private Vector3 currentRightHandOffset;
 
+    //input system
+    private PlayerInputActions inputActions;
+
     private void Start()
     {
         if (leftHandGrip != null)
@@ -107,6 +111,9 @@ public class PlayerWeaponManager : MonoBehaviour
 
         if (startingKnife != null)
             GetGunStats(startingKnife, autoEquip: true);
+
+        inputActions = new PlayerInputActions();
+        inputActions.KBM.Enable();
 
     }
 
@@ -147,7 +154,9 @@ public class PlayerWeaponManager : MonoBehaviour
         FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
         if (currentGun == null || isReloading) return;
 
-        bool fireInput = isAutomaticMode ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1");
+        bool fireInput = isAutomaticMode ?
+            Input.GetButton("Fire1") || inputActions.KBM.Fire.ReadValue<float>() > 0.1f :
+            Input.GetButtonDown("Fire1") || inputActions.KBM.Fire.triggered;
 
         if (fireInput && shootCooldown <= 0f)
         {
@@ -174,10 +183,12 @@ public class PlayerWeaponManager : MonoBehaviour
             }
         }
 
-        if (!Input.GetButton("Fire1"))
+        if (!Input.GetButton("Fire1") && inputActions.KBM.Fire.ReadValue<float>() == 0f)
             playedEmptySound = false;
 
-        if (Input.GetKeyDown(KeyCode.R) && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
+        bool reloadInput = Input.GetKeyDown(KeyCode.R) || Keyboard.current.rKey.wasPressedThisFrame;
+
+        if (reloadInput && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
             reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));// Starts Reload
     }
 
@@ -298,7 +309,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         meleeCooldownTimer -= Time.deltaTime;
 
-        if (!Input.GetButtonDown("Fire1")) return;
+        if (!Input.GetButtonDown("Fire1") && !inputActions.KBM.Fire.triggered) return;
         if (meleeCooldownTimer > 0f) return;
 
         meleeCooldownTimer = melee.attackRate;
