@@ -21,7 +21,10 @@ public class TutorialManager : MonoBehaviour
 
         public KeyCode[] requiredKeys;
 
+        public GameObject keyItemToHighlight;
+       
     }
+    private GameObject lastHighlightedObject;
 
     public TutorialSteps[] steps;
     public TMP_Text tutorialText;
@@ -95,12 +98,41 @@ public class TutorialManager : MonoBehaviour
 
     void ShowCurrentStep()
     {
+        tutorialText.gameObject.SetActive(true);
         tutorialText.text = steps[currentStep].message;
+
+        // Disable highlight on last object
+        if (lastHighlightedObject != null)
+        {
+            HighlightObject prevHighlight = lastHighlightedObject.GetComponent<HighlightObject>();
+            if (prevHighlight != null)
+                prevHighlight.DisableHighlight();
+        }
+
+        // Enable highlight on new object
+        GameObject newHighlight = steps[currentStep].keyItemToHighlight;
+        if (newHighlight != null)
+        {
+            HighlightObject highlight = newHighlight.GetComponent<HighlightObject>();
+            if (highlight != null)
+                highlight.EnableHighlight();
+
+            lastHighlightedObject = newHighlight;
+        }
     }
 
     void AdvanceStep()
     {
+        // Disable highlight of previous step
+        if (steps[currentStep].target != null)
+        {
+            HighlightObject highlight = steps[currentStep].target.GetComponent<HighlightObject>();
+            if (highlight != null)
+                highlight.DisableHighlight();
+        }
+
         currentStep++;
+
         if (currentStep < steps.Length)
         {
             ShowCurrentStep();
