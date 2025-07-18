@@ -38,7 +38,7 @@ public class MainMenu : MonoBehaviour
             AudioManager.instance.StopMusic();
         }
 
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2); // Note from William --> Changed loadscene from 1 to 2, due to branding scene placed at 0 Main Menu is now 1
 
 
     }
