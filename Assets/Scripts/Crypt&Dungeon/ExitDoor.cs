@@ -13,7 +13,7 @@ public class ExitDoor : MonoBehaviour
 
     void Update()
     {
-        if (playerInRange && PlayerController.inputActions.KBM.Interact.triggered)
+        if (playerInRange && PlayerController.inputActions.Input.Interact.triggered)
         {
             if (!string.IsNullOrEmpty(spawnPointName))
                 PlayerPrefs.SetString("LastSpawnPoint", spawnPointName);

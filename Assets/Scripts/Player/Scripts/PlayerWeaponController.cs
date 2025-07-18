@@ -150,8 +150,8 @@ public class PlayerWeaponManager : MonoBehaviour
         if (currentGun == null || isReloading) return;
 
         bool fireInput = isAutomaticMode ?
-            PlayerController.inputActions.KBM.Fire.ReadValue<float>() > 0.1f :
-            PlayerController.inputActions.KBM.Fire.triggered;
+            PlayerController.inputActions.Input.Fire.ReadValue<float>() > 0.1f :
+            PlayerController.inputActions.Input.Fire.triggered;
 
         if (fireInput && shootCooldown <= 0f)
         {
@@ -178,7 +178,7 @@ public class PlayerWeaponManager : MonoBehaviour
             }
         }
 
-        if ( PlayerController.inputActions.KBM.Fire.ReadValue<float>() == 0f)
+        if ( PlayerController.inputActions.Input.Fire.ReadValue<float>() == 0f)
             playedEmptySound = false;
 
         bool reloadInput = Keyboard.current.rKey.wasPressedThisFrame;
@@ -304,7 +304,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         meleeCooldownTimer -= Time.deltaTime;
 
-        if (!PlayerController.inputActions.KBM.Fire.triggered) return;
+        if (!PlayerController.inputActions.Input.Fire.triggered) return;
         if (meleeCooldownTimer > 0f) return;
 
         meleeCooldownTimer = melee.attackRate;
