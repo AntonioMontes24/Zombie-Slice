@@ -72,6 +72,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         if (currHealth > 0)
         {
             currHealth -= amount;
+            currHealth = Mathf.Max(currHealth, 0);
 
             if(GameManager.instance != null)
             {
