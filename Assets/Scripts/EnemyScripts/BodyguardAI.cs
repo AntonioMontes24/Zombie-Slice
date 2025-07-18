@@ -112,7 +112,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
         Destroy(gameObject);
 
         // update the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(-1);
+        //GameManager.instance.updateGameGoal(-1); //Commented out was causing compile error. Not found in gamemanager -- William
     }
 
     IEnumerator punchAttack()
@@ -186,7 +186,7 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
     void Start()
     {
         // increase the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(1);
+       // GameManager.instance.updateGameGoal(1); //Commented out was causing compile error. Not found in gamemanager -- William
 
         // set our HP variables for the health bar
         currHealth = _maxHealth;
