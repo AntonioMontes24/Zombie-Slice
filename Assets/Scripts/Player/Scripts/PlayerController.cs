@@ -82,8 +82,8 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         {
             weaponManager.ToggleFireMode();
         }
-        weaponManager.HandleADS();// handles ads
         weaponManager.SetAiming(inputActions.Input.ADS.ReadValue<float>() > 0.1f);// handles aiming
+        weaponManager.HandleADS();// handles ads
 
         HandleLean();
     }
