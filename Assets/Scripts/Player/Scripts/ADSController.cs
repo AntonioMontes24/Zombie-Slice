@@ -21,7 +21,7 @@ public class AimDownSights : MonoBehaviour
         cam.fieldOfView = hipFov;
         targetFov = hipFov;
 
-        weaponManager = FindObjectOfType<PlayerWeaponManager>();
+        weaponManager = Object.FindFirstObjectByType<PlayerWeaponManager>();
     }
 
     void Update()

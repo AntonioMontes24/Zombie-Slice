@@ -25,7 +25,7 @@ using UnityEngine.InputSystem.Utilities;
 /// <code>
 /// using namespace UnityEngine;
 /// using UnityEngine.InputSystem;
-///n
+///
 /// // Example of using an InputActionMap named "Player" from a UnityEngine.MonoBehaviour implementing callback interface.
 /// public class Example : MonoBehaviour, MyActions.IPlayerActions
 /// {
@@ -687,6 +687,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ADS"",
+                    ""type"": ""Button"",
+                    ""id"": ""a6f937ab-0c23-498b-a091-2a54ea07d5b5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FireMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""1516a5c7-6f69-483e-8a83-4255fd4f53a9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -786,6 +804,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4f58dbdd-b9d9-4846-94bb-eefab2dfb56a"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ADS"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""32d7ce22-acfb-4b99-9305-4eab55097e8c"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""FireMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1026,6 +1066,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_KBM_Sprint = m_KBM.FindAction("Sprint", throwIfNotFound: true);
         m_KBM_Jump = m_KBM.FindAction("Jump", throwIfNotFound: true);
         m_KBM_Look = m_KBM.FindAction("Look", throwIfNotFound: true);
+        m_KBM_ADS = m_KBM.FindAction("ADS", throwIfNotFound: true);
+        m_KBM_FireMode = m_KBM.FindAction("FireMode", throwIfNotFound: true);
         // Controller
         m_Controller = asset.FindActionMap("Controller", throwIfNotFound: true);
         m_Controller_Forward = m_Controller.FindAction("Forward", throwIfNotFound: true);
@@ -1321,6 +1363,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_KBM_Sprint;
     private readonly InputAction m_KBM_Jump;
     private readonly InputAction m_KBM_Look;
+    private readonly InputAction m_KBM_ADS;
+    private readonly InputAction m_KBM_FireMode;
     /// <summary>
     /// Provides access to input actions defined in input action map "KBM".
     /// </summary>
@@ -1368,6 +1412,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "KBM/Look".
         /// </summary>
         public InputAction @Look => m_Wrapper.m_KBM_Look;
+        /// <summary>
+        /// Provides access to the underlying input action "KBM/ADS".
+        /// </summary>
+        public InputAction @ADS => m_Wrapper.m_KBM_ADS;
+        /// <summary>
+        /// Provides access to the underlying input action "KBM/FireMode".
+        /// </summary>
+        public InputAction @FireMode => m_Wrapper.m_KBM_FireMode;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1421,6 +1473,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @ADS.started += instance.OnADS;
+            @ADS.performed += instance.OnADS;
+            @ADS.canceled += instance.OnADS;
+            @FireMode.started += instance.OnFireMode;
+            @FireMode.performed += instance.OnFireMode;
+            @FireMode.canceled += instance.OnFireMode;
         }
 
         /// <summary>
@@ -1459,6 +1517,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @ADS.started -= instance.OnADS;
+            @ADS.performed -= instance.OnADS;
+            @ADS.canceled -= instance.OnADS;
+            @FireMode.started -= instance.OnFireMode;
+            @FireMode.performed -= instance.OnFireMode;
+            @FireMode.canceled -= instance.OnFireMode;
         }
 
         /// <summary>
@@ -1867,6 +1931,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLook(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ADS" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnADS(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "FireMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFireMode(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Controller" which allows adding and removing callbacks.
