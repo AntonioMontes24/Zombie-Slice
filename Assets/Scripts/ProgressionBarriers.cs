@@ -1,48 +1,100 @@
+using NUnit.Framework;
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class ProgressionBarriers : MonoBehaviour
 {
-    [SerializeField] private int killsNeeded;
+    [SerializeField] private List<GameObject> barrierObjectsToRemove;
 
-    private bool barrierRemoved = false;
+    public UnityEvent listenForObjectiveCompleteEvent;
+  
+    private bool objectiveMetByEvent = false;
+    private bool playerAtBarrierTrigger = false;
 
-    private Renderer barrierRenderer;
-    private Collider barrierCollider;
-
-    private void Awake()
+    public void OnObjectiveComplete()
     {
-        barrierRenderer = GetComponent<Renderer>();
-        barrierCollider = GetComponent<Collider>();
+        objectiveMetByEvent = true;
 
-        if (barrierRenderer == null || barrierCollider == null)
+        if (playerAtBarrierTrigger)
         {
-            Debug.LogWarning("Renderer or Collider component missing on barrier: " + gameObject.name);
+            RemoveAllBarrier();
         }
     }
+
 
     void Update()
     {
-        if (!barrierRemoved && KillManager.instance != null && KillManager.instance.KillCount >= killsNeeded)
+        if(objectiveMetByEvent && playerAtBarrierTrigger)
         {
-            RemoveBarrier();
+            RemoveAllBarrier();
         }
     }
 
-    private void RemoveBarrier()
+    private void OnTriggerEnter(Collider other)
     {
-        barrierRemoved = true;
-        if (barrierRenderer != null) barrierRenderer.enabled = false;
-        if (barrierCollider != null) barrierCollider.enabled = false;
+        if (other.CompareTag("Player"))
+        {
+            playerAtBarrierTrigger = true;
+            if (objectiveMetByEvent)
+            {
+                RemoveAllBarrier();
+            }
+        }
+    }
 
-        Debug.Log("Barrier removed (disabled) after " + killsNeeded + " kills.");
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerAtBarrierTrigger = false;
+        }
+    }
+
+    private void RemoveAllBarrier()
+    {
+        if(barrierObjectsToRemove == null || barrierObjectsToRemove.Count == 0)
+        {
+            return;
+        }
+
+        foreach(GameObject barrier in barrierObjectsToRemove)
+        {
+            if(barrier != null)
+            {
+                barrier.SetActive(false);
+            }
+        }
+
+        this.enabled = false;
+        Collider selfCollider = GetComponent<Collider>();
+        if(selfCollider != null)
+        {
+            selfCollider.enabled = false;
+        }
     }
 
     public void ResetBarrier()
     {
-        barrierRemoved = false;
-        if (barrierRenderer != null) barrierRenderer.enabled = true;
-        if (barrierCollider != null) barrierCollider.enabled = true;
+        objectiveMetByEvent = false;
+        playerAtBarrierTrigger = false;
+        this.enabled = true;
 
-        Debug.Log("Barrier reset (enabled).");
+        Collider selfCollider = GetComponent<Collider>();
+        if(selfCollider != null)
+        {
+            selfCollider.enabled = true;
+        }
+
+        if(barrierObjectsToRemove != null)
+        {
+            foreach(GameObject barrier in barrierObjectsToRemove)
+            {
+                if(barrier != null)
+                {
+                    barrier.SetActive(true);
+                }
+            }
+        }
     }
 }

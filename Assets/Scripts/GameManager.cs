@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,6 +28,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject inGameUI;
 
+    public GameObject bittenStatusGroup;
+    public Image bittenFillImage;
 
     [SerializeField] TMP_Text gameTimerText;
     [SerializeField] float remainingTime;
@@ -49,7 +52,8 @@ public class GameManager : MonoBehaviour
     public Image enemyHPBar;
 
     [SerializeField] public TMP_Text zombieCountText;
-    [SerializeField] public TMP_Text objectiveText;   
+    [SerializeField] public TMP_Text objectiveText;
+    [SerializeField] public TMP_Text spawnerCountText;
                               
     public GameObject player;
     public PlayerController playerScript;
@@ -63,6 +67,7 @@ public class GameManager : MonoBehaviour
     float timeScaleOrig;
 
     private iEnemyHealth currentEnemy;
+    private Coroutine bittenEffectCoroutine;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -93,10 +98,20 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
+        if (objectiveText != null) objectiveText.text = "";
+        if (spawnerCountText != null) spawnerCountText.text = "";
+        if (zombieCountText != null) zombieCountText.text = "";
+
         // make sure enemy info panel is hidden initially
         if(enemyInfoPanel != null )
         {
             enemyInfoPanel.SetActive(false);
+        }
+
+        // make sure bite dot icon is hidden initially
+        if(bittenStatusGroup != null)
+        {
+            bittenStatusGroup.SetActive(false);
         }
 
         //make sure all menus are initially inactive
@@ -106,19 +121,19 @@ public class GameManager : MonoBehaviour
         }
         if (menuWin != null)
         {
-            menuPause.SetActive(false);
+            menuWin.SetActive(false);
         }
         if (menuLose != null)
         {
-            menuPause.SetActive(false);
+            menuLose.SetActive(false);
         }
         if (menuOptions != null)
         {
-            menuPause.SetActive(false);
+            menuOptions.SetActive(false);
         }
         if (menuNoTime != null)
         {
-            menuPause.SetActive(false);
+            menuNoTime.SetActive(false);
         }
 
         // make sure ingame ui is active at start
@@ -391,6 +406,49 @@ public class GameManager : MonoBehaviour
         foreach (var barrier in barriers)
         {
             barrier.ResetBarrier();
+        }
+    }
+
+    public void ShowBittenStatus(float duration)
+    {
+        if(bittenStatusGroup != null && bittenFillImage != null)
+        {
+            bittenStatusGroup.SetActive(true);
+
+            if(bittenEffectCoroutine != null)
+            {
+                StopCoroutine(bittenEffectCoroutine);
+            }
+            bittenEffectCoroutine = StartCoroutine(AnimateBittenStatusFill(duration));
+        }
+    }
+
+    public IEnumerator AnimateBittenStatusFill(float duration)
+    {
+        float timer = duration;
+        bittenFillImage.fillAmount = 1f;
+
+        while(timer > 0f)
+        {
+            timer -= Time.deltaTime;
+            bittenFillImage.fillAmount = Mathf.Clamp01(timer / duration);
+            yield return null;
+        }
+
+        bittenFillImage.fillAmount = 0f;
+        if(bittenStatusGroup != null)
+        {
+            bittenStatusGroup.SetActive(false);
+        }
+        bittenEffectCoroutine = null;
+
+    }
+
+    public void UpdateSpawnerCountUI(int count)
+    {
+        if(spawnerCountText != null)
+        {
+            spawnerCountText.text = Mathf.Max(0, count).ToString();
         }
     }
 
