@@ -13,15 +13,17 @@ public class TextReaderController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        string path = Path.Combine(Application.streamingAssetsPath, filename + ".txt");
-        if (File.Exists(path))
+        //string path = Path.Combine(Application.streamingAssetsPath, filename + ".txt");
+        TextAsset file = Resources.Load<TextAsset>("Narration/" + filename);
+        if (file != null)
         {
-            lines = File.ReadAllLines(path);
+            // lines = File.ReadAllLines(path);
+            lines = file.text.Split('\n');
             narrationText.text = "";
         }
         else
         {
-            Debug.LogError("Story file not found: " + path);
+            Debug.LogError("Story file not found: " + filename);
         }
         
     }
