@@ -32,7 +32,7 @@ public class MouseSensController : MonoBehaviour
     void Start()
     {
         // load sens
-        float loadedSens = PlayerPrefs.GetFloat(SensPlayerPrefKey, defaultSens) * 2f;
+        float loadedSens = PlayerPrefs.GetFloat(SensPlayerPrefKey, defaultSens);
 
         loadedSens = Mathf.Clamp(loadedSens, minSens, maxSens);
 

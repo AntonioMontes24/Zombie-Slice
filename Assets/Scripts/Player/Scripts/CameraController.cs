@@ -35,8 +35,10 @@ public class CameraController : MonoBehaviour
         HandleFreeLookInput();
         // get input
         lookInput = PlayerController.inputActions.KBM.Look.ReadValue<Vector2>();
-        float mouseX = lookInput.x * mouseSensitivity * Time.deltaTime;
-        float mouseY = lookInput.y * mouseSensitivity * Time.deltaTime;
+        float scaledSensitivity = mouseSensitivity * 0.2f;
+        float mouseX = lookInput.x * scaledSensitivity * Time.deltaTime;
+        float mouseY = lookInput.y * scaledSensitivity * Time.deltaTime;
+
 
         //give option to invert mouse look up and down
         rotX += invertY ? mouseY : -mouseY;

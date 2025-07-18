@@ -55,7 +55,7 @@ public class doorScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(openCode) && playerInRange)
+        if (PlayerController.inputActions.KBM.Interact.triggered && playerInRange)
         {
             if (CanOpen())
             {

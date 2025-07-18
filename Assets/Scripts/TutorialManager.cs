@@ -1,29 +1,24 @@
-
-
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 public class TutorialManager : MonoBehaviour
 {
-
     [System.Serializable]
     public class TutorialSteps
     {
         public string message;
-
         public Transform target;
         public float triggerRadius;
-
 
         public bool requireKeyPress = false;
         public bool requireProximity = false;
 
-        public KeyCode[] requiredKeys;
-
+        public Key[] requiredKeys;
         public GameObject keyItemToHighlight;
-       
     }
+
     private GameObject lastHighlightedObject;
 
     public TutorialSteps[] steps;
@@ -31,22 +26,17 @@ public class TutorialManager : MonoBehaviour
 
     private int currentStep = 0;
     private Transform player;
-    private HashSet<KeyCode> keysPressed = new HashSet<KeyCode>();
-
+    private HashSet<Key> keysPressed = new HashSet<Key>();
 
     void Start()
     {
-
         player = GameObject.FindGameObjectWithTag("Player").transform;
         if (steps.Length > 0)
         {
             ShowCurrentStep();
         }
-
-
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (currentStep >= steps.Length) return;
@@ -64,9 +54,9 @@ public class TutorialManager : MonoBehaviour
         // Key press check 
         if (step.requireKeyPress && inRange)
         {
-            foreach (KeyCode key in step.requiredKeys)
+            foreach (Key key in step.requiredKeys)
             {
-                if (Input.GetKeyDown(key))
+                if (Keyboard.current[key].wasPressedThisFrame)
                 {
                     keysPressed.Add(key);
                 }
@@ -74,7 +64,7 @@ public class TutorialManager : MonoBehaviour
 
             // All keys in requiredKeys must be pressed
             bool allKeysPressed = true;
-            foreach (KeyCode key in step.requiredKeys)
+            foreach (Key key in step.requiredKeys)
             {
                 if (!keysPressed.Contains(key))
                 {
@@ -88,7 +78,6 @@ public class TutorialManager : MonoBehaviour
                 AdvanceStep();
             }
         }
-
         // Proximity only steps
         else if (!step.requireKeyPress && step.requireProximity && inRange)
         {
@@ -123,7 +112,6 @@ public class TutorialManager : MonoBehaviour
 
     void AdvanceStep()
     {
-        // Disable highlight of previous step
         if (steps[currentStep].target != null)
         {
             HighlightObject highlight = steps[currentStep].target.GetComponent<HighlightObject>();
