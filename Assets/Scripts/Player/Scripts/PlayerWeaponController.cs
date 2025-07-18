@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine.UI;
 using NUnit.Framework;
 using UnityEngine.Audio;
+using UnityEngine.InputSystem;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
@@ -53,6 +54,11 @@ public class PlayerWeaponManager : MonoBehaviour
     [Header("Animations")]
     [SerializeField] Animator animator;
 
+    [Header("Fire mode Icons")]
+    [SerializeField] private Image fireModeIcon;
+    [SerializeField] private Sprite semiFireModeIcon;
+    [SerializeField] private Sprite fullFireModeIcon;
+
     [Header("Runtime State")]
     Transform currentHipPosition;
     Transform currentAdsPosition;
@@ -76,6 +82,8 @@ public class PlayerWeaponManager : MonoBehaviour
     private Vector3 initialRightHandPos;
     private Vector3 currentLeftHandOffset;
     private Vector3 currentRightHandOffset;
+
+ 
 
     private void Start()
     {
@@ -102,7 +110,6 @@ public class PlayerWeaponManager : MonoBehaviour
 
         if (startingKnife != null)
             GetGunStats(startingKnife, autoEquip: true);
-
     }
 
     public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1, bool autoEquip = true)// Optional Parameters to modify starting ammo and auto equip
@@ -134,7 +141,7 @@ public class PlayerWeaponManager : MonoBehaviour
     public void HandleShooting()//Handles Shooting
     {
         if (!canFire) return;
-        if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
+        if (movement != null && movement.IsActuallySprinting())
             return;
 
         shootCooldown -= Time.deltaTime;
@@ -142,7 +149,9 @@ public class PlayerWeaponManager : MonoBehaviour
         FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
         if (currentGun == null || isReloading) return;
 
-        bool fireInput = isAutomaticMode ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1");
+        bool fireInput = isAutomaticMode ?
+            PlayerController.inputActions.KBM.Fire.ReadValue<float>() > 0.1f :
+            PlayerController.inputActions.KBM.Fire.triggered;
 
         if (fireInput && shootCooldown <= 0f)
         {
@@ -169,10 +178,12 @@ public class PlayerWeaponManager : MonoBehaviour
             }
         }
 
-        if (!Input.GetButton("Fire1"))
+        if ( PlayerController.inputActions.KBM.Fire.ReadValue<float>() == 0f)
             playedEmptySound = false;
 
-        if (Input.GetKeyDown(KeyCode.R) && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
+        bool reloadInput = Keyboard.current.rKey.wasPressedThisFrame;
+
+        if (reloadInput && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
             reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));// Starts Reload
     }
 
@@ -190,7 +201,7 @@ public class PlayerWeaponManager : MonoBehaviour
             ray = gameplayCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         else
         {
-            float spreadAngle = 5f;
+            float spreadAngle = 2f;
             Vector3 spreadDir = Quaternion.Euler(
                 Random.Range(-spreadAngle, spreadAngle),
                 Random.Range(-spreadAngle, spreadAngle),
@@ -293,7 +304,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         meleeCooldownTimer -= Time.deltaTime;
 
-        if (!Input.GetButtonDown("Fire1")) return;
+        if (!PlayerController.inputActions.KBM.Fire.triggered) return;
         if (meleeCooldownTimer > 0f) return;
 
         meleeCooldownTimer = melee.attackRate;
@@ -422,16 +433,18 @@ public class PlayerWeaponManager : MonoBehaviour
     public void ToggleFireMode()//Sets Firemode
     {
         if (weaponList.Count == 0) return;
-        FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
-        if (currentGun == null) return;
 
-        if (currentGun.canSwitchFireMode)
-        {
-            isAutomaticMode = !isAutomaticMode;
-            if (currentGun.fireModeSwitchSound != null)
-                aud.PlayOneShot(currentGun.fireModeSwitchSound);
-        }
+        FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
+        if (currentGun == null || !currentGun.canSwitchFireMode) return;
+
+        isAutomaticMode = !isAutomaticMode;
+
+        if (currentGun.fireModeSwitchSound != null)
+            aud.PlayOneShot(currentGun.fireModeSwitchSound);
+
+        UpdateFireModeUI();
     }
+
     public bool HasGun() // This checks if player has any weapon
     {
         return weaponList.Count > 0;
@@ -517,7 +530,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             isAutomaticMode = gun.isAutomaticDefault;
         }
-
+        UpdateFireModeUI();
         if (currentWeaponInstance != null)
             Destroy(currentWeaponInstance);
 
@@ -621,4 +634,23 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         canFire = value;
     }
+
+    private void UpdateFireModeUI()// Changes firemode ICon
+    {
+        if (fireModeIcon == null)
+            return;
+
+        FireArmStats gun = weaponList[currentWeaponIndex] as FireArmStats;
+
+        if (gun == null)
+        {
+            fireModeIcon.enabled = false; // Hide icon for melee or null
+        }
+        else
+        {
+            fireModeIcon.enabled = true;
+            fireModeIcon.sprite = isAutomaticMode ? fullFireModeIcon : semiFireModeIcon;
+        }
+    }
+
 }

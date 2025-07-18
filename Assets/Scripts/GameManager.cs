@@ -3,7 +3,9 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEngine.SceneManagement;
+
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -53,6 +55,16 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] public TMP_Text zombieCountText;
     [SerializeField] public TMP_Text objectiveText;
+
+    [Header("FPS System")]
+    [SerializeField] private GameObject fpsCounter;
+    [SerializeField] private Toggle fpsToggle;
+
+
+    [Header("Out of Bounds Settings")]
+    [SerializeField] float outOfBoundsY;
+    [SerializeField] bool killOnFall = false;
+
     [SerializeField] public TMP_Text spawnerCountText;
                               
     public GameObject player;
@@ -61,6 +73,11 @@ public class GameManager : MonoBehaviour
     public GameObject flashDamageScreen;
     public GameObject flashHealScreen;
     public GameObject flashAmmoPickUp;
+
+
+    //input system
+    private PlayerInputActions inputActions;
+
 
     public bool isPaused;
 
@@ -141,7 +158,8 @@ public class GameManager : MonoBehaviour
         {
             inGameUI.SetActive(true);
         }
-
+        inputActions = new PlayerInputActions();
+        inputActions.UI.Enable();
     }
 
     private void Start()
@@ -162,27 +180,24 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Cancel"))
+        if (inputActions.UI.Cancel.triggered)
         {
-            if(menuActive == null)
+            if (menuActive == null)
             {
                 statePause();
                 menuActive = menuPause;
                 menuActive.SetActive(isPaused);
 
-                // hide all ingame ui
-                if(inGameUI != null)
+                if (inGameUI != null)
                 {
                     inGameUI.SetActive(false);
                 }
-
-
-            } else if (menuActive == menuPause)
+            }
+            else if (menuActive == menuPause)
             {
                 stateUnpause();
             }
-
-            else if(menuActive == menuOptions)
+            else if (menuActive == menuOptions)
             {
                 BackToPauseMenu();
             }
@@ -214,6 +229,20 @@ public class GameManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(remainingTime % 60);
         gameTimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
+        if (player != null && player.transform.position.y < outOfBoundsY)
+        {
+            if (killOnFall)
+            {
+                if (playerHealth != null && !playerHealth.hasDied)
+                {
+                    playerHealth.takeDamage(9999);
+                }
+            }
+            else
+            {
+                RespawnAtCheckpoint();
+            }
+        }
     }
 
     public void statePause()
@@ -377,7 +406,7 @@ public class GameManager : MonoBehaviour
             if(enemyHPBar != null)
             {
                 enemyHPBar.fillAmount = (float)en.CurrentHealth / en.maxHealth;
-            }  
+            }
         }
         else if (currentEnemy == en && en.CurrentHealth <= 0)
         {
@@ -406,6 +435,23 @@ public class GameManager : MonoBehaviour
         foreach (var barrier in barriers)
         {
             barrier.ResetBarrier();
+        }
+    }
+
+    public void ToggleFPSCounter(bool isOn)
+    {
+        if (fpsCounter != null)
+            fpsCounter.SetActive(isOn);
+    }
+
+    public void RespawnAtCheckpoint()
+    {
+        CharacterController cc = player.GetComponent<CharacterController>();
+        if (cc != null)
+        {
+            cc.enabled = false;
+            cc.transform.position = playerSpawnPoint;
+            cc.enabled = true;
         }
     }
 
@@ -452,4 +498,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //    if (playerHealth != null)
+    //        playerHealth.ResetHealth();
+    //}
 }

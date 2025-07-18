@@ -1,6 +1,6 @@
 using System.Collections;
-//using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, IOpen//Added open interface for crypt door
 {
@@ -23,11 +23,30 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     private bool hasPlayedPickup = false;
 
+    // In PlayerController.cs
+    public static PlayerInputActions inputActions { get; private set; }
+
+    void Awake()
+    {
+        inputActions = new PlayerInputActions();
+    }
+
+    private void OnEnable()
+    {
+        inputActions.KBM.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions.KBM.Disable();
+    }
+
+
+
     private void Start()
     {
         SpawnPlayer();
     }
-    //void Start() => SpawnPlayer();
 
     public void SpawnPlayer()
     {
@@ -43,12 +62,13 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         playerMovement.HandleLanding();// updates landing handling
         playerMovement.HandleJump();// Updates Jump handling
         weaponManager.HandleMeleeAttack();// Updates melee attacks
+        playerMovement.HandleCrouch();
 
         if (!GameManager.instance.isPaused)// If game is not paused player can shoot else player cannot shoot 
         {
-        weaponManager.HandleShooting();// updates shooting
-
+            weaponManager.HandleShooting();// updates shooting
         }
+
         HandleWeaponSwitch();
 
         if (!hasPlayedPickup && weaponManager.HasGun())
@@ -57,22 +77,21 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
             StartCoroutine(PlayPickupAnimation(isOneHanded));
         }
 
-
-        if (Input.GetButtonDown("FireMode"))//Handles Firemode switch
+        if (inputActions.KBM.FireMode.triggered)//Handles Firemode switch
         {
             weaponManager.ToggleFireMode();
         }
         weaponManager.HandleADS();// handles ads
-        weaponManager.SetAiming(Input.GetButton("Fire2"));// handles aiming
+        weaponManager.SetAiming(inputActions.KBM.ADS.ReadValue<float>() > 0.1f);// handles aiming
 
         HandleLean();
     }
 
     private void HandleLean()// Handles L & R leans
     {
-        if (Input.GetKey(KeyCode.Q))
+        if (inputActions.KBM.LeanLeft.ReadValue<float>() > 0.1f)
             targetLean = leanAngle;
-        else if (Input.GetKey(KeyCode.E))
+        else if (inputActions.KBM.LeanRight.ReadValue<float>() > 0.1f)
             targetLean = -leanAngle;
         else
             targetLean = 0f;
@@ -116,7 +135,6 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         }
     }
 
-
     public void UpdateOneHandedWeaponArms(bool isOneHanded)// Disables one arm for one handed guns and melee weapons
     {
         Debug.Log("One Handed Function called" + isOneHanded);
@@ -124,7 +142,6 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         {
             leftArm.localScale = isOneHanded ? Vector3.zero : Vector3.one;
         }
-
     }
 
     public void PlayGunTakeOutAnimation()//Plays switch animation everytime a weapon is picked up or switched
@@ -137,7 +154,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         StartCoroutine(BlockFireDuringGunSwitch(0.7f));
     }
 
-    public IEnumerator BlockFireDuringGunSwitch(float duration ) // Disables the ability to fire during weapon change
+    public IEnumerator BlockFireDuringGunSwitch(float duration) // Disables the ability to fire during weapon change
     {
         weaponManager.SetCanFire(false);
         yield return new WaitForSeconds(duration);
@@ -147,16 +164,22 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
     void HandleWeaponSwitch()// Handles weapon selection using mouse scroll and numbers
     {
         // Number key selection
-        if (Input.GetKeyDown(KeyCode.Alpha1)) weaponManager.TryEquipWeapon(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) weaponManager.TryEquipWeapon(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) weaponManager.TryEquipWeapon(2);
+        if (inputActions.KBM.SwitchWeapon.triggered)
+            weaponManager.TryEquipWeapon(0);
 
+        if (inputActions.KBM.SwitchWeapon2.triggered)
+            weaponManager.TryEquipWeapon(1);
+
+        if (inputActions.KBM.SwitchWeapon3.triggered)
+            weaponManager.TryEquipWeapon(2);
+        if(inputActions.KBM.SwitchWeapon4.triggered)
+            weaponManager.TryEquipWeapon(3);
         // Mouse scroll selection
-        float scroll = Input.mouseScrollDelta.y;
+        float scroll = inputActions.KBM.ScrollWheel.ReadValue<Vector2>().y;
+
         if (scroll > 0f)
             weaponManager.ScrollWeapon(1); // scroll up
         else if (scroll < 0f)
             weaponManager.ScrollWeapon(-1); // scroll down
     }
-
 }

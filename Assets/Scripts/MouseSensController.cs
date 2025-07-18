@@ -14,7 +14,7 @@ public class MouseSensController : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float defaultSens = 40.0f;
     [SerializeField] private float minSens = 10.0f;
-    [SerializeField] private float maxSens = 70.0f;
+    [SerializeField] private float maxSens = 100.0f;
 
     private const string SensPlayerPrefKey = "MouseSensitivity";
 
