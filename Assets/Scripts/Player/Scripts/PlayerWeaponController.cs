@@ -83,8 +83,7 @@ public class PlayerWeaponManager : MonoBehaviour
     private Vector3 currentLeftHandOffset;
     private Vector3 currentRightHandOffset;
 
-    //input system
-    private PlayerInputActions inputActions;
+ 
 
     private void Start()
     {
@@ -111,10 +110,6 @@ public class PlayerWeaponManager : MonoBehaviour
 
         if (startingKnife != null)
             GetGunStats(startingKnife, autoEquip: true);
-
-        inputActions = new PlayerInputActions();
-        inputActions.KBM.Enable();
-
     }
 
     public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1, bool autoEquip = true)// Optional Parameters to modify starting ammo and auto equip
@@ -155,8 +150,8 @@ public class PlayerWeaponManager : MonoBehaviour
         if (currentGun == null || isReloading) return;
 
         bool fireInput = isAutomaticMode ?
-            Input.GetButton("Fire1") || inputActions.KBM.Fire.ReadValue<float>() > 0.1f :
-            Input.GetButtonDown("Fire1") || inputActions.KBM.Fire.triggered;
+            PlayerController.inputActions.KBM.Fire.ReadValue<float>() > 0.1f :
+            PlayerController.inputActions.KBM.Fire.triggered;
 
         if (fireInput && shootCooldown <= 0f)
         {
@@ -183,10 +178,10 @@ public class PlayerWeaponManager : MonoBehaviour
             }
         }
 
-        if (!Input.GetButton("Fire1") && inputActions.KBM.Fire.ReadValue<float>() == 0f)
+        if ( PlayerController.inputActions.KBM.Fire.ReadValue<float>() == 0f)
             playedEmptySound = false;
 
-        bool reloadInput = Input.GetKeyDown(KeyCode.R) || Keyboard.current.rKey.wasPressedThisFrame;
+        bool reloadInput = Keyboard.current.rKey.wasPressedThisFrame;
 
         if (reloadInput && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
             reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));// Starts Reload
@@ -309,7 +304,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
         meleeCooldownTimer -= Time.deltaTime;
 
-        if (!Input.GetButtonDown("Fire1") && !inputActions.KBM.Fire.triggered) return;
+        if (!PlayerController.inputActions.KBM.Fire.triggered) return;
         if (meleeCooldownTimer > 0f) return;
 
         meleeCooldownTimer = melee.attackRate;

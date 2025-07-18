@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -66,6 +67,11 @@ public class GameManager : MonoBehaviour
     public GameObject flashDamageScreen;
     public GameObject flashHealScreen;
     public GameObject flashAmmoPickUp;
+
+
+    //input system
+    private PlayerInputActions inputActions;
+
 
     public bool isPaused;
 
@@ -135,7 +141,8 @@ public class GameManager : MonoBehaviour
         {
             inGameUI.SetActive(true);
         }
-
+        inputActions = new PlayerInputActions();
+        inputActions.UI.Enable();
     }
 
     private void Start()
@@ -156,27 +163,24 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Cancel"))
+        if (inputActions.UI.Cancel.triggered)
         {
-            if(menuActive == null)
+            if (menuActive == null)
             {
                 statePause();
                 menuActive = menuPause;
                 menuActive.SetActive(isPaused);
 
-                // hide all ingame ui
-                if(inGameUI != null)
+                if (inGameUI != null)
                 {
                     inGameUI.SetActive(false);
                 }
-
-
-            } else if (menuActive == menuPause)
+            }
+            else if (menuActive == menuPause)
             {
                 stateUnpause();
             }
-
-            else if(menuActive == menuOptions)
+            else if (menuActive == menuOptions)
             {
                 BackToPauseMenu();
             }

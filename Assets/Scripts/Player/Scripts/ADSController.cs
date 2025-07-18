@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Camera))]
 public class AimDownSights : MonoBehaviour
@@ -9,11 +10,12 @@ public class AimDownSights : MonoBehaviour
     [SerializeField] float zoomSpeed = 8f;
 
     [Header("Controls")]
-    [SerializeField] KeyCode aimButton = KeyCode.Mouse1;
+
 
     Camera cam;
     float targetFov;
     PlayerWeaponManager weaponManager;
+    private PlayerInputActions inputActions;
 
     void Awake()
     {
@@ -22,11 +24,13 @@ public class AimDownSights : MonoBehaviour
         targetFov = hipFov;
 
         weaponManager = Object.FindFirstObjectByType<PlayerWeaponManager>();
+        inputActions = new PlayerInputActions();
+        inputActions.KBM.Enable();
     }
 
     void Update()
     {
-        bool isAiming = Input.GetKey(aimButton);
+        bool isAiming = PlayerController.inputActions.KBM.Aim.ReadValue<float>() > 0.1f;
         targetFov = isAiming ? adsFov : hipFov;
 
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, targetFov, Time.deltaTime * zoomSpeed);

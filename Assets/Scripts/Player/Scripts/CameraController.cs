@@ -18,7 +18,6 @@ public class CameraController : MonoBehaviour
 
     private bool isFreeLooking;
 
-    private PlayerInputActions inputActions;
     private Vector2 lookInput;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,10 +25,6 @@ public class CameraController : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
-        inputActions = new PlayerInputActions();
-        inputActions.KBM.Enable();
-
         mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 3.5f);
         MouseSensController.OnSensChanged += UpdateSensitivity;
     }
@@ -39,7 +34,7 @@ public class CameraController : MonoBehaviour
     {
         HandleFreeLookInput();
         // get input
-        lookInput = inputActions.KBM.Look.ReadValue<Vector2>();
+        lookInput = PlayerController.inputActions.KBM.Look.ReadValue<Vector2>();
         float mouseX = lookInput.x * mouseSensitivity * Time.deltaTime;
         float mouseY = lookInput.y * mouseSensitivity * Time.deltaTime;
 
@@ -70,7 +65,7 @@ public class CameraController : MonoBehaviour
 
     void HandleFreeLookInput()
     {
-        isFreeLooking = Mouse.current != null && Mouse.current.middleButton.isPressed;
+        isFreeLooking = PlayerController.inputActions.KBM.FreeLook.ReadValue<float>() > 0.1f;
     }
 
     private void UpdateSensitivity(float newSens)

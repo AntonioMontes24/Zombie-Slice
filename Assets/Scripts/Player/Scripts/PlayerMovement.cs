@@ -28,7 +28,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Slider staminaSlider;
 
     [Header("Crouch Settings")]
-    [SerializeField] KeyCode crouchKey = KeyCode.LeftControl;
     [SerializeField] float crouchHeight = 1f;
     [SerializeField] float standHeight = 2f;
     [SerializeField] float crouchSpeedMultiplier = 0.5f;
@@ -52,16 +51,12 @@ public class PlayerMovement : MonoBehaviour
     bool isPlayingStep;
     bool wasGrounded;
 
-    private PlayerInputActions inputActions;
     private Vector2 inputMove;
     private bool jumpPressed;
     private bool sprintHeld;
 
     void Start()
     {
-        inputActions = new PlayerInputActions();
-        inputActions.KBM.Enable();
-
         originalWalkSpeed = walkSpeed;
     }
 
@@ -69,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleJump();
 
-        inputMove = inputActions.KBM.Move.ReadValue<Vector2>();
+        inputMove = PlayerController.inputActions.KBM.Move.ReadValue<Vector2>();
         moveDir = (inputMove.x * transform.right) +
                   (inputMove.y * transform.forward);
 
@@ -130,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        sprintHeld = inputActions.KBM.Sprint.ReadValue<float>() > 0.1f;
+        sprintHeld = PlayerController.inputActions.KBM.Sprint.ReadValue<float>() > 0.1f;
         bool sprintInput = sprintHeld && moveDir.magnitude > 0.1f;
 
         if (sprintInput && canSprint)
@@ -160,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleJump()//Jump
     {
-        jumpPressed = inputActions.KBM.Jump.triggered;
+        jumpPressed = PlayerController.inputActions.KBM.Jump.triggered;
 
         if (jumpPressed && currentJumpCount < jumpMax)
         {
@@ -195,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleCrouch()//Toggle crouch on key press
     {
-        if (inputActions.KBM.Crouch.triggered)
+        if (PlayerController.inputActions.KBM.Crouch.triggered)
         {
             isCrouching = !isCrouching;
 
