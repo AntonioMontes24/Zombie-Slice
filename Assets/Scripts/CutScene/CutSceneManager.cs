@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class CutSceneManager : MonoBehaviour
 {
@@ -9,13 +10,21 @@ public class CutSceneManager : MonoBehaviour
     private bool hasSkipped = false; //Default
     //public GameObject skipButton;
 
+    private PlayerInputActions inputActions;
+
+    private void Awake()
+    {
+        inputActions = new PlayerInputActions();
+    }
+
     void Update()
     {
-        if (!hasSkipped && Input.GetKeyDown(KeyCode.Escape))
+        if (!hasSkipped && inputActions.UI.Cancel.triggered)
         {
             SkipCutScene();
         }
     }
+
 
     public void SkipCutScene()
     {
