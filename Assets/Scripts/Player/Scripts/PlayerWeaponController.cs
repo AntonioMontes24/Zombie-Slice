@@ -181,7 +181,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if ( PlayerController.inputActions.Input.Fire.ReadValue<float>() == 0f)
             playedEmptySound = false;
 
-        bool reloadInput = Keyboard.current.rKey.wasPressedThisFrame;
+        bool reloadInput = PlayerController.inputActions.Input.Reload.IsPressed();
 
         if (reloadInput && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
             reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));// Starts Reload

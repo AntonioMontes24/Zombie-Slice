@@ -67,7 +67,7 @@ public class CameraController : MonoBehaviour
 
     void HandleFreeLookInput()
     {
-        isFreeLooking = PlayerController.inputActions.Input.FreeLook.ReadValue<float>() > 0.1f;
+        isFreeLooking = PlayerController.inputActions.Input.FreeLook.IsPressed();
     }
 
     private void UpdateSensitivity(float newSens)
