@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
@@ -17,15 +18,20 @@ public class CameraController : MonoBehaviour
 
     private bool isFreeLooking;
 
+    private PlayerInputActions inputActions;
+    private Vector2 lookInput;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
+        inputActions = new PlayerInputActions();
+        inputActions.KBM.Enable();
+
         mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 3.5f);
         MouseSensController.OnSensChanged += UpdateSensitivity;
-
     }
 
     // Update is called once per frame
@@ -33,8 +39,9 @@ public class CameraController : MonoBehaviour
     {
         HandleFreeLookInput();
         // get input
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        lookInput = inputActions.KBM.Look.ReadValue<Vector2>();
+        float mouseX = lookInput.x * mouseSensitivity * Time.deltaTime;
+        float mouseY = lookInput.y * mouseSensitivity * Time.deltaTime;
 
         //give option to invert mouse look up and down
         rotX += invertY ? mouseY : -mouseY;
@@ -63,7 +70,7 @@ public class CameraController : MonoBehaviour
 
     void HandleFreeLookInput()
     {
-        isFreeLooking = Input.GetMouseButton(2);
+        isFreeLooking = Mouse.current != null && Mouse.current.middleButton.isPressed;
     }
 
     private void UpdateSensitivity(float newSens)
@@ -71,5 +78,4 @@ public class CameraController : MonoBehaviour
         mouseSensitivity = newSens;
         Debug.Log($"new sens: {mouseSensitivity}");
     }
-
 }
