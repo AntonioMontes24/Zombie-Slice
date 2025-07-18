@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
     {
         HandleFreeLookInput();
         // get input
-        lookInput = PlayerController.inputActions.KBM.Look.ReadValue<Vector2>();
+        lookInput = PlayerController.inputActions.Input.Look.ReadValue<Vector2>();
         float scaledSensitivity = mouseSensitivity * 0.2f;
         float mouseX = lookInput.x * scaledSensitivity * Time.deltaTime;
         float mouseY = lookInput.y * scaledSensitivity * Time.deltaTime;
@@ -67,7 +67,7 @@ public class CameraController : MonoBehaviour
 
     void HandleFreeLookInput()
     {
-        isFreeLooking = PlayerController.inputActions.KBM.FreeLook.ReadValue<float>() > 0.1f;
+        isFreeLooking = PlayerController.inputActions.Input.FreeLook.IsPressed();
     }
 
     private void UpdateSensitivity(float newSens)

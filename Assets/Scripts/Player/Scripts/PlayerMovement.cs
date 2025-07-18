@@ -64,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleJump();
 
-        inputMove = PlayerController.inputActions.KBM.Move.ReadValue<Vector2>();
+        inputMove = PlayerController.inputActions.Input.Move.ReadValue<Vector2>();
         moveDir = (inputMove.x * transform.right) +
                   (inputMove.y * transform.forward);
 
@@ -125,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        sprintHeld = PlayerController.inputActions.KBM.Sprint.ReadValue<float>() > 0.1f;
+        sprintHeld = PlayerController.inputActions.Input.Sprint.ReadValue<float>() > 0.1f;
         bool sprintInput = sprintHeld && moveDir.magnitude > 0.1f;
 
         if (sprintInput && canSprint)
@@ -155,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleJump()//Jump
     {
-        jumpPressed = PlayerController.inputActions.KBM.Jump.triggered;
+        jumpPressed = PlayerController.inputActions.Input.Jump.triggered;
 
         if (jumpPressed && currentJumpCount < jumpMax)
         {
@@ -190,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleCrouch()//Toggle crouch on key press
     {
-        if (PlayerController.inputActions.KBM.Crouch.triggered)
+        if (PlayerController.inputActions.Input.Crouch.triggered)
         {
             isCrouching = !isCrouching;
 

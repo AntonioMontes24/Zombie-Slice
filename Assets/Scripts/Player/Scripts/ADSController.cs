@@ -25,12 +25,12 @@ public class AimDownSights : MonoBehaviour
 
         weaponManager = Object.FindFirstObjectByType<PlayerWeaponManager>();
         inputActions = new PlayerInputActions();
-        inputActions.KBM.Enable();
+        inputActions.Input.Enable();
     }
 
     void Update()
     {
-        bool isAiming = PlayerController.inputActions.KBM.Aim.ReadValue<float>() > 0.1f;
+        bool isAiming = PlayerController.inputActions.Input.ADS.ReadValue<float>() > 0.1f;
         targetFov = isAiming ? adsFov : hipFov;
 
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, targetFov, Time.deltaTime * zoomSpeed);
