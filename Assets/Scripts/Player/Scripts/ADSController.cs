@@ -30,11 +30,16 @@ public class AimDownSights : MonoBehaviour
 
     void Update()
     {
-        bool isAiming = PlayerController.inputActions.Input.ADS.ReadValue<float>() > 0.1f;
+        if (weaponManager == null) return;
+
+        bool isGun = weaponManager.CurrentGun is FireArmStats;
+        bool adsPressed = PlayerController.inputActions.Input.ADS.IsPressed();
+
+        bool isAiming = isGun && adsPressed;
         targetFov = isAiming ? adsFov : hipFov;
 
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, targetFov, Time.deltaTime * zoomSpeed);
 
-        weaponManager?.SetAiming(isAiming);
+        weaponManager.SetAiming(isAiming);
     }
 }

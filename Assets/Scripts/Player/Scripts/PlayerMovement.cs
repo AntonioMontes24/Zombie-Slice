@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Stamina Settings")]
     [SerializeField] public float maxStamina;
-    [SerializeField] private float staminaDrainRate;
+    [SerializeField] public float staminaDrainRate;
     [SerializeField] private float staminaRegenRate;
     [SerializeField] private float staminaRegenDelay;
     [SerializeField] private UnityEngine.UI.Slider staminaSlider;
@@ -117,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void HandleSprint()//Sprint
+    public void HandleSprint() //Sprint
     {
         if (isCrouching)// This flag checks if the player is crouching// If crouching forces isprinting to false; this will allow the player to hold sprint  button and still fire
         {
@@ -131,7 +131,7 @@ public class PlayerMovement : MonoBehaviour
         if (sprintInput && canSprint)
         {
             isSprinting = true;
-            currentStamina -= staminaDrainRate * Time.deltaTime;
+            currentStamina -= staminaDrainRate * Time.deltaTime;//Drain stamina
             regenTimer = 0f;
             currentStamina = Mathf.Max(currentStamina, 0f); // Clamp to 0
         }
@@ -142,7 +142,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (regenTimer >= staminaRegenDelay)
             {
-                currentStamina += staminaRegenRate * Time.deltaTime;
+                currentStamina += staminaRegenRate * Time.deltaTime; // Regenerate stamina
                 currentStamina = Mathf.Min(currentStamina, maxStamina); // Clamp to max
             }
         }
@@ -152,6 +152,7 @@ public class PlayerMovement : MonoBehaviour
         if (staminaSlider != null)
             staminaSlider.value = currentStamina;
     }
+
 
     public void HandleJump()//Jump
     {
