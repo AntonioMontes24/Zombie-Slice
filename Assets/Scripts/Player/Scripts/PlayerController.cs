@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     // In PlayerController.cs
     public static PlayerInputActions inputActions { get; private set; }
+    private float lastCycleInput;
 
     void Awake()
     {
@@ -33,12 +34,12 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     private void OnEnable()
     {
-        inputActions.KBM.Enable();
+        inputActions.Input.Enable();
     }
 
     private void OnDisable()
     {
-        inputActions.KBM.Disable();
+        inputActions.Input.Disable();
     }
 
 
@@ -77,21 +78,21 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
             StartCoroutine(PlayPickupAnimation(isOneHanded));
         }
 
-        if (inputActions.KBM.FireMode.triggered)//Handles Firemode switch
+        if (inputActions.Input.FireMode.triggered)//Handles Firemode switch
         {
             weaponManager.ToggleFireMode();
         }
         weaponManager.HandleADS();// handles ads
-        weaponManager.SetAiming(inputActions.KBM.ADS.ReadValue<float>() > 0.1f);// handles aiming
+        weaponManager.SetAiming(inputActions.Input.ADS.ReadValue<float>() > 0.1f);// handles aiming
 
         HandleLean();
     }
 
     private void HandleLean()// Handles L & R leans
     {
-        if (inputActions.KBM.LeanLeft.ReadValue<float>() > 0.1f)
+        if (inputActions.Input.LeanLeft.ReadValue<float>() > 0.1f)
             targetLean = leanAngle;
-        else if (inputActions.KBM.LeanRight.ReadValue<float>() > 0.1f)
+        else if (inputActions.Input.LeanRight.ReadValue<float>() > 0.1f)
             targetLean = -leanAngle;
         else
             targetLean = 0f;
@@ -164,18 +165,25 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
     void HandleWeaponSwitch()// Handles weapon selection using mouse scroll and numbers
     {
         // Number key selection
-        if (inputActions.KBM.SwitchWeapon.triggered)
+        if (inputActions.Input.SwitchWeapon.triggered)
             weaponManager.TryEquipWeapon(0);
 
-        if (inputActions.KBM.SwitchWeapon2.triggered)
+        if (inputActions.Input.SwitchWeapon2.triggered)
             weaponManager.TryEquipWeapon(1);
 
-        if (inputActions.KBM.SwitchWeapon3.triggered)
+        if (inputActions.Input.SwitchWeapon3.triggered)
             weaponManager.TryEquipWeapon(2);
-        if(inputActions.KBM.SwitchWeapon4.triggered)
+        if(inputActions.Input.SwitchWeapon4.triggered)
             weaponManager.TryEquipWeapon(3);
+
+        if (inputActions.Input.SwitchWeaponLeft.triggered)
+            weaponManager.ScrollWeapon(-1);
+
+        if (inputActions.Input.SwitchWeaponRight.triggered)
+            weaponManager.ScrollWeapon(1);
+
         // Mouse scroll selection
-        float scroll = inputActions.KBM.ScrollWheel.ReadValue<Vector2>().y;
+        float scroll = inputActions.Input.ScrollWheel.ReadValue<Vector2>().y;
 
         if (scroll > 0f)
             weaponManager.ScrollWeapon(1); // scroll up

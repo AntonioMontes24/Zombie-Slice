@@ -114,7 +114,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""15cef263-9014-4fd5-94d9-4e4a6234a6ef"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -462,10 +462,21 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""82627dcc-3b13-4ba9-841d-e4b746d6553e"",
-                    ""path"": ""*/{Cancel}"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse;Gamepad;Touch;Joystick;XR"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bd4438bb-accb-4cd0-95f9-c21bccb0a3c0"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -605,7 +616,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""KBM"",
+            ""name"": ""Input"",
             ""id"": ""a0d602c5-f283-435c-b1d0-86b15d11b3ad"",
             ""actions"": [
                 {
@@ -708,15 +719,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Aim"",
-                    ""type"": ""Button"",
-                    ""id"": ""f885e687-5875-4faa-9708-593504481dc3"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""ScrollWheel"",
                     ""type"": ""Value"",
                     ""id"": ""56768178-adcb-48b7-99da-a3c20a7b60d8"",
@@ -778,6 +780,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwitchWeaponLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""43b24a48-518e-46cc-bb99-8ba2cfad6219"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwitchWeaponRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""ffdb934f-5123-45a7-9321-64e7719544f4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -788,6 +808,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Lean Left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""04ab00f9-de1d-4319-b489-d4a4d3007264"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Lean Left"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -805,11 +836,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""0c6b14a8-a6c8-4276-957e-7f0e960ab55a"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Lean Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""f24acd6e-924a-4f0f-8595-e839aa5a92f5"",
                     ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""58c2147d-80a4-41dd-b9d6-cbefe822e18d"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -827,11 +880,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""b24e4039-071b-4fe7-9ed4-e2168646d3bb"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""22f7f9b3-9d0e-489b-8209-9cb11321e28f"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d5c72b7e-f598-47ae-9473-4a839db100e1"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -849,6 +924,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""619fd42b-b67a-444b-852a-a1dd0393aa66"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""ADS"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""32d7ce22-acfb-4b99-9305-4eab55097e8c"",
                     ""path"": ""<Keyboard>/b"",
                     ""interactions"": """",
@@ -860,11 +946,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""edcf0feb-f9f8-4f5d-9fe1-7124e98159ab"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""FireMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""3247c8d8-5609-4014-ab57-58f0b08cbb42"",
                     ""path"": ""<Keyboard>/leftCtrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2290cfd0-7439-4a69-9427-5ef8c5b07b51"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -926,11 +1034,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""e28c9941-6fc4-469b-b412-d6c690311309"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""79afd4a4-82e9-4e06-84b1-ddc2653a93be"",
                     ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c559798f-1200-4c0b-b92b-24b58ef02d9c"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -948,12 +1078,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ce38de85-8f01-41ad-961e-956f222f8682"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""id"": ""9d0152b0-d722-4085-95be-58fed9141679"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Aim"",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1024,6 +1154,39 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""5e274338-f2a9-4ff1-8de2-0f25401eee4f"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FreeLook"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""b9fcc09d-ebb1-4d16-b750-d190b2ac8a9a"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""FreeLook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""bef18a7b-5e7e-4586-90c5-1f1db96d4ccc"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""FreeLook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""53fdb3bb-320f-409f-ac76-5e808603ee5b"",
                     ""path"": ""<Keyboard>/f"",
@@ -1033,152 +1196,37 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""Controller"",
-            ""id"": ""e21af366-7d90-49a1-9def-43247bdfe04a"",
-            ""actions"": [
-                {
-                    ""name"": ""Forward"",
-                    ""type"": ""Button"",
-                    ""id"": ""45258b10-988e-44fa-8eb4-05320f22b68d"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 },
-                {
-                    ""name"": ""Backward"",
-                    ""type"": ""Button"",
-                    ""id"": ""10be7100-7ff7-4e4f-8853-1244b938fbb7"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Strafe Left"",
-                    ""type"": ""Button"",
-                    ""id"": ""551c571e-a253-4544-ac08-2bd9aa58169d"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Strafe Right"",
-                    ""type"": ""Button"",
-                    ""id"": ""e641b3a0-a090-40f1-ab9f-d7de2498e210"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Lean Left"",
-                    ""type"": ""Button"",
-                    ""id"": ""8c64c54c-e497-47a9-a5d3-1b14d3c11f68"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Lean Right"",
-                    ""type"": ""Button"",
-                    ""id"": ""260ab540-9220-4356-8e31-4c3ff9e64f42"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Jump"",
-                    ""type"": ""Button"",
-                    ""id"": ""5596e097-2fc1-436b-8746-5e3a37f8b483"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""05794462-c843-4e37-af9b-deb551f59188"",
-                    ""path"": ""<DualShockGamepad>/leftStick/up"",
+                    ""id"": ""277f3f32-5f50-46d5-b1d4-af14e0ec3805"",
+                    ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""Forward"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8e01197d-a665-4c1d-9f3e-10e8d7331cb8"",
-                    ""path"": ""<DualShockGamepad>/leftStick/down"",
+                    ""id"": ""f5857c2c-180e-42d8-9386-59e3c02366e5"",
+                    ""path"": ""<Gamepad>/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""Backward"",
+                    ""action"": ""SwitchWeaponLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""2f18ce64-a421-4469-8eb8-79c156c6e4ac"",
-                    ""path"": ""<DualShockGamepad>/leftStick/left"",
+                    ""id"": ""a68c40e9-3fac-4fc0-9f86-22bd07666e06"",
+                    ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""Strafe Left"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""24252a87-7031-4fe6-8b7f-a885addc7cdf"",
-                    ""path"": ""<DualShockGamepad>/leftStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Strafe Right"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ca53f423-d568-47c9-8d5b-5323605c3380"",
-                    ""path"": ""<DualShockGamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Lean Left"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""33ef5483-f982-44c5-a8ac-ee2f18c1cb5a"",
-                    ""path"": ""<DualShockGamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Lean Right"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2bcb31f5-eb75-4b2c-95de-e830f626242a"",
-                    ""path"": ""<DualShockGamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Jump"",
+                    ""action"": ""SwitchWeaponRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1260,43 +1308,34 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-        // KBM
-        m_KBM = asset.FindActionMap("KBM", throwIfNotFound: true);
-        m_KBM_LeanLeft = m_KBM.FindAction("Lean Left", throwIfNotFound: true);
-        m_KBM_LeanRight = m_KBM.FindAction("Lean Right", throwIfNotFound: true);
-        m_KBM_Sprint = m_KBM.FindAction("Sprint", throwIfNotFound: true);
-        m_KBM_Jump = m_KBM.FindAction("Jump", throwIfNotFound: true);
-        m_KBM_Look = m_KBM.FindAction("Look", throwIfNotFound: true);
-        m_KBM_ADS = m_KBM.FindAction("ADS", throwIfNotFound: true);
-        m_KBM_FireMode = m_KBM.FindAction("FireMode", throwIfNotFound: true);
-        m_KBM_Crouch = m_KBM.FindAction("Crouch", throwIfNotFound: true);
-        m_KBM_Move = m_KBM.FindAction("Move", throwIfNotFound: true);
-        m_KBM_Reload = m_KBM.FindAction("Reload", throwIfNotFound: true);
-        m_KBM_Fire = m_KBM.FindAction("Fire", throwIfNotFound: true);
-        m_KBM_Aim = m_KBM.FindAction("Aim", throwIfNotFound: true);
-        m_KBM_ScrollWheel = m_KBM.FindAction("ScrollWheel", throwIfNotFound: true);
-        m_KBM_SwitchWeapon = m_KBM.FindAction("SwitchWeapon", throwIfNotFound: true);
-        m_KBM_SwitchWeapon2 = m_KBM.FindAction("SwitchWeapon2", throwIfNotFound: true);
-        m_KBM_SwitchWeapon3 = m_KBM.FindAction("SwitchWeapon3", throwIfNotFound: true);
-        m_KBM_SwitchWeapon4 = m_KBM.FindAction("SwitchWeapon4", throwIfNotFound: true);
-        m_KBM_FreeLook = m_KBM.FindAction("FreeLook", throwIfNotFound: true);
-        m_KBM_Interact = m_KBM.FindAction("Interact", throwIfNotFound: true);
-        // Controller
-        m_Controller = asset.FindActionMap("Controller", throwIfNotFound: true);
-        m_Controller_Forward = m_Controller.FindAction("Forward", throwIfNotFound: true);
-        m_Controller_Backward = m_Controller.FindAction("Backward", throwIfNotFound: true);
-        m_Controller_StrafeLeft = m_Controller.FindAction("Strafe Left", throwIfNotFound: true);
-        m_Controller_StrafeRight = m_Controller.FindAction("Strafe Right", throwIfNotFound: true);
-        m_Controller_LeanLeft = m_Controller.FindAction("Lean Left", throwIfNotFound: true);
-        m_Controller_LeanRight = m_Controller.FindAction("Lean Right", throwIfNotFound: true);
-        m_Controller_Jump = m_Controller.FindAction("Jump", throwIfNotFound: true);
+        // Input
+        m_Input = asset.FindActionMap("Input", throwIfNotFound: true);
+        m_Input_LeanLeft = m_Input.FindAction("Lean Left", throwIfNotFound: true);
+        m_Input_LeanRight = m_Input.FindAction("Lean Right", throwIfNotFound: true);
+        m_Input_Sprint = m_Input.FindAction("Sprint", throwIfNotFound: true);
+        m_Input_Jump = m_Input.FindAction("Jump", throwIfNotFound: true);
+        m_Input_Look = m_Input.FindAction("Look", throwIfNotFound: true);
+        m_Input_ADS = m_Input.FindAction("ADS", throwIfNotFound: true);
+        m_Input_FireMode = m_Input.FindAction("FireMode", throwIfNotFound: true);
+        m_Input_Crouch = m_Input.FindAction("Crouch", throwIfNotFound: true);
+        m_Input_Move = m_Input.FindAction("Move", throwIfNotFound: true);
+        m_Input_Reload = m_Input.FindAction("Reload", throwIfNotFound: true);
+        m_Input_Fire = m_Input.FindAction("Fire", throwIfNotFound: true);
+        m_Input_ScrollWheel = m_Input.FindAction("ScrollWheel", throwIfNotFound: true);
+        m_Input_SwitchWeapon = m_Input.FindAction("SwitchWeapon", throwIfNotFound: true);
+        m_Input_SwitchWeapon2 = m_Input.FindAction("SwitchWeapon2", throwIfNotFound: true);
+        m_Input_SwitchWeapon3 = m_Input.FindAction("SwitchWeapon3", throwIfNotFound: true);
+        m_Input_SwitchWeapon4 = m_Input.FindAction("SwitchWeapon4", throwIfNotFound: true);
+        m_Input_FreeLook = m_Input.FindAction("FreeLook", throwIfNotFound: true);
+        m_Input_Interact = m_Input.FindAction("Interact", throwIfNotFound: true);
+        m_Input_SwitchWeaponLeft = m_Input.FindAction("SwitchWeaponLeft", throwIfNotFound: true);
+        m_Input_SwitchWeaponRight = m_Input.FindAction("SwitchWeaponRight", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
     {
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerInputActions.UI.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_KBM.enabled, "This will cause a leak and performance issues, PlayerInputActions.KBM.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Controller.enabled, "This will cause a leak and performance issues, PlayerInputActions.Controller.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Input.enabled, "This will cause a leak and performance issues, PlayerInputActions.Input.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1564,119 +1603,124 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     /// </summary>
     public UIActions @UI => new UIActions(this);
 
-    // KBM
-    private readonly InputActionMap m_KBM;
-    private List<IKBMActions> m_KBMActionsCallbackInterfaces = new List<IKBMActions>();
-    private readonly InputAction m_KBM_LeanLeft;
-    private readonly InputAction m_KBM_LeanRight;
-    private readonly InputAction m_KBM_Sprint;
-    private readonly InputAction m_KBM_Jump;
-    private readonly InputAction m_KBM_Look;
-    private readonly InputAction m_KBM_ADS;
-    private readonly InputAction m_KBM_FireMode;
-    private readonly InputAction m_KBM_Crouch;
-    private readonly InputAction m_KBM_Move;
-    private readonly InputAction m_KBM_Reload;
-    private readonly InputAction m_KBM_Fire;
-    private readonly InputAction m_KBM_Aim;
-    private readonly InputAction m_KBM_ScrollWheel;
-    private readonly InputAction m_KBM_SwitchWeapon;
-    private readonly InputAction m_KBM_SwitchWeapon2;
-    private readonly InputAction m_KBM_SwitchWeapon3;
-    private readonly InputAction m_KBM_SwitchWeapon4;
-    private readonly InputAction m_KBM_FreeLook;
-    private readonly InputAction m_KBM_Interact;
+    // Input
+    private readonly InputActionMap m_Input;
+    private List<IInputActions> m_InputActionsCallbackInterfaces = new List<IInputActions>();
+    private readonly InputAction m_Input_LeanLeft;
+    private readonly InputAction m_Input_LeanRight;
+    private readonly InputAction m_Input_Sprint;
+    private readonly InputAction m_Input_Jump;
+    private readonly InputAction m_Input_Look;
+    private readonly InputAction m_Input_ADS;
+    private readonly InputAction m_Input_FireMode;
+    private readonly InputAction m_Input_Crouch;
+    private readonly InputAction m_Input_Move;
+    private readonly InputAction m_Input_Reload;
+    private readonly InputAction m_Input_Fire;
+    private readonly InputAction m_Input_ScrollWheel;
+    private readonly InputAction m_Input_SwitchWeapon;
+    private readonly InputAction m_Input_SwitchWeapon2;
+    private readonly InputAction m_Input_SwitchWeapon3;
+    private readonly InputAction m_Input_SwitchWeapon4;
+    private readonly InputAction m_Input_FreeLook;
+    private readonly InputAction m_Input_Interact;
+    private readonly InputAction m_Input_SwitchWeaponLeft;
+    private readonly InputAction m_Input_SwitchWeaponRight;
     /// <summary>
-    /// Provides access to input actions defined in input action map "KBM".
+    /// Provides access to input actions defined in input action map "Input".
     /// </summary>
-    public struct KBMActions
+    public struct InputActions
     {
         private @PlayerInputActions m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public KBMActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "KBM/LeanLeft".
+        /// Provides access to the underlying input action "Input/LeanLeft".
         /// </summary>
-        public InputAction @LeanLeft => m_Wrapper.m_KBM_LeanLeft;
+        public InputAction @LeanLeft => m_Wrapper.m_Input_LeanLeft;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/LeanRight".
+        /// Provides access to the underlying input action "Input/LeanRight".
         /// </summary>
-        public InputAction @LeanRight => m_Wrapper.m_KBM_LeanRight;
+        public InputAction @LeanRight => m_Wrapper.m_Input_LeanRight;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/Sprint".
+        /// Provides access to the underlying input action "Input/Sprint".
         /// </summary>
-        public InputAction @Sprint => m_Wrapper.m_KBM_Sprint;
+        public InputAction @Sprint => m_Wrapper.m_Input_Sprint;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/Jump".
+        /// Provides access to the underlying input action "Input/Jump".
         /// </summary>
-        public InputAction @Jump => m_Wrapper.m_KBM_Jump;
+        public InputAction @Jump => m_Wrapper.m_Input_Jump;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/Look".
+        /// Provides access to the underlying input action "Input/Look".
         /// </summary>
-        public InputAction @Look => m_Wrapper.m_KBM_Look;
+        public InputAction @Look => m_Wrapper.m_Input_Look;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/ADS".
+        /// Provides access to the underlying input action "Input/ADS".
         /// </summary>
-        public InputAction @ADS => m_Wrapper.m_KBM_ADS;
+        public InputAction @ADS => m_Wrapper.m_Input_ADS;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/FireMode".
+        /// Provides access to the underlying input action "Input/FireMode".
         /// </summary>
-        public InputAction @FireMode => m_Wrapper.m_KBM_FireMode;
+        public InputAction @FireMode => m_Wrapper.m_Input_FireMode;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/Crouch".
+        /// Provides access to the underlying input action "Input/Crouch".
         /// </summary>
-        public InputAction @Crouch => m_Wrapper.m_KBM_Crouch;
+        public InputAction @Crouch => m_Wrapper.m_Input_Crouch;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/Move".
+        /// Provides access to the underlying input action "Input/Move".
         /// </summary>
-        public InputAction @Move => m_Wrapper.m_KBM_Move;
+        public InputAction @Move => m_Wrapper.m_Input_Move;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/Reload".
+        /// Provides access to the underlying input action "Input/Reload".
         /// </summary>
-        public InputAction @Reload => m_Wrapper.m_KBM_Reload;
+        public InputAction @Reload => m_Wrapper.m_Input_Reload;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/Fire".
+        /// Provides access to the underlying input action "Input/Fire".
         /// </summary>
-        public InputAction @Fire => m_Wrapper.m_KBM_Fire;
+        public InputAction @Fire => m_Wrapper.m_Input_Fire;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/Aim".
+        /// Provides access to the underlying input action "Input/ScrollWheel".
         /// </summary>
-        public InputAction @Aim => m_Wrapper.m_KBM_Aim;
+        public InputAction @ScrollWheel => m_Wrapper.m_Input_ScrollWheel;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/ScrollWheel".
+        /// Provides access to the underlying input action "Input/SwitchWeapon".
         /// </summary>
-        public InputAction @ScrollWheel => m_Wrapper.m_KBM_ScrollWheel;
+        public InputAction @SwitchWeapon => m_Wrapper.m_Input_SwitchWeapon;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/SwitchWeapon".
+        /// Provides access to the underlying input action "Input/SwitchWeapon2".
         /// </summary>
-        public InputAction @SwitchWeapon => m_Wrapper.m_KBM_SwitchWeapon;
+        public InputAction @SwitchWeapon2 => m_Wrapper.m_Input_SwitchWeapon2;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/SwitchWeapon2".
+        /// Provides access to the underlying input action "Input/SwitchWeapon3".
         /// </summary>
-        public InputAction @SwitchWeapon2 => m_Wrapper.m_KBM_SwitchWeapon2;
+        public InputAction @SwitchWeapon3 => m_Wrapper.m_Input_SwitchWeapon3;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/SwitchWeapon3".
+        /// Provides access to the underlying input action "Input/SwitchWeapon4".
         /// </summary>
-        public InputAction @SwitchWeapon3 => m_Wrapper.m_KBM_SwitchWeapon3;
+        public InputAction @SwitchWeapon4 => m_Wrapper.m_Input_SwitchWeapon4;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/SwitchWeapon4".
+        /// Provides access to the underlying input action "Input/FreeLook".
         /// </summary>
-        public InputAction @SwitchWeapon4 => m_Wrapper.m_KBM_SwitchWeapon4;
+        public InputAction @FreeLook => m_Wrapper.m_Input_FreeLook;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/FreeLook".
+        /// Provides access to the underlying input action "Input/Interact".
         /// </summary>
-        public InputAction @FreeLook => m_Wrapper.m_KBM_FreeLook;
+        public InputAction @Interact => m_Wrapper.m_Input_Interact;
         /// <summary>
-        /// Provides access to the underlying input action "KBM/Interact".
+        /// Provides access to the underlying input action "Input/SwitchWeaponLeft".
         /// </summary>
-        public InputAction @Interact => m_Wrapper.m_KBM_Interact;
+        public InputAction @SwitchWeaponLeft => m_Wrapper.m_Input_SwitchWeaponLeft;
+        /// <summary>
+        /// Provides access to the underlying input action "Input/SwitchWeaponRight".
+        /// </summary>
+        public InputAction @SwitchWeaponRight => m_Wrapper.m_Input_SwitchWeaponRight;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_KBM; }
+        public InputActionMap Get() { return m_Wrapper.m_Input; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -1684,9 +1728,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="KBMActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="InputActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(KBMActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(InputActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -1694,11 +1738,11 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="KBMActions" />
-        public void AddCallbacks(IKBMActions instance)
+        /// <seealso cref="InputActions" />
+        public void AddCallbacks(IInputActions instance)
         {
-            if (instance == null || m_Wrapper.m_KBMActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_KBMActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_InputActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_InputActionsCallbackInterfaces.Add(instance);
             @LeanLeft.started += instance.OnLeanLeft;
             @LeanLeft.performed += instance.OnLeanLeft;
             @LeanLeft.canceled += instance.OnLeanLeft;
@@ -1732,9 +1776,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
-            @Aim.started += instance.OnAim;
-            @Aim.performed += instance.OnAim;
-            @Aim.canceled += instance.OnAim;
             @ScrollWheel.started += instance.OnScrollWheel;
             @ScrollWheel.performed += instance.OnScrollWheel;
             @ScrollWheel.canceled += instance.OnScrollWheel;
@@ -1756,6 +1797,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @SwitchWeaponLeft.started += instance.OnSwitchWeaponLeft;
+            @SwitchWeaponLeft.performed += instance.OnSwitchWeaponLeft;
+            @SwitchWeaponLeft.canceled += instance.OnSwitchWeaponLeft;
+            @SwitchWeaponRight.started += instance.OnSwitchWeaponRight;
+            @SwitchWeaponRight.performed += instance.OnSwitchWeaponRight;
+            @SwitchWeaponRight.canceled += instance.OnSwitchWeaponRight;
         }
 
         /// <summary>
@@ -1764,8 +1811,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="KBMActions" />
-        private void UnregisterCallbacks(IKBMActions instance)
+        /// <seealso cref="InputActions" />
+        private void UnregisterCallbacks(IInputActions instance)
         {
             @LeanLeft.started -= instance.OnLeanLeft;
             @LeanLeft.performed -= instance.OnLeanLeft;
@@ -1800,9 +1847,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
-            @Aim.started -= instance.OnAim;
-            @Aim.performed -= instance.OnAim;
-            @Aim.canceled -= instance.OnAim;
             @ScrollWheel.started -= instance.OnScrollWheel;
             @ScrollWheel.performed -= instance.OnScrollWheel;
             @ScrollWheel.canceled -= instance.OnScrollWheel;
@@ -1824,15 +1868,21 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @SwitchWeaponLeft.started -= instance.OnSwitchWeaponLeft;
+            @SwitchWeaponLeft.performed -= instance.OnSwitchWeaponLeft;
+            @SwitchWeaponLeft.canceled -= instance.OnSwitchWeaponLeft;
+            @SwitchWeaponRight.started -= instance.OnSwitchWeaponRight;
+            @SwitchWeaponRight.performed -= instance.OnSwitchWeaponRight;
+            @SwitchWeaponRight.canceled -= instance.OnSwitchWeaponRight;
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="KBMActions.UnregisterCallbacks(IKBMActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="InputActions.UnregisterCallbacks(IInputActions)" />.
         /// </summary>
-        /// <seealso cref="KBMActions.UnregisterCallbacks(IKBMActions)" />
-        public void RemoveCallbacks(IKBMActions instance)
+        /// <seealso cref="InputActions.UnregisterCallbacks(IInputActions)" />
+        public void RemoveCallbacks(IInputActions instance)
         {
-            if (m_Wrapper.m_KBMActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_InputActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -1842,183 +1892,21 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="KBMActions.AddCallbacks(IKBMActions)" />
-        /// <seealso cref="KBMActions.RemoveCallbacks(IKBMActions)" />
-        /// <seealso cref="KBMActions.UnregisterCallbacks(IKBMActions)" />
-        public void SetCallbacks(IKBMActions instance)
+        /// <seealso cref="InputActions.AddCallbacks(IInputActions)" />
+        /// <seealso cref="InputActions.RemoveCallbacks(IInputActions)" />
+        /// <seealso cref="InputActions.UnregisterCallbacks(IInputActions)" />
+        public void SetCallbacks(IInputActions instance)
         {
-            foreach (var item in m_Wrapper.m_KBMActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_InputActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_KBMActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_InputActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="KBMActions" /> instance referencing this action map.
+    /// Provides a new <see cref="InputActions" /> instance referencing this action map.
     /// </summary>
-    public KBMActions @KBM => new KBMActions(this);
-
-    // Controller
-    private readonly InputActionMap m_Controller;
-    private List<IControllerActions> m_ControllerActionsCallbackInterfaces = new List<IControllerActions>();
-    private readonly InputAction m_Controller_Forward;
-    private readonly InputAction m_Controller_Backward;
-    private readonly InputAction m_Controller_StrafeLeft;
-    private readonly InputAction m_Controller_StrafeRight;
-    private readonly InputAction m_Controller_LeanLeft;
-    private readonly InputAction m_Controller_LeanRight;
-    private readonly InputAction m_Controller_Jump;
-    /// <summary>
-    /// Provides access to input actions defined in input action map "Controller".
-    /// </summary>
-    public struct ControllerActions
-    {
-        private @PlayerInputActions m_Wrapper;
-
-        /// <summary>
-        /// Construct a new instance of the input action map wrapper class.
-        /// </summary>
-        public ControllerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "Controller/Forward".
-        /// </summary>
-        public InputAction @Forward => m_Wrapper.m_Controller_Forward;
-        /// <summary>
-        /// Provides access to the underlying input action "Controller/Backward".
-        /// </summary>
-        public InputAction @Backward => m_Wrapper.m_Controller_Backward;
-        /// <summary>
-        /// Provides access to the underlying input action "Controller/StrafeLeft".
-        /// </summary>
-        public InputAction @StrafeLeft => m_Wrapper.m_Controller_StrafeLeft;
-        /// <summary>
-        /// Provides access to the underlying input action "Controller/StrafeRight".
-        /// </summary>
-        public InputAction @StrafeRight => m_Wrapper.m_Controller_StrafeRight;
-        /// <summary>
-        /// Provides access to the underlying input action "Controller/LeanLeft".
-        /// </summary>
-        public InputAction @LeanLeft => m_Wrapper.m_Controller_LeanLeft;
-        /// <summary>
-        /// Provides access to the underlying input action "Controller/LeanRight".
-        /// </summary>
-        public InputAction @LeanRight => m_Wrapper.m_Controller_LeanRight;
-        /// <summary>
-        /// Provides access to the underlying input action "Controller/Jump".
-        /// </summary>
-        public InputAction @Jump => m_Wrapper.m_Controller_Jump;
-        /// <summary>
-        /// Provides access to the underlying input action map instance.
-        /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Controller; }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
-        public void Enable() { Get().Enable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
-        public void Disable() { Get().Disable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
-        public bool enabled => Get().enabled;
-        /// <summary>
-        /// Implicitly converts an <see ref="ControllerActions" /> to an <see ref="InputActionMap" /> instance.
-        /// </summary>
-        public static implicit operator InputActionMap(ControllerActions set) { return set.Get(); }
-        /// <summary>
-        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <param name="instance">Callback instance.</param>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
-        /// </remarks>
-        /// <seealso cref="ControllerActions" />
-        public void AddCallbacks(IControllerActions instance)
-        {
-            if (instance == null || m_Wrapper.m_ControllerActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_ControllerActionsCallbackInterfaces.Add(instance);
-            @Forward.started += instance.OnForward;
-            @Forward.performed += instance.OnForward;
-            @Forward.canceled += instance.OnForward;
-            @Backward.started += instance.OnBackward;
-            @Backward.performed += instance.OnBackward;
-            @Backward.canceled += instance.OnBackward;
-            @StrafeLeft.started += instance.OnStrafeLeft;
-            @StrafeLeft.performed += instance.OnStrafeLeft;
-            @StrafeLeft.canceled += instance.OnStrafeLeft;
-            @StrafeRight.started += instance.OnStrafeRight;
-            @StrafeRight.performed += instance.OnStrafeRight;
-            @StrafeRight.canceled += instance.OnStrafeRight;
-            @LeanLeft.started += instance.OnLeanLeft;
-            @LeanLeft.performed += instance.OnLeanLeft;
-            @LeanLeft.canceled += instance.OnLeanLeft;
-            @LeanRight.started += instance.OnLeanRight;
-            @LeanRight.performed += instance.OnLeanRight;
-            @LeanRight.canceled += instance.OnLeanRight;
-            @Jump.started += instance.OnJump;
-            @Jump.performed += instance.OnJump;
-            @Jump.canceled += instance.OnJump;
-        }
-
-        /// <summary>
-        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <remarks>
-        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
-        /// </remarks>
-        /// <seealso cref="ControllerActions" />
-        private void UnregisterCallbacks(IControllerActions instance)
-        {
-            @Forward.started -= instance.OnForward;
-            @Forward.performed -= instance.OnForward;
-            @Forward.canceled -= instance.OnForward;
-            @Backward.started -= instance.OnBackward;
-            @Backward.performed -= instance.OnBackward;
-            @Backward.canceled -= instance.OnBackward;
-            @StrafeLeft.started -= instance.OnStrafeLeft;
-            @StrafeLeft.performed -= instance.OnStrafeLeft;
-            @StrafeLeft.canceled -= instance.OnStrafeLeft;
-            @StrafeRight.started -= instance.OnStrafeRight;
-            @StrafeRight.performed -= instance.OnStrafeRight;
-            @StrafeRight.canceled -= instance.OnStrafeRight;
-            @LeanLeft.started -= instance.OnLeanLeft;
-            @LeanLeft.performed -= instance.OnLeanLeft;
-            @LeanLeft.canceled -= instance.OnLeanLeft;
-            @LeanRight.started -= instance.OnLeanRight;
-            @LeanRight.performed -= instance.OnLeanRight;
-            @LeanRight.canceled -= instance.OnLeanRight;
-            @Jump.started -= instance.OnJump;
-            @Jump.performed -= instance.OnJump;
-            @Jump.canceled -= instance.OnJump;
-        }
-
-        /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="ControllerActions.UnregisterCallbacks(IControllerActions)" />.
-        /// </summary>
-        /// <seealso cref="ControllerActions.UnregisterCallbacks(IControllerActions)" />
-        public void RemoveCallbacks(IControllerActions instance)
-        {
-            if (m_Wrapper.m_ControllerActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        /// <summary>
-        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
-        /// </summary>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
-        /// </remarks>
-        /// <seealso cref="ControllerActions.AddCallbacks(IControllerActions)" />
-        /// <seealso cref="ControllerActions.RemoveCallbacks(IControllerActions)" />
-        /// <seealso cref="ControllerActions.UnregisterCallbacks(IControllerActions)" />
-        public void SetCallbacks(IControllerActions instance)
-        {
-            foreach (var item in m_Wrapper.m_ControllerActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_ControllerActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    /// <summary>
-    /// Provides a new <see cref="ControllerActions" /> instance referencing this action map.
-    /// </summary>
-    public ControllerActions @Controller => new ControllerActions(this);
+    public InputActions @Input => new InputActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -2163,11 +2051,11 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "KBM" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Input" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="KBMActions.AddCallbacks(IKBMActions)" />
-    /// <seealso cref="KBMActions.RemoveCallbacks(IKBMActions)" />
-    public interface IKBMActions
+    /// <seealso cref="InputActions.AddCallbacks(IInputActions)" />
+    /// <seealso cref="InputActions.RemoveCallbacks(IInputActions)" />
+    public interface IInputActions
     {
         /// <summary>
         /// Method invoked when associated input action "Lean Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
@@ -2247,13 +2135,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFire(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Aim" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAim(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "ScrollWheel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -2302,62 +2183,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
-    }
-    /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Controller" which allows adding and removing callbacks.
-    /// </summary>
-    /// <seealso cref="ControllerActions.AddCallbacks(IControllerActions)" />
-    /// <seealso cref="ControllerActions.RemoveCallbacks(IControllerActions)" />
-    public interface IControllerActions
-    {
         /// <summary>
-        /// Method invoked when associated input action "Forward" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "SwitchWeaponLeft" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnForward(InputAction.CallbackContext context);
+        void OnSwitchWeaponLeft(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Backward" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "SwitchWeaponRight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnBackward(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Strafe Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnStrafeLeft(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Strafe Right" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnStrafeRight(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Lean Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnLeanLeft(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Lean Right" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnLeanRight(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnJump(InputAction.CallbackContext context);
+        void OnSwitchWeaponRight(InputAction.CallbackContext context);
     }
 }
