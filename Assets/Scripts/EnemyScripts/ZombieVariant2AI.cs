@@ -3,68 +3,71 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine.Audio;
 
 
 public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
 {
-    // create some serialized variables
-    [SerializeField] int currHealth;                        // the current health 
-    [SerializeField] int _maxHealth;                        // enemy Max Health
-    [SerializeField] float speed;                           // the speed when walking normally
-    [SerializeField] float speedModifier;                   // the modifier if running or slowed
-    [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
-    [SerializeField] Renderer model;                        // Model we will use when we flash a new color on hit or when damaged.
-    [SerializeField] NavMeshAgent agent;                    // NavMeshAgent to traverse our navmesh
-    [SerializeField] Animator animator;                     // this will handle our animations
+    [Header("Zombie Health")]
+    [SerializeField] private int currHealth;                        // the current health 
+    [SerializeField] private int _maxHealth;                        // enemy Max Health
 
-    [SerializeField] bool playerInRange;                    // is our player in range to be chased
-    Vector3 playerDirection;                                // Direction of our player
-    [SerializeField] int field_of_view;                     // the number of degrees our of enemy can see
-    [SerializeField] Transform headPos;                     // for raycast to player. Can he see where we are at
-    float angle_to_player;                                  // the angle to the player 
+    [Header("Zombie Movement")]
+    [SerializeField] private float walkSpeed = 1.5f;                           // the speed when walking normally
+    [SerializeField] private float chaseSpeed = 3.5f;                   // speed while chasing
+    [SerializeField] private float faceTargetSpeed = 5f;                   // how fast he faces the target when not moving
 
-    // for swipeAttack
-    // bool canSwipe;                                          // can we swipe
-    // int swipeCounter;                                       // incremented until we hit the swipeRate
-    // [SerializeField] int swipeRate;                         // our swipeAttack cooldown
-    [SerializeField] int swipeDamage;                       // how much damage do we do
+    [Header("Zombie Components")]
+    [SerializeField] private Renderer model;                        // Model we will use when we flash a new color on hit or when damaged.
+    [SerializeField] private NavMeshAgent agent;                    // NavMeshAgent to traverse our navmesh
+    [SerializeField] private Animator animator;                     // this will handle our animations
+    [SerializeField] private Transform headPos;                     // for raycast to player. Can he see where we are at
 
-    // for bite attack
-    // bool canBite;                                           // can we bite
-    // int biteCounter;                                        // incremented until we hit the biteRate
-    // [SerializeField] int biteRate;                          // our bite cooldown
-    [SerializeField] int biteDamage;                        // how much damage does a bite do?
+    [Header("Zombie Detection")]
+    [SerializeField] private float detectionRange = 10f;            // max distance to chase player when aggro'd
+    [SerializeField] private float aggroRange = 15f;                // how close player needs to be to aggro (if in FOV)
+    [SerializeField] private float attackRange = 2f;                
+    [SerializeField] private float fieldOfViewAngle = 60f;          
 
-    [SerializeField] int roamDistance;                      // max distance he can roam from start position
-    [SerializeField] int roamStopTimer;                     // how long before he roams again
-    Vector3 startingPostion;                                // where his spawn position is
-    float roamTime;                                         // counter to see if he can roam 
-    float stoppingDistanceOriginal;                         // cache off the original stopping distance
+    [Header("Zombie Attack")]
+    [SerializeField] private int swipeDamage = 10;                       // how much damage do we do
+    [SerializeField] private int biteDamage = 20;                        // initial bite damage - applied DoT damage
+    [SerializeField] private float attackCooldown = 2f;
+    [SerializeField] private Collider clawCollider;                 // collider for the claw
+    [SerializeField] private Collider teethCollider;                // collider for the teeth
 
-    int attackCounter;
-    [SerializeField] int attackRate;
-    int attackToDo;
+    [Header("Bit Attack")]
+    [SerializeField] private int bleedDamagePerTick = 3;
+    [SerializeField] private float bleedTickInterval = 2f;          // damage every 2 seconds
+    [SerializeField] private float bleedDuration = 10f;             // dot duration
 
-    [SerializeField] Collider clawCollider;                 // collider for the claw
-    [SerializeField] Collider teethCollider;                // collider for the teeth
 
-    // Sound 
+    [Header("Zombie Roam")]
+    [SerializeField] private float roamDistance = 10f;                      // max distance he can roam from start position
+    [SerializeField] private float roamInterval = 5f;                     // how long before he roams again
+    private Vector3 startingPostion;                                // where his spawn position is
+    private float roamTimer;                                         // counter to see if he can roam 
+
+    private Transform playerTransform;
+    private bool isAttacking = false;
+    private float lastAttackTime;
+    private bool isAggroed = false;
+
+    [Header("Zombie Audio")]
     [SerializeField] AudioSource aud;
     [SerializeField] AudioClip aud_clip_idle;
-    [SerializeField] AudioClip aud_clip_attack;
+    [SerializeField] AudioClip aud_clip_attackLoop;
     [SerializeField] AudioClip aud_clip_swipe;  // 1 second long
     [SerializeField] AudioClip aud_clip_bite;   // 2 seconds long
     [SerializeField] AudioClip aud_clip_death;
 
-    [SerializeField] int audioCounter;
-
-    List<PickupSpawner> pickups = new List<PickupSpawner>();
+    // what does this do???
+    // List<PickupSpawner> pickups = new List<PickupSpawner>();
 
     public int CurrentHealth
     {
         get { return currHealth; }
+        private set { currHealth = value; } // private setter for consistency
     }
 
     public int maxHealth
@@ -75,292 +78,429 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
     // for IDamage
     public void takeDamage(int amount)
     {
-        // we need to apply the damage.
-        // check for death of the variant
-        // and if we have a win condition to kill all enemies, update it
-        if (currHealth >= 0)
+        if(currHealth <= 0) return;
+
+        currHealth -= amount;
+        currHealth = Mathf.Max(currHealth, 0); // ensure health doesnt go below 0
+
+        if (!isAggroed)
         {
-            currHealth -= amount;
-
+            isAggroed=true;
+        }
+        if(GameManager.instance != null)
+        {
             GameManager.instance.UpdateEnemyHealthBar(this);
-
-            // we took damage so we need to head towards the player
-            // set our navmesh agent towards the players position
-            // agent.SetDestination(GameManager.instance.player.transform.position);
-            agent.SetDestination(GameManager.instance.player.transform.position);
-
-            if (currHealth <= 0)
+            if(GameManager.instance.enemyInfoPanel != null)
             {
-                // remove the corpse by destroying the gameObject
-                StartCoroutine(removeCorpse());
-                GameManager.instance.enemyInfoPanel.SetActive(false);
+                GameManager.instance.enemyInfoPanel.SetActive(true);
+            }
+        }
+
+        if(agent != null && agent.enabled && playerTransform != null)
+        {
+            agent.SetDestination(playerTransform.position);
+            agent.isStopped = false;
+            SetAnimatorSpeed(chaseSpeed);
+        }
+
+        if(currHealth <= 0)
+        {
+            Die();
+        }
+
+    }
+
+    private void Die()
+    {
+        if(GetComponent<Collider>() != null) GetComponent<Collider>().enabled = false;
+        if(agent != null) agent.enabled = false;
+        this.enabled = false;
+
+        if(animator != null)
+        {
+            animator.SetTrigger("DeathTrigger");
+        }
+
+        PlayAudioDeath();
+        ObjectiveManager.instance.updateZombieCount(-1);
+        StartCoroutine(RemoveCorpseRoutine());
+
+        if(GameManager.instance != null && GameManager.instance.enemyInfoPanel != null)
+        {
+            GameManager.instance.enemyInfoPanel.SetActive(false);
+        }
+        isAggroed = false;
+    }
+
+    IEnumerator RemoveCorpseRoutine()
+    {
+        yield return new WaitForSeconds(aud_clip_death != null ? aud_clip_death.length + 0.5f : 4f);
+
+        if(ObjectiveManager.instance != null)
+        {
+            ObjectiveManager.instance.updateZombieCount(-1);
+        }
+        Destroy(gameObject);
+    }
+
+    IEnumerator SwipeAttackRoutine()
+    {
+        isAttacking = true;
+        SetAnimatorSpeed(0);
+        agent.isStopped = true;
+
+        if(animator != null)
+        {
+            animator.SetTrigger("SwipeAttackTrigger");
+        }
+        PlayAudioSwipe();
+
+        // wait for animation before next attack / movement
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length * 0.8f);
+
+        // damage is applied via animation event
+
+        // wait for remaining cd
+        yield return new WaitForSeconds(attackCooldown - (animator.GetCurrentAnimatorStateInfo(0).length * 0.8f));
+
+        isAttacking = false;
+        lastAttackTime = Time.time;
+        agent.isStopped = false;
+            
+    }
+
+    IEnumerator BiteAttackRoutine()
+    {
+        isAttacking = true;
+        SetAnimatorSpeed(0);
+        agent.isStopped = true;
+
+        if(animator != null)
+        {
+            animator.SetTrigger("BiteAttackTrigger");
+        }
+        PlayAudioBite();
+
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length * 0.8f);
+
+        // apply dot directly to playerhealth script
+        ApplyBiteBleedEffect();
+
+        // wait for cd
+        yield return new WaitForSeconds(attackCooldown - (animator.GetCurrentAnimatorStateInfo(0).length * 0.8f));
+
+        isAttacking = false;
+        lastAttackTime = Time.time;
+        agent.isStopped = false;
+
+    }
+
+    private void ApplyBiteBleedEffect()
+    {
+        if (GameManager.instance != null && GameManager.instance.player != null)
+        {
+            GameManager.instance.ShowBittenStatus(bleedDuration);
+            PlayerHealth playerHealth = GameManager.instance.player.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.ApplyBleed(bleedDamagePerTick, bleedTickInterval, bleedDuration);
             }
         }
     }
 
-    IEnumerator removeCorpse()
+    public void AssignSwipeDamage()
     {
-        if (animator != null && animator.runtimeAnimatorController != null)
-            agent.isStopped = true;
-            animator.SetTrigger("isDead");
-
-        aud.Stop();
-
-      
-        yield return new WaitForSeconds(4);
-
-        // Creating NullReference Needs to be fixed
-        //foreach (var p in pickups)
-        //    p.Spawn();
-
-        Destroy(gameObject);
-
-        // update the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(-1);
-    }
-
-    IEnumerator swipeAttack()
-    {
-        if (animator != null && animator.runtimeAnimatorController != null)
+        if(GameManager.instance != null && GameManager.instance.player != null)
         {
-            attackCounter = 0;
-
-            animator.SetTrigger("Swipe");
-
-            // wait 1 second
-            yield return new WaitForSeconds(3);
-
-        }
-            
-    }
-
-    IEnumerator biteAttack()
-    {
-        if(animator != null && animator.runtimeAnimatorController != null)
-        {
-            attackCounter = 0;
-
-            animator.SetTrigger("Bite");
-
-            yield return new WaitForSeconds(4);
-
             IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
-            player_dmg.takeDamage(biteDamage);
+            if(player_dmg != null)
+            {
+                player_dmg.takeDamage(swipeDamage);
+            }
         }
+    }
+
+    public void AssignBiteDamage()
+    {
+        if(GameManager.instance != null && GameManager.instance.player != null)
+        {
+            IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
+            if(player_dmg != null)
+            {
+                player_dmg.takeDamage(biteDamage);
+            }
+        }
+    }
+
+    private void Awake()
+    {
         
-    }
+        if(agent == null) agent = GetComponent<NavMeshAgent>();
+        if(animator == null) animator = GetComponent<Animator>();
+        if(aud == null) aud = GetComponent<AudioSource>();
+        if(model == null) model = GetComponentInChildren<MeshRenderer>();
 
-    public void assignSwipeDamage()
-    {
-
-        IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
-        player_dmg.takeDamage(swipeDamage);
-    }
-
-    public void assignBiteDamage()
-    {
-        // assign damage to the player
-        IDamage player_dmg = GameManager.instance.player.GetComponent<IDamage>();
-        player_dmg.takeDamage(biteDamage);
-    }
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        var components = GetComponents<PickupSpawner>();
-        if (components != null)
-            pickups.AddRange(components);
-        var componentsInChildren = GetComponentsInChildren<PickupSpawner>();
-        if (componentsInChildren != null)
-            pickups.AddRange(componentsInChildren);
         currHealth = _maxHealth;
-        // increase the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(1);
+        startingPostion = transform.position;
 
-        
-        attackCounter = 399;
-        audioCounter = 749;
+        if(agent != null)
+        {
+            agent.stoppingDistance = attackRange;
+        }
+
+        if(GameManager.instance != null && GameManager.instance.player != null)
+        {
+            playerTransform = GameManager.instance.player.transform;
+        } else
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if(playerObj != null) playerTransform = playerObj.transform;
+            else
+            {
+                Debug.LogWarning("Player not found with tag 'Player' in Zombie Variant 2");
+            }
+        }
+
+        if(clawCollider != null) clawCollider.enabled = false;
+        if(teethCollider != null) teethCollider.enabled = false;
+
+        if(ObjectiveManager.instance != null)
+        {
+            ObjectiveManager.instance.updateZombieCount(1);
+        }
+
+        roamTimer = roamInterval;
 
     }
 
-    public void playAudioSwipe()
+    void Update()
+    {
+
+        if (currHealth <= 0) return;
+
+        if(agent == null || !agent.enabled || !agent.isOnNavMesh)
+        {
+            SetAnimatorSpeed(0);
+            return;
+        }
+
+        // aggro 
+        if (!isAggroed)
+        {
+            if(playerTransform != null)
+            {
+                float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+                if(distanceToPlayer <= aggroRange && CanWeSeeThePlayer(distanceToPlayer))
+                {
+                    isAggroed = true;
+                }
+                else
+                {
+                    HandleRoamingState();
+                }
+            }
+            else
+            {
+
+                HandleRoamingState();
+
+            }
+        } else
+        {
+            HandleAggroedState();
+        }
+    }
+
+    private void HandleRoamingState()
+    {
+        PlayAudioLooping(aud_clip_idle);
+
+        roamTimer += Time.deltaTime;
+        if(roamTimer >= roamInterval && agent.remainingDistance <= agent.stoppingDistance + 0.1f)
+        {
+            Roam();
+        }
+        SetAnimatorSpeed(agent.velocity.magnitude);
+    }
+
+    private void HandleAggroedState()
+    {
+        float distanceToPlayer = playerTransform != null ? Vector3.Distance(transform.position, playerTransform.position) : Mathf.Infinity;
+        bool canSeePlayerNow = playerTransform != null && CanWeSeeThePlayer(distanceToPlayer);
+
+
+
+
+        if(canSeePlayerNow && distanceToPlayer <= detectionRange)
+        {
+            roamTimer = roamInterval;
+
+            if(distanceToPlayer <= agent.stoppingDistance + 0.1f) // player is in attack range
+            {
+                agent.isStopped = true;
+                SetAnimatorSpeed(0);
+                FaceTarget();
+
+                if(!isAttacking && Time.time >= lastAttackTime + attackCooldown)
+                {
+                    // rng attack choice
+                    int attackChoice = Random.Range(0, 10);
+                    if (attackChoice >= 4)
+                    {
+                        StartCoroutine(SwipeAttackRoutine());
+                    }else
+                    {
+                        StartCoroutine(BiteAttackRoutine());
+                    }
+                }
+            }
+            else // player is detected but not in range
+            {
+                agent.SetDestination(playerTransform.position);
+                agent.isStopped = false;
+                SetAnimatorSpeed(chaseSpeed);
+            }
+            PlayAudioLooping(aud_clip_attackLoop); // when chasing / attacking
+        } else
+        {
+            // deaggro if player out of range
+            if(distanceToPlayer > detectionRange + 1f)
+            {
+                isAggroed = false;
+                HandleRoamingState();
+            }
+            else // still within detection range, but lost LOS
+            {
+                // last known player position
+                if(agent.remainingDistance <= agent.stoppingDistance + 0.1f)
+                {
+                    HandleRoamingState();
+                }
+                else
+                {
+                    // keep moving to last position it was walking to
+                    SetAnimatorSpeed(walkSpeed);
+                }
+            }
+        }
+
+    }
+
+    void Roam()
+    {
+        roamTimer = 0f;
+
+        Vector3 randomDirection = Random.insideUnitSphere * roamDistance;
+        randomDirection += startingPostion;
+
+        NavMeshHit hit;
+        if(NavMesh.SamplePosition(randomDirection, out hit, roamDistance, NavMesh.AllAreas))
+        {
+            agent.SetDestination(hit.position);
+            agent.isStopped = false;
+        }
+        SetAnimatorSpeed(walkSpeed);
+    }
+
+    void FaceTarget()
+    {
+        if (playerTransform == null) return;
+
+        Vector3 direction = (playerTransform.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * faceTargetSpeed);
+
+    }
+
+    bool CanWeSeeThePlayer(float currentDistanceToPlayer)
+    {
+       if (playerTransform == null || headPos == null) return false;
+
+       Vector3 directionToPlayer = playerTransform.position - headPos.position;
+        float angleToPlayer = Vector3.Angle(directionToPlayer, transform.forward);
+
+        // checking range for los check based on aggro 
+        float effectiveRange = isAggroed ? detectionRange : aggroRange;
+
+        if(angleToPlayer <= fieldOfViewAngle * 0.5f && currentDistanceToPlayer <= effectiveRange)
+        {
+            RaycastHit hit;
+            if(Physics.Raycast(headPos.position, directionToPlayer.normalized, out hit, effectiveRange))
+            {
+                if (hit.collider.CompareTag("Player"))
+                {
+                    return true; // player in fov, range and in los
+                }
+            }
+        }
+        return false; // player not seen
+    }
+
+    private void PlayAudioLooping(AudioClip clip)
+    {
+        if (aud == null || clip == null) return;
+
+        if (aud.clip != clip || !aud.isPlaying)
+        {
+            aud.clip = clip;
+            aud.loop = true;
+            aud.Play();
+        }
+    }
+
+    public void PlayAudioSwipe()
     {
         if (aud_clip_swipe != null)
             aud.PlayOneShot(aud_clip_swipe);
     }
 
-    public void playAudioBite()
+    public void PlayAudioBite()
     {
         if (aud_clip_bite != null)
             aud.PlayOneShot(aud_clip_bite);
     }
 
-    public void playAudioIdle()
+    public void PlayAudioIdle()
     {
         if (aud_clip_idle != null)
             aud.PlayOneShot(aud_clip_idle);
     }
 
-    public void playAudioDeath()
+    public void PlayAudioDeath()
     {
         aud.Stop();
         if (aud_clip_death != null)
             aud.PlayOneShot(aud_clip_death);
     }
 
-    public void clawColliderOn()
+    public void ClawColliderOn()
     {
         if (clawCollider)
             clawCollider.enabled = true;
     }
 
-    public void clawColliderOff()
+    public void ClawColliderOff()
     {
         if (clawCollider)
             clawCollider.enabled = false;
     }
 
-    public void teethColliderOn()
+    public void TeethColliderOn()
     {
-        if (teethCollider)
-            teethCollider.enabled = true;
-    }
-
-    public void teethColliderOff()
-    {
-        if (teethCollider)
-            teethCollider.enabled = false;
-    }
-
-    private void Awake()
-    {
-        // set our starting position so that we know how far we can roam. This is the point we will check from
-        startingPostion = transform.position;
-
-        // set our stopping distance to the stopping distance in Unity
-        stoppingDistanceOriginal = agent.stoppingDistance;
-    }
-
-    public int chooseAttack()
-    {
-        return Random.Range(0, 10);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        if (currHealth > 0)
-        {
-
-            if (playerInRange && canWeSeeThePlayer())
-            {
-                // reset the stopping distance
-                agent.stoppingDistance = stoppingDistanceOriginal;
-
-                // handle audio
-                if (audioCounter >= 750)
-                {
-                    audioCounter = 0;
-
-                    aud.Stop();
-
-                    // play sound
-                    if (aud_clip_attack != null)
-                        aud.PlayOneShot(aud_clip_attack);
-
-                }
-                else
-                {
-                    audioCounter++;
-                    // attackCounter++;
-                }
-
-                // check for roam 
-                if (playerInRange && !canWeSeeThePlayer())
-                {
-                    roamCheck();
-                }
-                else if (!playerInRange)
-                {
-                    roamCheck();
-                }
-
-                if (agent.remainingDistance <= agent.stoppingDistance)
-                {
-                    // we need to face the player
-                    faceTarget();
-
-                    
-                    // can we attack
-                    if (attackCounter >= attackRate)
-                    {
-
-                        // choose an attack 
-                        attackToDo = chooseAttack();
-
-                        if (attackToDo >= 4)
-                        {
-                            // animate the swipe
-                            StartCoroutine(swipeAttack());
-
-                        }
-                        // need to check for swipeAttack 
-                        else
-                        {
-                            // animate the bite
-                            StartCoroutine(biteAttack());
-
-                        }
-                    }
-                    else
-                    {
-                        // no attack but increment the counter
-                        attackCounter++;
-                    }
-
-                }
-                else
-                {
-
-                }
-
-
-            }
-
+        if(teethCollider != null)
+        {if (teethCollider)
+                teethCollider.enabled = true;
         }
     }
 
-    void roam()
+    public void TeethColliderOff()
     {
-        // reset the timer
-        roamTime = 0;
-
-        // make sure he is able to get to the location and not stop short
-        agent.stoppingDistance = 0;
-
-        // grab a random spot in our sphere on the navmesh
-        Vector3 randPos = Random.insideUnitSphere * roamDistance;
-        randPos += startingPostion;
-
-        // check if the position is on the navmesh
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randPos, out hit, roamDistance, 1);
-
-        // move
-        agent.SetDestination(hit.position);
-        animator.SetFloat("Speed", 1);
-    }
-
-    void roamCheck()
-    {
-        // can i roam and am I stopped. 
-        if (roamTime >= roamStopTimer && agent.remainingDistance < 0.1f)
-        {
-            roam();
+        if(teethCollider != null)
+        {if (teethCollider)
+                teethCollider.enabled = false;
         }
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -368,7 +508,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
         if (other.CompareTag("Player"))
         {
             // player is in range! 
-            playerInRange = true;
+            playerTransform = other.transform;
         }
     }
 
@@ -378,57 +518,16 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
         if (other.CompareTag("Player"))
         {
             // player left our range
-            playerInRange = false;
+            playerTransform = null;
         }
     }
 
-    void faceTarget()
+
+    void SetAnimatorSpeed(float speed)
     {
-        // turn our enemy towards the player when he is not moving
-        // we need a direction not a position to rotate, example a position - a position
-
-        Quaternion rotate_val = (Quaternion.LookRotation(new Vector3(playerDirection.x, 0, playerDirection.z)));
-        transform.rotation = Quaternion.Lerp(transform.rotation, rotate_val, Time.deltaTime * faceTargetSpeed);
-
-    }
-
-    bool canWeSeeThePlayer()
-    {
-        // take the players current position from the game manager and subtract our position
-        playerDirection = GameManager.instance.player.transform.position - headPos.position;
-
-        // get our angle to the player
-        angle_to_player = Vector3.Angle(playerDirection, transform.forward);
-
-        // make our Raycast to the player. If it hits the player, we have line of sight. 
-        RaycastHit hit_player;
-
-        if (Physics.Raycast(headPos.position, playerDirection, out hit_player))
+        if(animator != null)
         {
-            // check if its the player we hit
-            if (angle_to_player <= field_of_view && hit_player.collider.CompareTag("Player"))
-            {
-                // we hit the player with the raycast and he is in our field of view
-                // agent.SetDestination(GameManager.instance.player.transform.position);
-
-                agent.SetDestination(GameManager.instance.player.transform.position);
-                animator.SetFloat("Speed", 1);
-
-
-                // face the target
-                if (agent.remainingDistance <= agent.stoppingDistance)
-                {
-                    faceTarget();
-                    animator.SetFloat("Speed", 0);
-                }
-
-                // we need to return true since we found the player
-                return true;
-            }
-
-
+            animator.SetFloat("Speed", speed);
         }
-
-        return false;
     }
 }

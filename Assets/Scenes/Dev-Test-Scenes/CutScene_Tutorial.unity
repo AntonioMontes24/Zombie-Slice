@@ -856,7 +856,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Roamer (4)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3603622343448420338, guid: 81138e37bcf7b434c8d72ea1273da675, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1210,7 +1211,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Roamer (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3603622343448420338, guid: 81138e37bcf7b434c8d72ea1273da675, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2910,7 +2912,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Roamer (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3603622343448420338, guid: 81138e37bcf7b434c8d72ea1273da675, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -3564,7 +3567,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Roamer
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3603622343448420338, guid: 81138e37bcf7b434c8d72ea1273da675, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -3931,7 +3935,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Roamer (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3603622343448420338, guid: 81138e37bcf7b434c8d72ea1273da675, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -16937,6 +16942,9 @@ MonoBehaviour:
   enemyRoom: {fileID: 0}
   doorHinge: {fileID: 6277625979776440598}
   openAngleOffsetY: 90
+  useSlidingDoor: 0
+  openPositionOffSet: {x: 0, y: 0, z: -3}
+  doorCollider: {fileID: 0}
 --- !u!65 &6339937127563840890
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17313,6 +17321,9 @@ MonoBehaviour:
   enemyRoom: {fileID: 0}
   doorHinge: {fileID: 6277625980137998776}
   openAngleOffsetY: -90
+  useSlidingDoor: 0
+  openPositionOffSet: {x: 0, y: 0, z: -3}
+  doorCollider: {fileID: 0}
 --- !u!65 &6339937130706937512
 BoxCollider:
   m_ObjectHideFlags: 0

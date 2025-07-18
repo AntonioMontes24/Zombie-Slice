@@ -56,28 +56,21 @@ ModelImporter:
       curves: []
       events:
       - time: 0.14583333
-        functionName: teethColliderOn
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.8961354
-        functionName: teethColliderOff
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.15824468
-        functionName: playAudioBite
+        functionName: PlayAudioBite
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.35277522
-        functionName: assignBiteDamage
+        functionName: ApplyBiteBleedEffect
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.23819444
+        functionName: AssignBiteDamage
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
