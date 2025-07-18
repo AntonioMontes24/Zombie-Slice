@@ -27,6 +27,15 @@ public class ButtonFunctions : MonoBehaviour
         //}
     }
 
+    public void Respawn()
+    {
+        if (GameManager.instance != null && GameManager.instance.player != null)
+        {
+            GameManager.instance.player.transform.position = GameManager.instance.playerSpawnPoint;
+            GameManager.instance.stateUnpause();
+        }
+    }
+
    private void OnSceneReloaded(Scene scene, LoadSceneMode mode)  //makes sure you reload the scene with the barriers getting reset
     {
 
@@ -107,69 +116,21 @@ public class ButtonFunctions : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text interactPrompt;
 
-   // private float holdTimer = 0f;
+  
     private bool isPlayerNearDoor = false;
 
     private void Start()
     {
-        //if (interactPrompt != null)
-        //{
-
-        //    interactPrompt.gameObject.SetActive(false);
-        //}
+    
 
     }
 
 
     private void Update()
     {
-        //if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() == 0)
-        //{
-        //    InteractText.gameObject.SetActive(true);
-
-        //    if (Input.GetKey(interactKey))
-        //    {
-        //        holdTimer += Time.deltaTime;
-
-        //        if (holdTimer >= holdDuration)
-        //        {
-        //            LoadTargetScene();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        holdTimer = 0f;
-        //    }
-        //}
-
-        //else
-        //{
-        //    InteractText.gameObject.SetActive(false);
-        //    holdTimer = 0f;
-        //}
+        
 
     }
 
-    //private void LoadTargetScene()
-    //{
-    //    Debug.Log("Loading scene: " + sceneBuildIndex);
-    //    SceneManager.LoadScene(sceneBuildIndex);
-    //}
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.CompareTag("Player"))
-    //    {
-    //        isPlayerNearDoor = true;
-    //    }
-    //}
-
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.CompareTag("Player"))
-    //    {
-    //        isPlayerNearDoor = false;
-    //        //holdTimer = 0f;
-    //    }
-    //}
+   
 }

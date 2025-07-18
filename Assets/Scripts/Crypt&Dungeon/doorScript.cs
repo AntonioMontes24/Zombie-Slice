@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class doorScript : MonoBehaviour
@@ -10,6 +11,11 @@ public class doorScript : MonoBehaviour
     [SerializeField] EnemyRoom enemyRoom;
     [SerializeField] public GameObject doorHinge;
     [SerializeField] float openAngleOffsetY = -90f;
+    [SerializeField] bool useSlidingDoor = false; //sliding door 
+    [SerializeField] Vector3 openPositionOffSet = new Vector3(0, 0, -3f); //door sliding
+
+    private Vector3 closedPosition;
+    private Vector3 targetPosition;
 
     bool isOpen = false; //toggle if door is open
     bool isLockedByEnemies;
@@ -20,15 +26,29 @@ public class doorScript : MonoBehaviour
     private Quaternion targetRotation;
     private PlayerInventory playerInventory;
 
+
+    //trying to make door not hit player upon open
+
+    [SerializeField] private Collider doorCollider;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
+        closedPosition = doorHinge.transform.localPosition; //starting POS
+        targetPosition = closedPosition;
+
         closeRotation = doorHinge.transform.localRotation;
         openRotation = closeRotation * Quaternion.Euler(0, openAngleOffsetY, 0);
         targetRotation = closeRotation;
         if (doorType == DoorType.LockedUntilClear)
         {
             isLockedByEnemies = true;
+        }
+
+        if (doorCollider == null)
+        {
+            doorCollider = doorHinge.GetComponent<Collider>();
         }
     }
 
@@ -41,10 +61,14 @@ public class doorScript : MonoBehaviour
             {
                 ToggleDoor();
             }
-
-
         }
-        if (Quaternion.Angle(doorHinge.transform.localRotation, targetRotation) > 0.01f)
+
+        if (useSlidingDoor)
+        {
+            doorHinge.transform.localPosition = Vector3.Lerp(doorHinge.transform.localPosition, targetPosition, Time.deltaTime * openSpeed);
+        }
+
+        else if (Quaternion.Angle(doorHinge.transform.localRotation, targetRotation) > 0.01f)
         {
             doorHinge.transform.localRotation = Quaternion.Slerp(doorHinge.transform.localRotation, targetRotation, Time.deltaTime * openSpeed);
         }
@@ -81,7 +105,18 @@ public class doorScript : MonoBehaviour
     private void ToggleDoor()
     {
         isOpen = !isOpen;
-        if (isOpen)
+
+        if (doorCollider != null)
+            doorCollider.enabled = false; // Disable collider before rotation
+
+        if (useSlidingDoor)
+        {
+            targetPosition = isOpen ? closedPosition + openPositionOffSet : closedPosition;
+
+        }
+
+
+        else if (isOpen)
         {
             targetRotation = closeRotation * Quaternion.Euler(0, 90f, 0);
         }
@@ -89,6 +124,15 @@ public class doorScript : MonoBehaviour
         {
             targetRotation = closeRotation;
         }
+
+        StartCoroutine(ReenableColliderAfterDelay(.5f)); // Adjustable delay
+    }
+
+    private IEnumerator ReenableColliderAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (doorCollider != null)
+            doorCollider.enabled = true;
     }
 
     public void CloseDoor()
@@ -97,8 +141,13 @@ public class doorScript : MonoBehaviour
         {
             return;
         }
+
         isOpen = false;
-        targetRotation = closeRotation;
+
+        if (useSlidingDoor)
+            targetPosition = closedPosition;
+        else
+            targetRotation = closeRotation;
     }
 
     void OnTriggerEnter(Collider other)
