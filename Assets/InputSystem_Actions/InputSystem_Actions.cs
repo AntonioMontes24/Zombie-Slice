@@ -608,42 +608,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ""id"": ""a0d602c5-f283-435c-b1d0-86b15d11b3ad"",
             ""actions"": [
                 {
-                    ""name"": ""Forward"",
-                    ""type"": ""Button"",
-                    ""id"": ""0cd8b1b6-aab5-4d3f-8d26-d1c47873a07b"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Backward"",
-                    ""type"": ""Button"",
-                    ""id"": ""d328aeda-bbc6-4797-a7d0-148f4ce98028"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Strafe Left"",
-                    ""type"": ""Button"",
-                    ""id"": ""48e0d754-b368-412f-8e90-30ada7cd061c"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Strafe Right"",
-                    ""type"": ""Button"",
-                    ""id"": ""769973e6-4a5a-4e15-846f-1464e148f9d3"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Lean Left"",
                     ""type"": ""Button"",
                     ""id"": ""55337530-fa8c-4d3b-b060-a81295b35131"",
@@ -705,53 +669,27 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""93f3664f-2c60-4397-8d43-dfbcb6063910"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""7680a1a9-c9f4-45c6-872e-18f5bd2e322f"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""09d21215-7fe0-45a7-a389-ed33f601cb89"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Forward"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ad6df21f-fb72-4941-8800-90390dce45c7"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Backward"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f5e86de6-481f-4dd2-8892-168059cd7d22"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Strafe Left"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b957f3ff-e08d-431a-9251-2e0925811172"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Strafe Right"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""6b208b58-0721-4052-bf4f-f58c21e563df"",
@@ -828,6 +766,72 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""FireMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3247c8d8-5609-4014-ab57-58f0b08cbb42"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""fbdddd44-12b7-49d7-897e-edada866da1c"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""6f1c29ac-6181-4ae4-83b3-1c5cdde3fc17"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""453d1cc3-54b8-4429-84b5-2c47f93f1a5a"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""a7700e63-38e1-4aaa-a8c3-09f55dc2a431"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""df99e895-8e41-4834-a15f-1e24e0083565"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -1057,10 +1061,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         // KBM
         m_KBM = asset.FindActionMap("KBM", throwIfNotFound: true);
-        m_KBM_Forward = m_KBM.FindAction("Forward", throwIfNotFound: true);
-        m_KBM_Backward = m_KBM.FindAction("Backward", throwIfNotFound: true);
-        m_KBM_StrafeLeft = m_KBM.FindAction("Strafe Left", throwIfNotFound: true);
-        m_KBM_StrafeRight = m_KBM.FindAction("Strafe Right", throwIfNotFound: true);
         m_KBM_LeanLeft = m_KBM.FindAction("Lean Left", throwIfNotFound: true);
         m_KBM_LeanRight = m_KBM.FindAction("Lean Right", throwIfNotFound: true);
         m_KBM_Sprint = m_KBM.FindAction("Sprint", throwIfNotFound: true);
@@ -1068,6 +1068,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_KBM_Look = m_KBM.FindAction("Look", throwIfNotFound: true);
         m_KBM_ADS = m_KBM.FindAction("ADS", throwIfNotFound: true);
         m_KBM_FireMode = m_KBM.FindAction("FireMode", throwIfNotFound: true);
+        m_KBM_Crouch = m_KBM.FindAction("Crouch", throwIfNotFound: true);
+        m_KBM_Move = m_KBM.FindAction("Move", throwIfNotFound: true);
         // Controller
         m_Controller = asset.FindActionMap("Controller", throwIfNotFound: true);
         m_Controller_Forward = m_Controller.FindAction("Forward", throwIfNotFound: true);
@@ -1354,10 +1356,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     // KBM
     private readonly InputActionMap m_KBM;
     private List<IKBMActions> m_KBMActionsCallbackInterfaces = new List<IKBMActions>();
-    private readonly InputAction m_KBM_Forward;
-    private readonly InputAction m_KBM_Backward;
-    private readonly InputAction m_KBM_StrafeLeft;
-    private readonly InputAction m_KBM_StrafeRight;
     private readonly InputAction m_KBM_LeanLeft;
     private readonly InputAction m_KBM_LeanRight;
     private readonly InputAction m_KBM_Sprint;
@@ -1365,6 +1363,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_KBM_Look;
     private readonly InputAction m_KBM_ADS;
     private readonly InputAction m_KBM_FireMode;
+    private readonly InputAction m_KBM_Crouch;
+    private readonly InputAction m_KBM_Move;
     /// <summary>
     /// Provides access to input actions defined in input action map "KBM".
     /// </summary>
@@ -1376,22 +1376,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
         public KBMActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "KBM/Forward".
-        /// </summary>
-        public InputAction @Forward => m_Wrapper.m_KBM_Forward;
-        /// <summary>
-        /// Provides access to the underlying input action "KBM/Backward".
-        /// </summary>
-        public InputAction @Backward => m_Wrapper.m_KBM_Backward;
-        /// <summary>
-        /// Provides access to the underlying input action "KBM/StrafeLeft".
-        /// </summary>
-        public InputAction @StrafeLeft => m_Wrapper.m_KBM_StrafeLeft;
-        /// <summary>
-        /// Provides access to the underlying input action "KBM/StrafeRight".
-        /// </summary>
-        public InputAction @StrafeRight => m_Wrapper.m_KBM_StrafeRight;
         /// <summary>
         /// Provides access to the underlying input action "KBM/LeanLeft".
         /// </summary>
@@ -1421,6 +1405,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @FireMode => m_Wrapper.m_KBM_FireMode;
         /// <summary>
+        /// Provides access to the underlying input action "KBM/Crouch".
+        /// </summary>
+        public InputAction @Crouch => m_Wrapper.m_KBM_Crouch;
+        /// <summary>
+        /// Provides access to the underlying input action "KBM/Move".
+        /// </summary>
+        public InputAction @Move => m_Wrapper.m_KBM_Move;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_KBM; }
@@ -1446,18 +1438,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_KBMActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_KBMActionsCallbackInterfaces.Add(instance);
-            @Forward.started += instance.OnForward;
-            @Forward.performed += instance.OnForward;
-            @Forward.canceled += instance.OnForward;
-            @Backward.started += instance.OnBackward;
-            @Backward.performed += instance.OnBackward;
-            @Backward.canceled += instance.OnBackward;
-            @StrafeLeft.started += instance.OnStrafeLeft;
-            @StrafeLeft.performed += instance.OnStrafeLeft;
-            @StrafeLeft.canceled += instance.OnStrafeLeft;
-            @StrafeRight.started += instance.OnStrafeRight;
-            @StrafeRight.performed += instance.OnStrafeRight;
-            @StrafeRight.canceled += instance.OnStrafeRight;
             @LeanLeft.started += instance.OnLeanLeft;
             @LeanLeft.performed += instance.OnLeanLeft;
             @LeanLeft.canceled += instance.OnLeanLeft;
@@ -1479,6 +1459,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @FireMode.started += instance.OnFireMode;
             @FireMode.performed += instance.OnFireMode;
             @FireMode.canceled += instance.OnFireMode;
+            @Crouch.started += instance.OnCrouch;
+            @Crouch.performed += instance.OnCrouch;
+            @Crouch.canceled += instance.OnCrouch;
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
         }
 
         /// <summary>
@@ -1490,18 +1476,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="KBMActions" />
         private void UnregisterCallbacks(IKBMActions instance)
         {
-            @Forward.started -= instance.OnForward;
-            @Forward.performed -= instance.OnForward;
-            @Forward.canceled -= instance.OnForward;
-            @Backward.started -= instance.OnBackward;
-            @Backward.performed -= instance.OnBackward;
-            @Backward.canceled -= instance.OnBackward;
-            @StrafeLeft.started -= instance.OnStrafeLeft;
-            @StrafeLeft.performed -= instance.OnStrafeLeft;
-            @StrafeLeft.canceled -= instance.OnStrafeLeft;
-            @StrafeRight.started -= instance.OnStrafeRight;
-            @StrafeRight.performed -= instance.OnStrafeRight;
-            @StrafeRight.canceled -= instance.OnStrafeRight;
             @LeanLeft.started -= instance.OnLeanLeft;
             @LeanLeft.performed -= instance.OnLeanLeft;
             @LeanLeft.canceled -= instance.OnLeanLeft;
@@ -1523,6 +1497,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @FireMode.started -= instance.OnFireMode;
             @FireMode.performed -= instance.OnFireMode;
             @FireMode.canceled -= instance.OnFireMode;
+            @Crouch.started -= instance.OnCrouch;
+            @Crouch.performed -= instance.OnCrouch;
+            @Crouch.canceled -= instance.OnCrouch;
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
         }
 
         /// <summary>
@@ -1869,34 +1849,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     public interface IKBMActions
     {
         /// <summary>
-        /// Method invoked when associated input action "Forward" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnForward(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Backward" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnBackward(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Strafe Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnStrafeLeft(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Strafe Right" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnStrafeRight(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "Lean Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1945,6 +1897,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFireMode(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Crouch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCrouch(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMove(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Controller" which allows adding and removing callbacks.

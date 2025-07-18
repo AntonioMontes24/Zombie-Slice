@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -51,8 +52,16 @@ public class PlayerMovement : MonoBehaviour
     bool isPlayingStep;
     bool wasGrounded;
 
+    private PlayerInputActions inputActions;
+    private Vector2 inputMove;
+    private bool jumpPressed;
+    private bool sprintHeld;
+
     void Start()
     {
+        inputActions = new PlayerInputActions();
+        inputActions.KBM.Enable();
+
         originalWalkSpeed = walkSpeed;
     }
 
@@ -60,8 +69,9 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleJump();
 
-        moveDir = (Input.GetAxis("Horizontal") * transform.right) +
-                  (Input.GetAxis("Vertical") * transform.forward);
+        inputMove = inputActions.KBM.Move.ReadValue<Vector2>();
+        moveDir = (inputMove.x * transform.right) +
+                  (inputMove.y * transform.forward);
 
         float currentSpeed = isSprinting ? walkSpeed * sprintMultiplier : walkSpeed;
         controller.Move(moveDir * currentSpeed * Time.deltaTime);
@@ -120,7 +130,8 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        bool sprintInput = Input.GetButton("Sprint") && moveDir.magnitude > 0.1f;
+        sprintHeld = inputActions.KBM.Sprint.ReadValue<float>() > 0.1f;
+        bool sprintInput = sprintHeld && moveDir.magnitude > 0.1f;
 
         if (sprintInput && canSprint)
         {
@@ -149,7 +160,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleJump()//Jump
     {
-        if (Input.GetButtonDown("Jump") && currentJumpCount < jumpMax)
+        jumpPressed = inputActions.KBM.Jump.triggered;
+
+        if (jumpPressed && currentJumpCount < jumpMax)
         {
             playerVel.y = jumpForce;
             isJumped = true;
@@ -182,7 +195,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleCrouch()//Toggle crouch on key press
     {
-        if (Input.GetKeyDown(crouchKey))
+        if (inputActions.KBM.Crouch.triggered)
         {
             isCrouching = !isCrouching;
 
