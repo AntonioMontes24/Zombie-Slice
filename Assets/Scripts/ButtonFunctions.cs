@@ -110,7 +110,7 @@ public class ButtonFunctions : MonoBehaviour
     [Header("Door Interaction")]
     [SerializeField] private float holdDuration = 1f;
     [SerializeField] private int sceneBuildIndex = 2;
-    [SerializeField] private KeyCode interactKey = KeyCode.X;
+    //[SerializeField] private KeyCode interactKey = KeyCode.X;
     [SerializeField] private TMP_Text InteractText;
 
     [Header("UI")]
