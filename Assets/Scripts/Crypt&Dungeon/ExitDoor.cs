@@ -9,6 +9,8 @@ public class ExitDoor : MonoBehaviour
     [SerializeField] private string specificSceneName = ""; // Only used if ExitType is LoadSpecificScene
     [SerializeField] string spawnPointName = "";//Choose a specific spawn point location 
 
+    private PlayerHealth playerHealth;
+    private PlayerWeaponManager weaponManager;
     private bool playerInRange = false;
 
     void Update()
@@ -33,8 +35,49 @@ public class ExitDoor : MonoBehaviour
         }
     }
 
+    void Awake()
+    {
+        {
+            weaponManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWeaponManager>();
+        }
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            playerHealth = player.GetComponent<PlayerHealth>();
+            weaponManager = player.GetComponent<PlayerWeaponManager>();
+        }
+        else
+        {
+            Debug.LogError("Player not found!");
+        }
+    }
+
     void LoadNext()
     {
+        //saving player state
+        // Save health
+        if (playerHealth != null)
+        {
+            GameManager.instance.savedHealth = playerHealth.CurrentHealth;
+        }
+        else
+        {
+            Debug.LogWarning("PlayerHealth not assigned.");
+        }
+
+        //save weapon data
+
+
+        if (weaponManager != null)
+        {
+            GameManager.instance.savedWeaponData = weaponManager.GetWeaponSaveData();
+        }
+        else
+        {
+            Debug.LogWarning("WeaponManager not assigned.");
+        }
+
+
         int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
         if (nextIndex < SceneManager.sceneCountInBuildSettings)
             SceneManager.LoadScene(nextIndex);
@@ -52,10 +95,12 @@ public class ExitDoor : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag("Player"))
     {
-        if (other.CompareTag("Player"))
-            playerInRange = true;
+        playerInRange = true;
     }
+}
 
     void OnTriggerExit(Collider other)
     {
