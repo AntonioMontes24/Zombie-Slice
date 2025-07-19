@@ -60193,7 +60193,7 @@ MonoBehaviour:
     requireProximity: 1
     requiredKeys: 
     keyItemToHighlight: {fileID: 0}
-  tutorialText: {fileID: 5181648996927724336}
+  tutorialText: {fileID: 0}
 --- !u!4 &2010331570
 Transform:
   m_ObjectHideFlags: 0
@@ -69625,17 +69625,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &5181648996927724336 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7685365705350602299, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
-  m_PrefabInstance: {fileID: 6277647530506669887}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &5282859845205729500
 Transform:
   m_ObjectHideFlags: 0
@@ -69740,6 +69729,34 @@ PrefabInstance:
       propertyPath: objectives.Array.data[0].completeEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2030368962}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[0].waveContainter
+      value: 
+      objectReference: {fileID: 1909665442}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[1].waveContainter
+      value: 
+      objectReference: {fileID: 872095123}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[2].waveContainter
+      value: 
+      objectReference: {fileID: 830934354}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[0].completeEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2030368962}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[1].completeEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[2].completeEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[0].completeEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnObjectiveComplete
+      objectReference: {fileID: 0}
     - target: {fileID: 1215621598939437438, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: m_Name
       value: GameManager
