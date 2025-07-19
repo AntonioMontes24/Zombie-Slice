@@ -122,7 +122,6 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
         }
 
         PlayAudioDeath();
-        ObjectiveManager.instance.updateZombieCount(-1);
         StartCoroutine(RemoveCorpseRoutine());
 
         if(GameManager.instance != null && GameManager.instance.enemyInfoPanel != null)
@@ -263,11 +262,6 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
 
         if(clawCollider != null) clawCollider.enabled = false;
         if(teethCollider != null) teethCollider.enabled = false;
-
-        if(ObjectiveManager.instance != null)
-        {
-            ObjectiveManager.instance.updateZombieCount(1);
-        }
 
         roamTimer = roamInterval;
 
