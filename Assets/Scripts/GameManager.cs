@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
+using UnityEngine.UIElements.Experimental;
 
 public class GameManager : MonoBehaviour
 {
@@ -82,6 +84,11 @@ public class GameManager : MonoBehaviour
     public VolumeSettings volumeSettings;//For Controller nav
     private iEnemyHealth currentEnemy;
     private Coroutine bittenEffectCoroutine;
+
+    //saving player health and equipped weapons
+    public List<WeaponSaveData> savedWeaponData = new List<WeaponSaveData>();
+    public float savedHealth;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
