@@ -197,7 +197,8 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     void Start()
     {
         currHealth = _maxHealth;
-
+        // increase the number of zombies left in stage
+        ObjectiveManager.instance.updateZombieCount(1);
 
         playerTransform = GameManager.instance.player.transform; // cache player transform
 
@@ -220,7 +221,6 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         stoppingDistanceOriginal = agent.stoppingDistance;
 
         agent.stoppingDistance = meleeAttackRange * 0.8f;
-
     }
 
     // Update is called once per frame
