@@ -135,7 +135,7 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 
     public void createBlightStorm()
     {
-        // make for blightballs
+        // make four blightballs
         Instantiate(blightBall, BS1Position.position, transform.rotation);
         Instantiate(blightBall, BS2Position.position, transform.rotation);
         Instantiate(blightBall, BS3Position.position, transform.rotation);

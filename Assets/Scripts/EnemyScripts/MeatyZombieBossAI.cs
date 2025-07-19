@@ -28,7 +28,18 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     float angle_to_player;                                  // the angle to the player 
 
     // blightball fields
-    [SerializeField] Transform [] shootPositions;               // where does our blightball spawn from
+    [SerializeField] Transform shoot_pos1;
+    [SerializeField] Transform shoot_pos2;
+    [SerializeField] Transform shoot_pos3;
+    [SerializeField] Transform shoot_pos4;
+
+    [SerializeField] Transform shoot_pos5;
+    [SerializeField] Transform shoot_pos6;
+    [SerializeField] Transform shoot_pos7;
+    [SerializeField] Transform shoot_pos8;
+
+    
+
     [SerializeField] GameObject blightBall;                 // our projectile
     [SerializeField] int blightBallDuration;                // how long a blightball lasts
 
@@ -38,6 +49,8 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] int search_distance;
     bool executing_phase;
     int current_phase;
+
+    bool has_moved_to_spawn;
 
     [SerializeField] Transform[] blight_pool_spawns;
     
@@ -105,8 +118,37 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
     public void fireBlightBalls()
     {
-        // this will fire the 12 blight balls after the leap
+        float angle = 0;
+        Quaternion blightball_rotation = Quaternion.Euler(0f, angle, 0);
+        Instantiate(blightBall, shoot_pos1.position, blightball_rotation);
 
+        angle += 45;
+        blightball_rotation = Quaternion.Euler(0f, angle, 0);
+        Instantiate(blightBall, shoot_pos2.position, blightball_rotation);
+
+        angle += 45;
+        blightball_rotation = Quaternion.Euler(0f, angle, 0);
+        Instantiate(blightBall, shoot_pos3.position, blightball_rotation);
+
+        angle += 45;
+        blightball_rotation = Quaternion.Euler(0f, angle, 0);
+        Instantiate(blightBall, shoot_pos4.position, blightball_rotation);
+
+        angle += 45;
+        blightball_rotation = Quaternion.Euler(0f, angle, 0);
+        Instantiate(blightBall, shoot_pos5.position, blightball_rotation);
+
+        angle += 45;
+        blightball_rotation = Quaternion.Euler(0f, angle, 0);
+        Instantiate(blightBall, shoot_pos6.position, blightball_rotation);
+
+        angle += 45;
+        blightball_rotation = Quaternion.Euler(0f, angle, 0);
+        Instantiate(blightBall, shoot_pos7.position, blightball_rotation);
+
+        angle += 45;
+        blightball_rotation = Quaternion.Euler(0f, angle, 0);
+        Instantiate(blightBall, shoot_pos8.position, blightball_rotation);
     }
 
     public void spawnBlightPool()
@@ -117,6 +159,25 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     public void spawnMultipleBlightPools(Transform[] spawn_points)
     {
         // this will spawn blightpools in phase 2 
+    }
+
+    public void checkForPhase()
+    {
+        // get or current health percentage
+        float HP_Percent = currHealth / maxHealth;
+
+        if(HP_Percent > 70)
+        {
+            current_phase = 1;
+        }
+        else if (HP_Percent < 40)
+        {
+            current_phase = 2;
+        }
+        else 
+        { 
+            current_phase = 3;
+        }
     }
 
     IEnumerator chargeAttack()
@@ -160,6 +221,8 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         animator.SetFloat("Speed", 1);
 
         yield return new WaitForSeconds(4);
+
+        has_moved_to_spawn = true;
     }
 
     IEnumerator roar()
@@ -169,6 +232,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
         animator.SetTrigger("Roar");
 
+        
         yield return new WaitForSeconds(4);
 
         
@@ -176,7 +240,27 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
     IEnumerator removeCorpse()
     {
-        yield return new WaitForSeconds(4);
+        animator.enabled = false;
+
+        // Enable the Animator
+        animator.enabled = true;
+
+        //Rebind the animator and update it
+        animator.Rebind();
+        animator.Update(0f);
+
+        animator.SetTrigger("isDead");
+
+        aud.Stop();
+
+        if (aud_clip_death != null)
+            aud.PlayOneShot(aud_clip_death);
+
+        // wait 2 seconds
+        yield return new WaitForSeconds(5);
+
+
+        Destroy(gameObject);
     }
 
     IEnumerator startOfFight()
@@ -189,8 +273,10 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
         yield return new WaitForSeconds(2);
 
+        has_moved_to_spawn = false;
+
         // set the current phase to 1
-        current_phase = 1;
+        current_phase = 2;
     }
 
     IEnumerator Phase1()
@@ -225,13 +311,17 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
         // set our bool so that we know we are executing a state
         executing_phase = true;
+        if(!has_moved_to_spawn)
+            StartCoroutine(moveToSpawn());
 
-        StartCoroutine(moveToSpawn());
+        animator.SetFloat("Speed", 0);
 
         StartCoroutine(roar());
        
 
         yield return new WaitForSeconds(4);
+
+        executing_phase = false;
     }
 
     IEnumerator Phase3()
@@ -265,6 +355,8 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     {
         if (currHealth > 0)
         {
+            // checkForPhase();
+
             switch(current_phase)
             {
                 case 1:
