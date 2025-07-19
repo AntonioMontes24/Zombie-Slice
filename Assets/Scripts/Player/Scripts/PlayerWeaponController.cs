@@ -750,4 +750,45 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
+    public List<WeaponSaveData> GetWeaponSaveData()
+    {
+        List<WeaponSaveData> saveDataList = new List<WeaponSaveData>();
+
+        foreach (WeaponStats weapon in weaponList)
+        {
+            var data = new WeaponSaveData
+            {
+                weaponId = weapon.weaponNameId,
+                currentAmmo = 0,
+                reserveAmmo = 0
+            };
+
+            if (weapon is FireArmStats firearm)
+            {
+                data.currentAmmo = firearm.ammoCur;
+                data.reserveAmmo = firearm.ammoReserve;
+            }
+
+            saveDataList.Add(data);
+        }
+
+        return saveDataList;
+    }
+
+    public void LoadWeaponData(List<WeaponSaveData> savedData)
+    {
+        for (int i = 0; i < savedData.Count && i < weaponList.Count; i++)
+        {
+            var weapon = weaponList[i];
+            var data = savedData[i];
+
+            if (weapon is FireArmStats firearm)
+            {
+                firearm.ammoCur = data.currentAmmo;
+                firearm.ammoReserve = data.reserveAmmo;
+            }
+        }
+    }
+
 }
+

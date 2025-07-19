@@ -119,6 +119,23 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
     }
 
+    public int CurrentHealth // saving health for player state
+    {
+        get => currentHealth;
+        set
+        {
+            currentHealth = Mathf.Clamp(value, 0, maxHealth);
+            updatePlayerUI();
+        }
+    }
+
+    public void SetHealth(int newHealth)
+    {
+        currentHealth = Mathf.Clamp(newHealth, 0, maxHealth);
+        updatePlayerUI();
+    }
+
+
     // only call this when resetting gamestate
     public void ResetHealth()
     {
@@ -343,6 +360,34 @@ public class PlayerHealth : MonoBehaviour, IDamage
             timer += activeBleedTickInterval;
         }
         RemoveBleed();
+    }
+
+    public void Revive()
+    {
+        hasDied = false;
+
+        // Re-enable player controller
+        PlayerController controller = GetComponent<PlayerController>();
+        if (controller != null)
+            controller.enabled = true;
+
+        // Re-enable weapon firing
+        PlayerWeaponManager weaponManager = GetComponent<PlayerWeaponManager>();
+        if (weaponManager != null)
+            weaponManager.SetCanFire(true);
+
+        // Re-enable camera controls
+        CameraController cameraController = GetComponentInChildren<CameraController>();
+        if (cameraController != null)
+            cameraController.enabled = true;
+
+        // Hide death camera
+        if (deathCamera != null)
+            deathCamera.gameObject.SetActive(false);
+
+        // Reset death animation
+        if (animator != null)
+            animator.Rebind(); // Resets all animation states
     }
 
 }
