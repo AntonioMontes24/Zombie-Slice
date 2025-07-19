@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NarrationController : MonoBehaviour
 {
@@ -14,10 +15,18 @@ public class NarrationController : MonoBehaviour
     [SerializeField] public float fadeDistance = 100f; //Default to 100f can adjust in inspector
     [SerializeField] private bool loadCreditsAfterScroll = false; //Default to false
     [SerializeField] private TextAsset creditsFile;
+    [SerializeField] public string sceneToLoad;
     public enum NarrationMode { Scroll, FadeCredits }
     public NarrationMode mode = NarrationMode.Scroll;
 
     private List<TextMeshProUGUI> lines = new List<TextMeshProUGUI>();
+    private bool hasSkipped;
+    private PlayerInputActions InputActions;
+
+    private void Awake()
+    {
+        InputActions = new PlayerInputActions();
+    }
 
     void Start()
     {
@@ -37,6 +46,20 @@ public class NarrationController : MonoBehaviour
         }
 
         StartCoroutine(ScrollandFade());
+    }
+    void Update()
+    {
+        if (!hasSkipped && InputActions.UI.Cancel.triggered)
+        {
+            SkipScene();
+        }
+    }
+
+    public void SkipScene()
+    {
+        if (hasSkipped) return;
+        hasSkipped = true;
+        SceneManager.LoadScene(sceneToLoad);
     }
 
     IEnumerator ScrollandFade()
