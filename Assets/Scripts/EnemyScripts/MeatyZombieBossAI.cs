@@ -75,7 +75,19 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     }
     public void takeDamage(int amount)
     {
-        throw new System.NotImplementedException();
+        if (currHealth >= 0)
+        {
+            currHealth -= amount;
+
+            GameManager.instance.UpdateEnemyHealthBar(this);
+
+            if (currHealth <= 0)
+            {
+                // remove the corpse by destroying the gameObject
+                StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
+            }
+        }
     }
 
     public void assignHeavyAttackDamage()
@@ -110,10 +122,18 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     }
 
 
-    public void heavyAttack()
+    IEnumerator heavyAttack()
     {
         // animate the swing 
         // play sound
+
+        if (aud_clip_heavy_attack != null)
+            aud.PlayOneShot(aud_clip_heavy_attack);
+
+        animator.SetTrigger("HeavyAttack");
+
+        yield return new WaitForSeconds(3);
+
     }
 
     public void fireBlightBalls()
@@ -189,13 +209,19 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
         // find the player
         // take the players current position from the game manager and subtract our position
-        playerDirection = GameManager.instance.player.transform.position - headPos.position;
+        // playerDirection = GameManager.instance.player.transform.position - headPos.position;
+
+        // Option 2: Smooth rotation using Quaternion.RotateTowards
+        Vector3 targetDirection = GameManager.instance.player.transform.position - transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 3.0f * Time.deltaTime);
+
 
         agent.SetDestination(GameManager.instance.player.transform.position);
         animator.SetFloat("Speed", 1);
 
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
     }
 
     IEnumerator leapAttack()
@@ -276,7 +302,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         has_moved_to_spawn = false;
 
         // set the current phase to 1
-        current_phase = 2;
+        current_phase = 1;
     }
 
     IEnumerator Phase1()
@@ -299,6 +325,8 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         yield return new WaitForSeconds(4);
 
         executing_phase = false;
+
+        current_phase = 2;
     }
 
     IEnumerator Phase2()
@@ -322,6 +350,8 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         yield return new WaitForSeconds(4);
 
         executing_phase = false;
+
+        current_phase = 3;
     }
 
     IEnumerator Phase3()
@@ -330,8 +360,16 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // Boss will use phase 1 attacks until his sound counter is above its threshold. 
         // when sound threshold is hit .. it is reset and boss will charge at the player and power attack for big damage. 
         // repeat this process until dead.
+        executing_phase = true; 
+
+        StartCoroutine(chargeAttack());
+        yield return new WaitForSeconds(2);
+
+        StartCoroutine(heavyAttack());
 
         yield return new WaitForSeconds(4);
+
+        executing_phase = false;
     }
 
     private void Awake()
