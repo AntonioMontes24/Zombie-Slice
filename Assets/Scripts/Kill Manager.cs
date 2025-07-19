@@ -47,5 +47,16 @@ public class KillManager : MonoBehaviour
         killCount = checkpointKillCount;
         Debug.Log("Kill count restored to checkpoint value: " + killCount);
     }
+    public void ResetKillCount()
+    {
+        killCount = 0;
+        Debug.Log("Kill count reset!");
+    }
+
+    void OnEnable()
+    {
+        // Reset kill count every time scene loads
+        ResetKillCount();
+    }
 
 }

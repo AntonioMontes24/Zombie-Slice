@@ -774,5 +774,21 @@ public class PlayerWeaponManager : MonoBehaviour
 
         return saveDataList;
     }
+
+    public void LoadWeaponData(List<WeaponSaveData> savedData)
+    {
+        for (int i = 0; i < savedData.Count && i < weaponList.Count; i++)
+        {
+            var weapon = weaponList[i];
+            var data = savedData[i];
+
+            if (weapon is FireArmStats firearm)
+            {
+                firearm.ammoCur = data.currentAmmo;
+                firearm.ammoReserve = data.reserveAmmo;
+            }
+        }
+    }
+
 }
 
