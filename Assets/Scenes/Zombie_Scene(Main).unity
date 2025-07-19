@@ -25959,6 +25959,17 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4790000225344279549, guid: 331e6cacaa5064ecb91f918c9aca93fd, type: 3}
+--- !u!114 &919024898 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4356881495498678638, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+  m_PrefabInstance: {fileID: 8907604313854523998}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &921380620 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 331e6cacaa5064ecb91f918c9aca93fd, type: 3}
@@ -57999,7 +58010,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2010331569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58035,7 +58046,7 @@ MonoBehaviour:
     requireProximity: 1
     requiredKeys: 
     keyItemToHighlight: {fileID: 0}
-  tutorialText: {fileID: 0}
+  tutorialText: {fileID: 919024898}
 --- !u!4 &2010331570
 Transform:
   m_ObjectHideFlags: 0
@@ -67470,6 +67481,62 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 49658238348438881, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 49658238348438881, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9206a74a80fcf7f44872df9808e6f59b, type: 3}
+    - target: {fileID: 109071280673824133, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_Type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 109071280673824133, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9206a74a80fcf7f44872df9808e6f59b, type: 3}
+    - target: {fileID: 109071280673824133, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_FillAmount
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1018484358014807107, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2135364799077612420, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[0].waveContainter
+      value: 
+      objectReference: {fileID: 1909665442}
+    - target: {fileID: 2135364799077612420, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[1].waveContainter
+      value: 
+      objectReference: {fileID: 872095123}
+    - target: {fileID: 2135364799077612420, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[2].waveContainter
+      value: 
+      objectReference: {fileID: 830934354}
+    - target: {fileID: 2135364799077612420, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[0].completeEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2030368962}
+    - target: {fileID: 2135364799077612420, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[0].completeEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnObjectiveComplete
+      objectReference: {fileID: 0}
+    - target: {fileID: 2907306449481355311, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 50.89
+      objectReference: {fileID: 0}
+    - target: {fileID: 2907306449481355311, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.005
+      objectReference: {fileID: 0}
+    - target: {fileID: 2907306449481355311, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 68.9
+      objectReference: {fileID: 0}
     - target: {fileID: 3964324416632392354, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: m_text
       value: 
