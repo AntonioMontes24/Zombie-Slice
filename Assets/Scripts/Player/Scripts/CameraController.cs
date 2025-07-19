@@ -3,8 +3,8 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
-    public float mouseSensitivity = 1.0f;
-    public float controllerSensitivity = 200f;
+    public float mouseSensitivity = 3.5f;
+    [SerializeField] float controllerSensitivity = 8f;
     public float lockVertMin = -90f;
     public float lockVertMax = 90f;
     public bool invertY = false;
@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", .5f);
+        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 3.5f);
         MouseSensController.OnSensChanged += UpdateSensitivity;
     }
 
@@ -34,30 +34,16 @@ public class CameraController : MonoBehaviour
     void Update()
     {
         HandleFreeLookInput();
+        // get input
         lookInput = PlayerController.inputActions.Input.Look.ReadValue<Vector2>();
 
         bool isGamepad = Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame;
+        float activeSensitivity = isGamepad ? controllerSensitivity * 2f : mouseSensitivity;
 
-        float mouseX, mouseY;
+        float scaledSensitivity = activeSensitivity * 0.2f;
+        float mouseX = lookInput.x * scaledSensitivity * Time.deltaTime;
+        float mouseY = lookInput.y * scaledSensitivity * Time.deltaTime;
 
-        if (isGamepad)
-        {
-            float sens = PlayerPrefs.GetFloat("ControllerSensitivity", controllerSensitivity);
-            mouseX = lookInput.x * sens * Time.deltaTime;
-            mouseY = lookInput.y * sens * Time.deltaTime;
-        }
-        else
-        {
-            Vector2 rawMouse = Mouse.current.delta.ReadValue();
-            float sens = PlayerPrefs.GetFloat("MouseSensitivity", mouseSensitivity);
-
-            const float mouseScale = 0.01f;
-
-            mouseX = rawMouse.x * sens * mouseScale;
-            mouseY = rawMouse.y * sens * mouseScale;
-
-            Debug.Log($"Raw Mouse Input: {rawMouse}, Scaled: ({mouseX}, {mouseY}), Sens: {sens}");
-        }
         rotX += invertY ? mouseY : -mouseY;
         rotX = Mathf.Clamp(rotX, lockVertMin, lockVertMax);// clamp camera on the x axis
 
