@@ -160,6 +160,10 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         animator.SetFloat("Speed", 1);
 
 
+        // now we leap 
+        animator.SetTrigger("Leap");
+
+
 
         yield return new WaitForSeconds(4);
 
