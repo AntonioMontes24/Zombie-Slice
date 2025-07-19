@@ -362,4 +362,32 @@ public class PlayerHealth : MonoBehaviour, IDamage
         RemoveBleed();
     }
 
+    public void Revive()
+    {
+        hasDied = false;
+
+        // Re-enable player controller
+        PlayerController controller = GetComponent<PlayerController>();
+        if (controller != null)
+            controller.enabled = true;
+
+        // Re-enable weapon firing
+        PlayerWeaponManager weaponManager = GetComponent<PlayerWeaponManager>();
+        if (weaponManager != null)
+            weaponManager.SetCanFire(true);
+
+        // Re-enable camera controls
+        CameraController cameraController = GetComponentInChildren<CameraController>();
+        if (cameraController != null)
+            cameraController.enabled = true;
+
+        // Hide death camera
+        if (deathCamera != null)
+            deathCamera.gameObject.SetActive(false);
+
+        // Reset death animation
+        if (animator != null)
+            animator.Rebind(); // Resets all animation states
+    }
+
 }

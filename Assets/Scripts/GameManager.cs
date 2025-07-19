@@ -79,6 +79,8 @@ public class GameManager : MonoBehaviour
     public GameObject flashHealScreen;
     public GameObject flashAmmoPickUp;
 
+    [HideInInspector] public List<WeaponSaveData> WeaponSaveData = new List<WeaponSaveData>();
+
 
     //input system
     private PlayerInputActions inputActions;
