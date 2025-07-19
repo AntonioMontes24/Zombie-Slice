@@ -33,6 +33,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] int blightBallDuration;                // how long a blightball lasts
 
     Vector3 initial_start_position;
+    Vector3 players_last_location;
 
     [SerializeField] int search_distance;
     bool executing_phase;
@@ -74,7 +75,26 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // assign damage to the player
     }
 
-    
+    IEnumerator walkToSpot()
+    {
+        // choose a spot and move to it
+        // grab a random spot in our sphere on the navmesh
+        Vector3 randPos = Random.insideUnitSphere * search_distance;
+        randPos += initial_start_position;
+
+        // check if the position is on the navmesh
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randPos, out hit, search_distance, 1);
+
+        // move
+        agent.SetDestination(hit.position);
+        animator.SetFloat("Speed", 1);
+
+        aud.PlayOneShot(aud_clip_engaged);
+
+        yield return new WaitForSeconds(3);
+
+    }
 
 
     public void heavyAttack()
@@ -106,7 +126,15 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // run towards the players location
         // when we arrive we do a heavy attack
 
-        yield return new WaitForSeconds(4);
+        // find the player
+        // take the players current position from the game manager and subtract our position
+        playerDirection = GameManager.instance.player.transform.position - headPos.position;
+
+        agent.SetDestination(GameManager.instance.player.transform.position);
+        animator.SetFloat("Speed", 1);
+
+
+        yield return new WaitForSeconds(2);
     }
 
     IEnumerator leapAttack()
@@ -115,8 +143,35 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // boss will leap from the spot and leave a blight pool . 
         // when he lands he will fire off 12 blightballs in the same directions as the numbers on a clock. 
 
+        // now we leap 
+        animator.SetTrigger("Leap");
+
+        aud.PlayOneShot(aud_clip_leap);
 
         yield return new WaitForSeconds(4);
+
+    }
+
+    IEnumerator moveToSpawn()
+    {
+        // move to the spawn location
+        // move
+        agent.SetDestination(initial_start_position);
+        animator.SetFloat("Speed", 1);
+
+        yield return new WaitForSeconds(4);
+    }
+
+    IEnumerator roar()
+    {
+        if(aud_clip_roar != null)
+            aud.PlayOneShot(aud_clip_roar);
+
+        animator.SetTrigger("Roar");
+
+        yield return new WaitForSeconds(4);
+
+        
     }
 
     IEnumerator removeCorpse()
@@ -127,9 +182,12 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     IEnumerator startOfFight()
     {
         // boss will have an animation, maybe say something and move to phase 1 
-        aud.PlayOneShot(fight_start);
+        if(fight_start != null)
+           aud.PlayOneShot(fight_start);
 
-        yield return new WaitForSeconds(4);
+
+
+        yield return new WaitForSeconds(2);
 
         // set the current phase to 1
         current_phase = 1;
@@ -146,24 +204,11 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // set our bool so that we know we are executing a state
         executing_phase = true;
 
-        // choose a spot and move to it
-        // grab a random spot in our sphere on the navmesh
-        Vector3 randPos = Random.insideUnitSphere * search_distance;
-        randPos += initial_start_position;
+        StartCoroutine(walkToSpot());
 
-        // check if the position is on the navmesh
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randPos, out hit, search_distance, 1);
+        yield return new WaitForSeconds(2);
 
-        // move
-        agent.SetDestination(hit.position);
-        animator.SetFloat("Speed", 1);
-
-
-        // now we leap 
-        animator.SetTrigger("Leap");
-
-
+        StartCoroutine(leapAttack());
 
         yield return new WaitForSeconds(4);
 
@@ -177,6 +222,14 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // Roar animation and sound
         // spawn 8 blight pools 
         // repeat until 40% health
+
+        // set our bool so that we know we are executing a state
+        executing_phase = true;
+
+        StartCoroutine(moveToSpawn());
+
+        StartCoroutine(roar());
+       
 
         yield return new WaitForSeconds(4);
     }
