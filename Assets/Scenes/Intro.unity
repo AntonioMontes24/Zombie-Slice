@@ -888,7 +888,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acf13090b9b6902409e3232f712102bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  director: {fileID: 0}
+  director: {fileID: 1943512395}
   sceneToLoad: CutScene_Tutorial
 --- !u!4 &1491300534
 Transform:
@@ -955,9 +955,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   narrationFile: {fileID: 4900000, guid: 8820450dceb302b4fb8bf76a6c8f168b, type: 3}
   textLinePrefab: {fileID: 7202435677821947876}
+  creditsLinePrefab: {fileID: 0}
   contenParent: {fileID: 340055785}
+  creditsParent: {fileID: 0}
   scrollSpeed: 30
   fadeDistance: 100
+  loadCreditsAfterScroll: 0
+  creditsFile: {fileID: 0}
+  sceneToLoad: 
+  mode: 0
+  endOptionsUI: {fileID: 0}
 --- !u!1 &1943512393
 GameObject:
   m_ObjectHideFlags: 0
