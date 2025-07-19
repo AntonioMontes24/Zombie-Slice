@@ -44,10 +44,10 @@ public class zombieSpawnTrap : MonoBehaviour
             if(spawnPosition != Vector3.zero)
             {
                 Instantiate(zombiePrefab, spawnPosition, Quaternion.identity);
-                //if(ObjectiveManager.instance != null)
-                //{
-                //    ObjectiveManager.instance.updateZombieCount(1);
-                //}
+                if (ObjectiveManager.instance != null)
+                {
+                    ObjectiveManager.instance.updateZombieCount(1);
+                }
             }
         }
     }
