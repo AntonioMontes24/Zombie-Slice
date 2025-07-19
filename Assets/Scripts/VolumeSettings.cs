@@ -6,9 +6,9 @@ public class VolumeSettings : MonoBehaviour
 {
 
     [SerializeField] AudioMixer mixer;
-    [SerializeField] public Slider musicSlider;
-    [SerializeField] public Slider sfxSlider;
-    [SerializeField] public Slider menuSlider;
+    [SerializeField] Slider musicSlider;
+    [SerializeField] Slider sfxSlider;
+    [SerializeField] Slider menuSlider;
 
     public const string MIXER_MUSIC = "Music";
     public const string MIXER_SFX = "SFX";
