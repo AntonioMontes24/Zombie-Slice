@@ -38,7 +38,7 @@ public class CameraController : MonoBehaviour
         lookInput = PlayerController.inputActions.Input.Look.ReadValue<Vector2>();
 
         bool isGamepad = Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame;
-        float activeSensitivity = isGamepad ? controllerSensitivity * 4f : mouseSensitivity;
+        float activeSensitivity = isGamepad ? controllerSensitivity * 2f : mouseSensitivity;
 
         float scaledSensitivity = activeSensitivity * 0.2f;
         float mouseX = lookInput.x * scaledSensitivity * Time.deltaTime;
