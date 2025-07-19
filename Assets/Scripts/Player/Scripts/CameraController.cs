@@ -29,6 +29,7 @@ public class CameraController : MonoBehaviour
         mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 3.5f);
         controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", 200f);
         MouseSensController.OnSensChanged += UpdateSensitivity;
+        ControllerSensController.OnControllerSensChanged += UpdateControllerSensitivity;
     }
 
     // Update is called once per frame
@@ -89,4 +90,15 @@ public class CameraController : MonoBehaviour
         mouseSensitivity = newSens;
         Debug.Log($"new sens: {mouseSensitivity}");
     }
+    private void UpdateControllerSensitivity(float newSens)
+    {
+        controllerSensitivity = newSens;
+        Debug.Log($"Controller sensitivity updated to: {controllerSensitivity}");
+    }
+    void OnDestroy()
+    {
+        MouseSensController.OnSensChanged -= UpdateSensitivity;
+        ControllerSensController.OnControllerSensChanged -= UpdateControllerSensitivity;
+    }
+
 }
