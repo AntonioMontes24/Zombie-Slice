@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 using System.Collections;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -53,6 +54,10 @@ public class GameManager : MonoBehaviour
     public TMP_Text enemyNameText;
     public Image enemyHPBar;
 
+    //saving player health and equipped weapons
+    public List<WeaponSaveData> savedWeaponData = new List<WeaponSaveData>();
+    public float savedHealth;
+
     [SerializeField] public TMP_Text zombieCountText;
     [SerializeField] public TMP_Text objectiveText;
 
@@ -93,6 +98,7 @@ public class GameManager : MonoBehaviour
         if(instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         } else if(instance != this)
         {
             Destroy(gameObject);

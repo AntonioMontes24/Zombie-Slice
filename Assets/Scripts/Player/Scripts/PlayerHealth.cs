@@ -119,6 +119,23 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
     }
 
+    public int CurrentHealth // saving health for player state
+    {
+        get => currentHealth;
+        set
+        {
+            currentHealth = Mathf.Clamp(value, 0, maxHealth);
+            updatePlayerUI();
+        }
+    }
+
+    public void SetHealth(int newHealth)
+    {
+        currentHealth = Mathf.Clamp(newHealth, 0, maxHealth);
+        updatePlayerUI();
+    }
+
+
     // only call this when resetting gamestate
     public void ResetHealth()
     {
