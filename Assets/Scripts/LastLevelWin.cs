@@ -1,39 +1,55 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class KeyItem : MonoBehaviour
+public class LastLevelWin : MonoBehaviour
 {
-    public string keyID;
 
-    private bool playerInRange = false;
-    private PlayerInventory playerInventory;
+
+    public string zombieTag = "enemy";
+
+    public GameObject winScreen;
+
+    private bool hasWon = false;
+
+
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    void Start()
+    {
+        if (SceneManager.GetActiveScene().name != "BossRoom")
+        {
+            this.enabled = false;
+        }
+    }
+
 
     void Update()
     {
-        if (playerInRange && PlayerController.inputActions.Input.Interact.triggered)
+        if (hasWon) return;
+
+        if (GameObject.FindGameObjectsWithTag("enemy").Length == 0 && GameObject.FindGameObjectsWithTag("Boss").Length == 0)
         {
-            if (playerInventory != null)
-            {
-                playerInventory.AddKey(keyID);
-                Destroy(gameObject);
-            }
+            Win();
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    // Update is called once per frame
+    void Win()
     {
-        if (other.CompareTag("Player"))
-        {
-            playerInRange = true;
-            playerInventory = other.GetComponent<PlayerInventory>();
-        }
-    }
+        hasWon = true;
 
-    void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
+        if (winScreen != null)
         {
-            playerInRange = false;
-            playerInventory = null;
+            winScreen.SetActive(true);
         }
+        else
+        {
+            Debug.LogWarning("Win Screen UI is not assigned!");
+        }
+
+        Time.timeScale = 0f;
+
+        Debug.Log("All enemies cleared! You win!");
     }
 }
