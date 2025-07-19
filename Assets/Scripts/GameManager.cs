@@ -395,23 +395,30 @@ public class GameManager : MonoBehaviour
         {
             enemyNameText.text = (en as MonoBehaviour).gameObject.name;
         }
-        UpdateEnemyHealthBar(en);
+        //UpdateEnemyHealthBar(en);
 
     }
 
     public void UpdateEnemyHealthBar(iEnemyHealth en)
     {
-        if(currentEnemy == en && en.maxHealth > 0)
+        if(currentEnemy != en)
         {
-            if(enemyHPBar != null)
-            {
-                enemyHPBar.fillAmount = (float)en.CurrentHealth / en.maxHealth;
-            }
+            SetCurrentEnemy(en);
         }
-        else if (currentEnemy == en && en.CurrentHealth <= 0)
+
+        if(currentEnemy != null && enemyHPBar != null && currentEnemy.maxHealth > 0)
+        {
+            enemyHPBar.fillAmount = (float)currentEnemy.CurrentHealth / currentEnemy.maxHealth;
+        } else
         {
             HideEnemyUI();
         }
+
+        if(en != null && en.CurrentHealth <= 0)
+        {
+            HideEnemyUI();
+        }
+
     }
 
     public void HideEnemyUI()
