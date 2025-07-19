@@ -82,8 +82,8 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         {
             weaponManager.ToggleFireMode();
         }
-        weaponManager.HandleADS();// handles ads
         weaponManager.SetAiming(inputActions.Input.ADS.ReadValue<float>() > 0.1f);// handles aiming
+        weaponManager.HandleADS();// handles ads
 
         HandleLean();
     }
@@ -162,8 +162,10 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         weaponManager.SetCanFire(true);
     }
 
-    void HandleWeaponSwitch()// Handles weapon selection using mouse scroll and numbers
+    public void HandleWeaponSwitch()// Handles weapon selection using mouse scroll and numbers
     {
+        if (GameManager.instance != null && GameManager.instance.isPaused)
+            return;
         // Number key selection
         if (inputActions.Input.SwitchWeapon.triggered)
             weaponManager.TryEquipWeapon(0);

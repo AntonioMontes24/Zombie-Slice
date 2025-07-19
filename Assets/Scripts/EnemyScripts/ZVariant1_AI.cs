@@ -56,6 +56,17 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 
     //casched player transofrm for effeciency
     private Transform playerTransform;
+
+    int iEnemyHealth.CurrentHealth
+    {
+        get {  return currHealth; }
+    }
+
+    int iEnemyHealth.maxHealth
+    {
+        get {  return _maxHealth; }
+    }
+
     public int CurrentHealth
     {
         get { return currHealth; }
@@ -65,6 +76,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     {
         get { return _maxHealth; }
     }
+
 
 
     public void takeDamage(int amount)
@@ -184,9 +196,8 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currHealth = maxHealth;
-        // increase the number of zombies left in stage
-        ObjectiveManager.instance.updateZombieCount(1);
+        currHealth = _maxHealth;
+
 
         playerTransform = GameManager.instance.player.transform; // cache player transform
 
@@ -209,6 +220,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         stoppingDistanceOriginal = agent.stoppingDistance;
 
         agent.stoppingDistance = meleeAttackRange * 0.8f;
+
     }
 
     // Update is called once per frame

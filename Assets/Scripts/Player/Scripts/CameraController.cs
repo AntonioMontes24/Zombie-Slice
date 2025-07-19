@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class CameraController : MonoBehaviour
 {
     public float mouseSensitivity = 3.5f;
+    public float controllerSensitivity = 200f;
     public float lockVertMin = -90f;
     public float lockVertMax = 90f;
     public bool invertY = false;
@@ -26,23 +27,38 @@ public class CameraController : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 3.5f);
+        controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", 200f);
         MouseSensController.OnSensChanged += UpdateSensitivity;
+        ControllerSensController.OnControllerSensChanged += UpdateControllerSensitivity;
     }
 
     // Update is called once per frame
     void Update()
     {
         HandleFreeLookInput();
-        // get input
-        lookInput = PlayerController.inputActions.Input.Look.ReadValue<Vector2>();
-        float scaledSensitivity = mouseSensitivity * 0.2f;
-        float mouseX = lookInput.x * scaledSensitivity * Time.deltaTime;
-        float mouseY = lookInput.y * scaledSensitivity * Time.deltaTime;
 
+        float mouseX = 0f, mouseY = 0f;
 
-        //give option to invert mouse look up and down
+        // Check device type
+        var lastDevice = PlayerController.inputActions.Input.Look.activeControl?.device;
+
+        if (lastDevice is Mouse)
+        {
+            Vector2 look = PlayerController.inputActions.Input.Look.ReadValue<Vector2>();
+            float scaledSensitivity = mouseSensitivity * 0.2f;
+            mouseX = look.x * scaledSensitivity * Time.deltaTime;
+            mouseY = look.y * scaledSensitivity * Time.deltaTime;
+        }
+        else if (lastDevice is Gamepad)
+        {
+            Vector2 look = PlayerController.inputActions.Input.Look.ReadValue<Vector2>();
+            float controllerSens = controllerSensitivity * 0.2f;
+            mouseX = look.x * controllerSens * Time.deltaTime;
+            mouseY = look.y * controllerSens * Time.deltaTime;
+        }
+
         rotX += invertY ? mouseY : -mouseY;
-        rotX = Mathf.Clamp(rotX, lockVertMin, lockVertMax);// clamp camera on the x axis 
+        rotX = Mathf.Clamp(rotX, lockVertMin, lockVertMax);// clamp camera on the x axis
 
         if (pitchTarget != null)
             pitchTarget.localRotation = Quaternion.Euler(rotX, 0f, 0f);
@@ -58,7 +74,6 @@ public class CameraController : MonoBehaviour
         {
             // Rotate the player body as normal
             playerBody.Rotate(Vector3.up * mouseX);
-
             // Reset freelook rotation
             freeLookYaw = 0f;
             transform.localRotation = Quaternion.identity;
@@ -75,4 +90,15 @@ public class CameraController : MonoBehaviour
         mouseSensitivity = newSens;
         Debug.Log($"new sens: {mouseSensitivity}");
     }
+    private void UpdateControllerSensitivity(float newSens)
+    {
+        controllerSensitivity = newSens;
+        Debug.Log($"Controller sensitivity updated to: {controllerSensitivity}");
+    }
+    void OnDestroy()
+    {
+        MouseSensController.OnSensChanged -= UpdateSensitivity;
+        ControllerSensController.OnControllerSensChanged -= UpdateControllerSensitivity;
+    }
+
 }
