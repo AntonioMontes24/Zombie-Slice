@@ -117,6 +117,12 @@ public class PlayerWeaponManager : MonoBehaviour
 
         if (startingKnife != null)
             GetGunStats(startingKnife, autoEquip: true);
+
+        if (GameManager.instance != null && GameManager.instance.savedWeaponData != null && GameManager.instance.savedWeaponData.Count > 0)
+        {
+            LoadWeaponData(GameManager.instance.savedWeaponData);
+            UpdateAmmoUi();
+        }
     }
 
     public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1, bool autoEquip = true)// Optional Parameters to modify starting ammo and auto equip
@@ -819,18 +825,17 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void LoadWeaponData(List<WeaponSaveData> savedData)
     {
-        for (int i = 0; i < savedData.Count && i < weaponList.Count; i++)
+        foreach (var data in savedData)
         {
-            var weapon = weaponList[i];
-            var data = savedData[i];
-
-            if (weapon is FireArmStats firearm)
+            // Find weapon by ID
+            var weapon = weaponList.FirstOrDefault(w => w.weaponNameId == data.weaponId);
+            if (weapon is FireArmStats firearm && weapon != null)
             {
                 firearm.ammoCur = data.currentAmmo;
                 firearm.ammoReserve = data.reserveAmmo;
             }
         }
-    } 
+    }
 
 }
 

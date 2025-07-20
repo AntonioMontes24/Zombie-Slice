@@ -51,8 +51,28 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     public void SpawnPlayer()
     {
-        playerMovement.controller.transform.position = GameManager.instance.playerSpawnPoint;
-        playerHealth.ResetHealth();
+        transform.position = GameManager.instance.playerSpawnPoint;
+        transform.rotation = Quaternion.identity;
+
+        PlayerHealth health = GetComponent<PlayerHealth>();
+        if (health != null)
+        {
+            if (GameManager.instance.savedHealth > 0)
+            {
+                health.CurrentHealth = (int)GameManager.instance.savedHealth;
+            }
+            else
+            {
+                health.LoadHealth();
+            }
+        }
+
+        PlayerWeaponManager weaponManager = GetComponent<PlayerWeaponManager>();
+        if (weaponManager != null && GameManager.instance.savedWeaponData != null)
+        {
+            weaponManager.LoadWeaponData(GameManager.instance.savedWeaponData);
+            weaponManager.UpdateAmmoUi();
+        }
     }
 
     // Update is called once per frame
