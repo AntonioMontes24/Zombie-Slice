@@ -87,22 +87,24 @@ public class GameManager : MonoBehaviour
 
     //saving player health and equipped weapons
     public List<WeaponSaveData> savedWeaponData = new List<WeaponSaveData>();
-    public float savedHealth;
+    public float savedHealth = 100f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        //if (instance == null)
-        //{
-        //    instance = this;
-        //    DontDestroyOnLoad(gameObject);
-        //}
-        //else if (instance != this)
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
+
+        if (instance == null)
+        {
+            instance = this;
+        
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
 
         Time.timeScale = 1.0f;
         timeScaleOrig = Time.timeScale;

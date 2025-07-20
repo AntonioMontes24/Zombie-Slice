@@ -4750,9 +4750,33 @@ PrefabInstance:
       propertyPath: objectives.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2319652933041040604, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: currentHealth
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 2946873011948580738, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080245641133656912, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -11.41
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080245641133656912, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -39.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080245641133656912, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.70538765
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080245641133656912, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7088217
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080245641133656912, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90.278
       objectReference: {fileID: 0}
     - target: {fileID: 7642121515913387314, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: m_Pivot.x
@@ -4874,6 +4898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c8ae2befdebd94bbda25324bdcd033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  savedHealth: 0
   currentHealth: 0
   savedWeapons: []
 --- !u!1001 &486805016
@@ -5364,6 +5389,7 @@ MonoBehaviour:
           m_CallState: 2
     objectiveDescription: Get Past the trucks
     waveContainter: {fileID: 0}
+    isComplete: 0
   - completeEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -5371,6 +5397,11 @@ MonoBehaviour:
 
 '
     waveContainter: {fileID: 0}
+    isComplete: 0
+  objectiveIconImage: {fileID: 0}
+  diamondIconSprite: {fileID: 0}
+  checkmarkIconSprite: {fileID: 0}
+  iconDisplayDuration: 1
 --- !u!4 &508591658
 Transform:
   m_ObjectHideFlags: 0
@@ -18127,8 +18158,8 @@ MonoBehaviour:
     keyItemToHighlight: {fileID: 8203948545409818309}
     requiredActions: []
   - message: Head outside to the shed
-    target: {fileID: 1503424459}
-    triggerRadius: 4
+    target: {fileID: 7711092991062248456}
+    triggerRadius: 5
     requireKeyPress: 0
     requireProximity: 1
     requiredKeys: 
@@ -30842,8 +30873,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exitType: 0
-  specificSceneName: Crimson Town
-  spawnPointName: Street Barricades
+  specificSceneName: ZombieScene_Main
+  spawnPointName: SpawnPosition
 --- !u!1 &4576468817411142134
 GameObject:
   m_ObjectHideFlags: 0

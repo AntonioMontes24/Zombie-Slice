@@ -12,8 +12,8 @@ public class Checkpoint : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player") ||
-            GameManager.instance.playerSpawnPoint == transform.position)
+        if (!other.CompareTag("Player") || 
+            Vector3.Distance(GameManager.instance.playerSpawnPoint, transform.position) < 0.1f)
             return;
 
         if (usesSceneChange)

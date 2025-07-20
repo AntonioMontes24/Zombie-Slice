@@ -5,6 +5,7 @@ public class PlayerPersistentData : MonoBehaviour
 {
     public static PlayerPersistentData instance;
 
+    public int savedHealth;
     public float currentHealth;
     public List<WeaponSaveData> savedWeapons = new List<WeaponSaveData>();
 
