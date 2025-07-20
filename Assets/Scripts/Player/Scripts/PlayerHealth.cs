@@ -50,7 +50,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
         audioSource = GetComponent<AudioSource>();
 
-        if(lowHealthFlashAnimator != null)
+        if (lowHealthFlashAnimator != null)
         {
             lowHealthFlashAnimator.SetBool("IsLowHealth", false);
             isFlashingLowHealth = false;
@@ -81,7 +81,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
                 if (damageSoundRoutine != null)
                     StopCoroutine(damageSoundRoutine);
 
-                if(lowHealthFlashAnimator != null)
+                if (lowHealthFlashAnimator != null)
                 {
                     lowHealthFlashAnimator.SetBool("IsLowHealth", false);
                     isFlashingLowHealth = false;
@@ -108,9 +108,9 @@ public class PlayerHealth : MonoBehaviour, IDamage
         StartCoroutine(HealFlash());
 
         // stop low health flashing if healed above threshold
-        if(((float)currentHealth / maxHealth) > lowHealthThreashHold && isFlashingLowHealth)
+        if (((float)currentHealth / maxHealth) > lowHealthThreashHold && isFlashingLowHealth)
         {
-            if(lowHealthFlashAnimator != null)
+            if (lowHealthFlashAnimator != null)
             {
                 lowHealthFlashAnimator.SetBool("IsLowHealth", false);
                 isFlashingLowHealth = false;
@@ -144,7 +144,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
         hasDied = false;
         RemoveBleed();
 
-        if(lowHealthFlashAnimator != null)
+        if (lowHealthFlashAnimator != null)
         {
             lowHealthFlashAnimator.SetBool("IsLowHealth", false);
             isFlashingLowHealth = false;
@@ -209,7 +209,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
     public void CancelHurtLoop()//Cancels the hurt loop sound
     {
         isTakingDotDamage = false;
-        if(damageSoundRoutine != null)
+        if (damageSoundRoutine != null)
         {
             StopCoroutine(damageSoundRoutine);
             damageSoundRoutine = null;
@@ -238,11 +238,11 @@ public class PlayerHealth : MonoBehaviour, IDamage
             GameManager.instance.playerHPBar.color = Color.red;
         }
 
-        if(lowHealthFlashAnimator != null)
+        if (lowHealthFlashAnimator != null)
         {
-            if(healthPercent <= lowHealthThreashHold && !hasDied)
+            if (healthPercent <= lowHealthThreashHold && !hasDied)
             {
-                if(!isFlashingLowHealth)
+                if (!isFlashingLowHealth)
                 {
                     lowHealthFlashAnimator.SetBool("IsLowHealth", true);
                     isFlashingLowHealth = true;
@@ -254,13 +254,13 @@ public class PlayerHealth : MonoBehaviour, IDamage
                 if (isFlashingLowHealth)
                 {
                     lowHealthFlashAnimator.SetBool("IsLowHealth", false);
-                    isFlashingLowHealth= false;
+                    isFlashingLowHealth = false;
                     Debug.Log("Low Health flashing stopped.");
                 }
             }
         }
 
-        
+
     }
 
     void EnableDeathCamera()//Enable second camera on death to follow death animation view
@@ -322,7 +322,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
     public void ApplyBleed(int damagePerTick, float tickInterval, float duration)
     {
-        if(bleedCoroutine != null)
+        if (bleedCoroutine != null)
         {
             StopCoroutine(bleedCoroutine);
         }
@@ -336,7 +336,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
     public void RemoveBleed()
     {
-        if(bleedCoroutine != null)
+        if (bleedCoroutine != null)
         {
             StopCoroutine(bleedCoroutine);
             bleedCoroutine = null;
@@ -346,7 +346,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
     private IEnumerator BleedRoutine(float duration)
     {
         float timer = 0f;
-        while(timer < duration)
+        while (timer < duration)
         {
             yield return new WaitForSeconds(activeBleedTickInterval);
 

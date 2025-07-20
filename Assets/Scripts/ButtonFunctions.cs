@@ -35,7 +35,7 @@ public class ButtonFunctions : MonoBehaviour
             if (GameManager.instance.player != null)
 
 
-             // Instantiate a fresh player from prefab at spawn point
+                // Instantiate a fresh player from prefab at spawn point
                 GameManager.instance.player.transform.position = GameManager.instance.playerSpawnPoint;
 
             // Restore health
@@ -54,6 +54,7 @@ public class ButtonFunctions : MonoBehaviour
             GameManager.instance.stateUnpause();
         }
     }
+
 
     private void OnSceneReloaded(Scene scene, LoadSceneMode mode)  //makes sure you reload the scene with the barriers getting reset
     {

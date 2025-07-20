@@ -192,4 +192,6 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
         else if (scroll < 0f)
             weaponManager.ScrollWeapon(-1); // scroll down
     }
+
+
 }

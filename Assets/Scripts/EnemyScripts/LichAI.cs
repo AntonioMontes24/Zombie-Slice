@@ -71,6 +71,7 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 
     IEnumerator removeCorpse()
     {
+        ObjectiveManager.instance.updateZombieCount(-1);
         animator.enabled = false;
 
         // Enable the Animator
@@ -135,7 +136,7 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 
     public void createBlightStorm()
     {
-        // make for blightballs
+        // make four blightballs
         Instantiate(blightBall, BS1Position.position, transform.rotation);
         Instantiate(blightBall, BS2Position.position, transform.rotation);
         Instantiate(blightBall, BS3Position.position, transform.rotation);
