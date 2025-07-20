@@ -188,5 +188,32 @@ public class TutorialManager : MonoBehaviour
             }
         }
     }
+
+    public void StartTutorial()
+    {
+        currentStep = 0;
+        keysPressed.Clear();
+        actionsTriggered.Clear();
+
+        // Reassign player in case it changed between scenes
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+
+        if (steps.Length > 0)
+        {
+            ShowCurrentStep();
+        }
+
+        // Enable input actions again (in case they were disabled)
+        foreach (var step in steps)
+        {
+            if (step.requiredActions != null)
+            {
+                foreach (var actionRef in step.requiredActions)
+                {
+                    actionRef?.action?.Enable();
+                }
+            }
+        }
+    }
     public bool IsTutorialComplete => currentStep >= steps.Length;
 }
