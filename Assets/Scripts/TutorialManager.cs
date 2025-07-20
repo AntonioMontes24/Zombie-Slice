@@ -37,6 +37,12 @@ public class TutorialManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
+        if(tutorialText == null)
+        {
+            enabled = false;
+            return;
+        }
+
         // Enable all required actions
         foreach (var step in steps)
         {
@@ -49,18 +55,30 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-        if (steps.Length > 0)
+        if(steps.Length > 0 && tutorialText != null)
         {
             ShowCurrentStep();
+        } 
+        else if (tutorialText != null)
+        {
+            tutorialText.gameObject.SetActive(false);
+            tutorialText.text = "";
         }
+
     }
 
     void Update()
     {
-        if (currentStep >= steps.Length || player == null) return;
+        //if (steps.Length > 0)
+        //{
+        //    ShowCurrentStep();
+        //}
+
+        if (currentStep >= steps.Length || player == null || tutorialText == null) return;
 
         TutorialSteps step = steps[currentStep];
         bool inRange = true;
+
 
         // Proximity check
         if (step.requireProximity && step.target != null)
@@ -129,6 +147,11 @@ public class TutorialManager : MonoBehaviour
 
     void ShowCurrentStep()
     {
+        if(tutorialText == null)
+        {
+            return;
+        }
+
         tutorialText.gameObject.SetActive(true);
         tutorialText.text = steps[currentStep].message;
 
@@ -172,7 +195,11 @@ public class TutorialManager : MonoBehaviour
         }
         else
         {
-            tutorialText.gameObject.SetActive(false);
+            if(tutorialText != null)
+            { 
+                tutorialText.gameObject.SetActive(false);
+                tutorialText.text = "";
+            }
         }
     }
     private void OnDisable()

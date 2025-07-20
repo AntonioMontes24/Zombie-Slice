@@ -16,9 +16,15 @@ public class CutSceneManager : MonoBehaviour
     private bool hasSkipped = false; //Default
                                      //public GameObject skipButton;
 
-    private PlayerInputActions inputActions => PlayerController.inputActions;
+    private PlayerInputActions inputActions;
 
     private AsyncOperation loadingOperation;
+
+    private void Awake()
+    {
+        inputActions = new PlayerInputActions();
+    }
+
 
     void Start()
     {

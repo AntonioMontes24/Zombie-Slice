@@ -1025,6 +1025,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a170ef7959983b488c654233376192f, type: 3}
+--- !u!1 &283162145 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6916835057799141805, guid: 2a170ef7959983b488c654233376192f, type: 3}
+  m_PrefabInstance: {fileID: 283162144}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &300229084 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1314193541681366, guid: 361e3d5cdb2eadb43a7e7bacd9accd86, type: 3}
@@ -2760,7 +2765,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3471086689169232055, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1287039712434086029, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
@@ -3446,11 +3452,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!1 &1597479573 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4994523689525668647, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
-  m_PrefabInstance: {fileID: 254898167}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1625821460 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1314193541681366, guid: 361e3d5cdb2eadb43a7e7bacd9accd86, type: 3}
@@ -3785,6 +3786,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
+--- !u!1 &1756444399 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
+  m_PrefabInstance: {fileID: 1756444398}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1808142146 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6104163626302980887, guid: 2a170ef7959983b488c654233376192f, type: 3}
@@ -3931,7 +3937,7 @@ MonoBehaviour:
     requireKeyPress: 0
     requireProximity: 1
     requiredKeys: 
-    keyItemToHighlight: {fileID: 1597479573}
+    keyItemToHighlight: {fileID: 512619662}
     requiredActions: []
   - message: Now we'll need some ammo for our weapons
     target: {fileID: 493669217}
@@ -3939,7 +3945,7 @@ MonoBehaviour:
     requireKeyPress: 0
     requireProximity: 1
     requiredKeys: 
-    keyItemToHighlight: {fileID: 67254863}
+    keyItemToHighlight: {fileID: 1756444399}
     requiredActions: []
   - message: Use F to interact and get outside
     target: {fileID: 0}
@@ -3976,7 +3982,7 @@ MonoBehaviour:
     requireKeyPress: 0
     requireProximity: 1
     requiredKeys: 
-    keyItemToHighlight: {fileID: 0}
+    keyItemToHighlight: {fileID: 283162145}
     requiredActions: []
   tutorialText: {fileID: 1399532251}
 --- !u!4 &1896259114
