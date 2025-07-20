@@ -203,11 +203,11 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // get or current health percentage
         float HP_Percent = currHealth / maxHealth;
 
-        if(HP_Percent > 70)
+        if(HP_Percent > .70)
         {
             current_phase = 1;
         }
-        else if (HP_Percent < 40)
+        else if (HP_Percent < .40)
         {
             current_phase = 2;
         }
