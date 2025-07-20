@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
+
         if (instance == null)
         {
             instance = this;
@@ -103,6 +104,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
 
         Time.timeScale = 1.0f;
         timeScaleOrig = Time.timeScale;
