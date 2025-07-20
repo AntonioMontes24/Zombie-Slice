@@ -67,12 +67,6 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
             }
         }
 
-        PlayerWeaponManager weaponManager = GetComponent<PlayerWeaponManager>();
-        if (weaponManager != null && GameManager.instance.savedWeaponData != null)
-        {
-            weaponManager.LoadWeaponData(GameManager.instance.savedWeaponData);
-            weaponManager.UpdateAmmoUi();
-        }
     }
 
     // Update is called once per frame
