@@ -38,19 +38,6 @@ public class ButtonFunctions : MonoBehaviour
                 // Instantiate a fresh player from prefab at spawn point
                 GameManager.instance.player.transform.position = GameManager.instance.playerSpawnPoint;
 
-            // Restore health
-            var playerHealth = GameManager.instance.player.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.SetHealth((int)GameManager.instance.savedHealth);
-                playerHealth.Revive(); // <-- Reset death state here (must be implemented)
-            }
-
-            // Restore weapons
-            var weaponManager = GameManager.instance.player.GetComponent<PlayerWeaponManager>();
-            if (weaponManager != null)
-                weaponManager.LoadWeaponData(GameManager.instance.savedWeaponData);
-
             GameManager.instance.stateUnpause();
         }
     }

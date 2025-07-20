@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
     private Coroutine bittenEffectCoroutine;
 
     //saving player health and equipped weapons
-    public List<WeaponSaveData> savedWeaponData = new List<WeaponSaveData>();
+    
     public float savedHealth = 100f;
 
 
