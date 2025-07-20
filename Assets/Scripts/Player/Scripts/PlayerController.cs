@@ -29,16 +29,12 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     void Awake()
     {
-        if (inputActions == null)
-        {
-            inputActions = new PlayerInputActions();
-        }
+        inputActions = new PlayerInputActions();
     }
 
     private void OnEnable()
     {
         inputActions.Input.Enable();
-        inputActions.UI.Enable();
     }
 
     private void OnDisable()
@@ -71,6 +67,12 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
             }
         }
 
+        PlayerWeaponManager weaponManager = GetComponent<PlayerWeaponManager>();
+        if (weaponManager != null && GameManager.instance.savedWeaponData != null)
+        {
+            weaponManager.LoadWeaponData(GameManager.instance.savedWeaponData);
+            weaponManager.UpdateAmmoUi();
+        }
     }
 
     // Update is called once per frame
