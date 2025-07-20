@@ -2,7 +2,6 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -38,11 +37,6 @@ public class TutorialManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
-        if (steps.Length > 0)
-        {
-            ShowCurrentStep();
-        }
-
         // Enable all required actions
         foreach (var step in steps)
         {
@@ -55,17 +49,10 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-    }
-
-    private void Awake()
-    {
-        // Ensure this is the only TutorialManager in the scene
-        if (FindObjectsOfType<TutorialManager>().Length > 1)
+        if (steps.Length > 0)
         {
-            Destroy(gameObject); // Destroy any duplicates
-            return;
+            ShowCurrentStep();
         }
-
     }
 
     void Update()
@@ -142,9 +129,6 @@ public class TutorialManager : MonoBehaviour
 
     void ShowCurrentStep()
     {
-        if (tutorialText == null)
-            return;
-
         tutorialText.gameObject.SetActive(true);
         tutorialText.text = steps[currentStep].message;
 
@@ -173,7 +157,7 @@ public class TutorialManager : MonoBehaviour
 
     void AdvanceStep()
     {
-        if (currentStep < steps.Length && steps[currentStep].target != null)
+        if (steps[currentStep].target != null)
         {
             HighlightObject highlight = steps[currentStep].target.GetComponent<HighlightObject>();
             if (highlight != null)
@@ -188,20 +172,11 @@ public class TutorialManager : MonoBehaviour
         }
         else
         {
-            if (tutorialText != null)
-                tutorialText.gameObject.SetActive(false);
+            tutorialText.gameObject.SetActive(false);
         }
     }
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-
     private void OnDisable()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-
         foreach (var step in steps)
         {
             if (step.requiredActions != null)
@@ -211,16 +186,6 @@ public class TutorialManager : MonoBehaviour
                     actionRef?.action?.Disable();
                 }
             }
-        }
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        
-        if (steps != null && steps.Length > 0)
-        {
-            player = GameObject.FindGameObjectWithTag("Player")?.transform;
-            StartTutorial();
         }
     }
 
