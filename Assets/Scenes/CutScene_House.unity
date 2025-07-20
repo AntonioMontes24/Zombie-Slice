@@ -2739,6 +2739,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   narrationText: {fileID: 446234806}
   filename: HouseCutScene
+  creditContainer: {fileID: 0}
+  isCreditsMode: 0
 --- !u!224 &615506788
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25680,7 +25682,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8367523789894929613}
-  - component: {fileID: 8425267889310658791}
   - component: {fileID: 5160135650004868905}
   - component: {fileID: 3165553772231415538}
   - component: {fileID: 8425267889310658790}
@@ -29183,7 +29184,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3667211753715026924}
-  - component: {fileID: 3667211753715026926}
   - component: {fileID: 3667211753715026925}
   m_Layer: 0
   m_Name: Simple Retro Car
@@ -29426,21 +29426,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4, y: 2, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3667211753715026926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3638911071020136055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0977e3f2f4a8de4aaf4b319541ce34f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  exitType: 0
-  specificSceneName: Crimson Town
-  spawnPointName: Street Barricades
 --- !u!4 &3672073929625550459
 Transform:
   m_ObjectHideFlags: 0
@@ -49391,22 +49376,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.6706227, y: 0.5873872, z: 4.3006043}
   m_Center: {x: 0.0025981069, y: 0.5640439, z: 0.12866044}
---- !u!114 &8425267889310658791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2668072362568886000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ca81ae87ee633c4a92cccabe087ec2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  holdDuration: 1
-  sceneBuildIndex: 3
-  InteractText: {fileID: 0}
-  interactPrompt: {fileID: 0}
 --- !u!1 &8428322393585178690
 GameObject:
   m_ObjectHideFlags: 0
