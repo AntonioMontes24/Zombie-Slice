@@ -14,15 +14,11 @@ public class CutSceneManager : MonoBehaviour
     // [SerializeField] private TextMeshProUGUI loadingPercent;
     // [SerializeField] private GameObject loadingUI;
     private bool hasSkipped = false; //Default
-    //public GameObject skipButton;
+                                     //public GameObject skipButton;
 
-    private PlayerInputActions inputActions;
+    private PlayerInputActions inputActions => PlayerController.inputActions;
+
     private AsyncOperation loadingOperation;
-    private void Awake()
-    {
-        inputActions = new PlayerInputActions();
-        inputActions.Enable();
-    }
 
     void Start()
     {
@@ -97,6 +93,18 @@ public class CutSceneManager : MonoBehaviour
 
         SceneManager.LoadScene(sceneToLoad);
     }
+    private void OnEnable()
+    {
+        inputActions.Input.Disable();
+        inputActions.UI.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions.Input.Enable();
+        inputActions.UI.Disable();
+    }
+
 
     public void EndCutScene()
     {

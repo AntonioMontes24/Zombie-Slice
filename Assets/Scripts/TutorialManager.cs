@@ -175,7 +175,18 @@ public class TutorialManager : MonoBehaviour
             tutorialText.gameObject.SetActive(false);
         }
     }
-
-
+    private void OnDisable()
+    {
+        foreach (var step in steps)
+        {
+            if (step.requiredActions != null)
+            {
+                foreach (var actionRef in step.requiredActions)
+                {
+                    actionRef?.action?.Disable();
+                }
+            }
+        }
+    }
     public bool IsTutorialComplete => currentStep >= steps.Length;
 }
