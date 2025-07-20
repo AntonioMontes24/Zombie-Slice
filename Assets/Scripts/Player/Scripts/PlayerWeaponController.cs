@@ -90,7 +90,7 @@ public class PlayerWeaponManager : MonoBehaviour
     private Vector3 currentLeftHandOffset;
     private Vector3 currentRightHandOffset;
 
- 
+
 
     private void Start()
     {
@@ -185,7 +185,7 @@ public class PlayerWeaponManager : MonoBehaviour
             }
         }
 
-        if ( PlayerController.inputActions.Input.Fire.ReadValue<float>() == 0f)
+        if (PlayerController.inputActions.Input.Fire.ReadValue<float>() == 0f)
             playedEmptySound = false;
 
         bool reloadInput = PlayerController.inputActions.Input.Reload.IsPressed();
@@ -348,21 +348,42 @@ public class PlayerWeaponManager : MonoBehaviour
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         Debug.DrawRay(ray.origin, ray.direction * 2f, Color.red, 1f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 2f))
+        bool hitSomething = Physics.Raycast(ray, out RaycastHit hit, 2f);
+
+        if (hitSomething)
         {
+
             IDamage dmg = hit.collider.GetComponent<IDamage>();
+            iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
+
             if (dmg != null)
                 dmg.takeDamage(melee.damage * 2); // More damage for heavy attack
 
             if (hit.collider.CompareTag("Enemy"))
-            {
-                if (melee.zombieHit != null)
+            {     
+                    if (melee.zombieHit != null)
                     aud.PlayOneShot(melee.zombieHit);
 
-                iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
-                if (enemyHealth != null)
-                    GameManager.instance.SetCurrentEnemy(enemyHealth);
-            }
+                    if (enemyHealth != null)
+                    {
+                        if (enemyHealth.CurrentHealth <= 0)
+                        {
+                            GameManager.instance.HideEnemyUI();
+                        }
+                        else
+                        {
+                            GameManager.instance.SetCurrentEnemy(enemyHealth);
+                        }
+                    }
+             }
+             else
+             {
+                GameManager.instance.HideEnemyUI();
+             }
+        }
+        else
+        {
+            GameManager.instance.HideEnemyUI();
         }
     }
 
@@ -388,21 +409,42 @@ public class PlayerWeaponManager : MonoBehaviour
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         Debug.DrawRay(ray.origin, ray.direction * 2f, Color.red, 1f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 2f))
+        bool hitSomething = Physics.Raycast(ray, out RaycastHit hit, 2f);
+
+        if (hitSomething)
         {
+
             IDamage dmg = hit.collider.GetComponent<IDamage>();
+            iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
+
             if (dmg != null)
-                dmg.takeDamage(melee.damage);
+                dmg.takeDamage(melee.damage); // More damage for heavy attack
 
             if (hit.collider.CompareTag("Enemy"))
             {
                 if (melee.zombieHit != null)
                     aud.PlayOneShot(melee.zombieHit);
 
-                iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
                 if (enemyHealth != null)
-                    GameManager.instance.SetCurrentEnemy(enemyHealth);
+                {
+                    if (enemyHealth.CurrentHealth <= 0)
+                    {
+                        GameManager.instance.HideEnemyUI();
+                    }
+                    else
+                    {
+                        GameManager.instance.SetCurrentEnemy(enemyHealth);
+                    }
+                }
             }
+            else
+            {
+                GameManager.instance.HideEnemyUI();
+            }
+        }
+        else
+        {
+            GameManager.instance.HideEnemyUI();
         }
     }
 
@@ -750,4 +792,45 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
+    public List<WeaponSaveData> GetWeaponSaveData()
+    {
+        List<WeaponSaveData> saveDataList = new List<WeaponSaveData>();
+
+        foreach (WeaponStats weapon in weaponList)
+        {
+            var data = new WeaponSaveData
+            {
+                weaponId = weapon.weaponNameId,
+                currentAmmo = 0,
+                reserveAmmo = 0
+            };
+
+            if (weapon is FireArmStats firearm)
+            {
+                data.currentAmmo = firearm.ammoCur;
+                data.reserveAmmo = firearm.ammoReserve;
+            }
+
+            saveDataList.Add(data);
+        }
+
+        return saveDataList;
+    }
+
+    public void LoadWeaponData(List<WeaponSaveData> savedData)
+    {
+        for (int i = 0; i < savedData.Count && i < weaponList.Count; i++)
+        {
+            var weapon = weaponList[i];
+            var data = savedData[i];
+
+            if (weapon is FireArmStats firearm)
+            {
+                firearm.ammoCur = data.currentAmmo;
+                firearm.ammoReserve = data.reserveAmmo;
+            }
+        }
+    }
+
 }
+
