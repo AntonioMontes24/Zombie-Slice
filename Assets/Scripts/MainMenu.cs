@@ -1,15 +1,21 @@
 using JetBrains.Annotations;
 using System.Collections;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 //using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
+
 public class MainMenu : MonoBehaviour
 {
     public GameObject mainMenuPanel;
     public GameObject optionsMenuPanel;
+    [Header("Controller Navigation")]
+    [SerializeField] private GameObject firstSelectedButton; // for controller nav
+    public OptionsMenu optionsMenuScript; // assign via Inspector
 
     private void Start()
     {
@@ -26,7 +32,11 @@ public class MainMenu : MonoBehaviour
         {
             AudioManager.instance.ApplySavedVolumeToMixer();
         }
-
+        if(firstSelectedButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(firstSelectedButton);
+        }
     }
 
 
@@ -52,6 +62,29 @@ public class MainMenu : MonoBehaviour
         if(optionsMenuPanel != null)
         {
             optionsMenuPanel.SetActive(true);
+
+            OptionsMenu optionsScript = optionsMenuPanel.GetComponent<OptionsMenu>();
+            if (optionsScript != null)
+            {
+                optionsScript.FocusFirstOption();
+            }
+        }
+    }
+
+    public void ReturnFromOptions()
+    {
+        if (mainMenuPanel != null)
+            mainMenuPanel.SetActive(true);
+
+        if (optionsMenuScript != null && firstSelectedButton != null)
+            optionsMenuScript.SelectAfterReturn(firstSelectedButton.GetComponent<Selectable>());
+    }
+    public void FocusMainMenuButton()
+    {
+        if (firstSelectedButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(firstSelectedButton);
         }
     }
 
@@ -63,7 +96,5 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
 #endif
     }
-
-
 
 }

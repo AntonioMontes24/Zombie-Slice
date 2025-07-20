@@ -362,6 +362,22 @@ public class PlayerHealth : MonoBehaviour, IDamage
         RemoveBleed();
     }
 
+    public void SaveHealth()
+    {
+        PlayerPrefs.SetInt("PlayerHealth", currentHealth);
+        PlayerPrefs.Save();
+    }
+
+    public void LoadHealth()
+    {
+        if (PlayerPrefs.HasKey("PlayerHealth"))
+        {
+            currentHealth = PlayerPrefs.GetInt("PlayerHealth");
+            updatePlayerUI();
+        }
+    }
+
+
     public void Revive()
     {
         hasDied = false;

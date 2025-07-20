@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,15 +22,17 @@ public class ExitDoor : MonoBehaviour
     {
         if (playerInRange && PlayerController.inputActions.Input.Interact.triggered)
         {
-            // Block exit if tutorial not complete
             if (tutorialManager != null && !tutorialManager.IsTutorialComplete)
             {
                 Debug.Log("You must complete all tutorial steps before exiting.");
                 return;
             }
 
+            // Save spawn point name if specified
             if (!string.IsNullOrEmpty(spawnPointName))
                 PlayerPrefs.SetString("LastSpawnPoint", spawnPointName);
+
+            SavePlayerData(); //Save player health and weapon data before changing scene
 
             switch (exitType)
             {
@@ -47,8 +50,26 @@ public class ExitDoor : MonoBehaviour
         }
     }
 
+    private void SavePlayerData()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null || PlayerPersistentData.instance == null) return;
+
+        PlayerHealth health = player.GetComponent<PlayerHealth>();
+        PlayerWeaponManager weaponManager = player.GetComponent<PlayerWeaponManager>();
+
+        float currentHealth = health != null ? health.CurrentHealth : 100f;
+
+        List<WeaponSaveData> weaponData = weaponManager != null
+            ? weaponManager.GetWeaponSaveData()
+            : new List<WeaponSaveData>();
+
+        PlayerPersistentData.instance.SavePlayerData(currentHealth, weaponData);
+    }
+
     void LoadNext()
     {
+        FindObjectOfType<PlayerHealth>().SaveHealth();
         int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
         if (nextIndex < SceneManager.sceneCountInBuildSettings)
             SceneManager.LoadScene(nextIndex);
