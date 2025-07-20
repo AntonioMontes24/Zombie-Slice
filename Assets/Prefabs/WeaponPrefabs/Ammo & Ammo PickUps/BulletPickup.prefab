@@ -88,6 +88,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 922c2067d18091f4f96f481884258e16, type: 3}
       insertIndex: -1
       addedObject: {fileID: -3371001586467909517}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 922c2067d18091f4f96f481884258e16, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2424866473448689375}
   m_SourcePrefab: {fileID: 100100000, guid: 922c2067d18091f4f96f481884258e16, type: 3}
 --- !u!1 &5835967704610880946 stripped
 GameObject:
@@ -107,6 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullets: 20
+  ammoType: 0
   sourceAudio: {fileID: 4001188537475491633}
   pickUpSoundAmmo: {fileID: 8300000, guid: cf98cc838eb13ec4189c2040834d98c5, type: 3}
   pickUpSoundVol: 0.9
@@ -325,3 +329,30 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!54 &-2424866473448689375
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5835967704610880946}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
