@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Linq;
+using System.Collections;
+using UnityEngine.UI;
 
 public class ObjectiveManager : MonoBehaviour
 {
@@ -17,11 +19,20 @@ public class ObjectiveManager : MonoBehaviour
         [TextArea]
         public string objectiveDescription;
         public GameObject waveContainter;
+        [HideInInspector] public bool isComplete = false;
 
     }
     [SerializeField] public Objective[] objectives;
 
     private int objectivesIndex;
+
+    [Header("Objective UI")]
+    [SerializeField] private Image objectiveIconImage;
+    [SerializeField] private Sprite diamondIconSprite;
+    [SerializeField] private Sprite checkmarkIconSprite;
+    [SerializeField] private float iconDisplayDuration = 1.0f;
+
+    private ExitDoor cryptExitDoor; // reference for exitdoor, found dynamically
 
     private void Awake()
     {
@@ -41,23 +52,48 @@ public class ObjectiveManager : MonoBehaviour
         }
         objectivesIndex = 0;
         SetcurrentObjective(objectivesIndex);
+
+        cryptExitDoor = FindObjectOfType<ExitDoor>();
+        if(cryptExitDoor != null)
+        {
+            cryptExitDoor.enabled = false;
+        }
+        else
+        {
+            Debug.Log("ObjectiveManager: no exitdoor found in this scene. no door functionality to control. This is fine for scenes with no door.");
+        }
+
     }
 
-    private void Start()
-    {
-        objectivesIndex = 0;
-        SetcurrentObjective(objectivesIndex);
-    }
+    //private void Start()
+    //{
+    //    objectivesIndex = 0;
+    //    SetcurrentObjective(objectivesIndex);
+    //}
 
     private void SetcurrentObjective(int index)
     {
         if (index >= objectives.Length)
         {
+
+            if(objectiveIconImage != null)
+            {
+                objectiveIconImage.sprite = checkmarkIconSprite;
+                GameManager.instance.objectiveText.text = "<s>" + GameManager.instance.objectiveText.text + "</s>";
+                objectiveIconImage.color = Color.green;
+            }
+
             return;
         }
 
         objectivesIndex = index;
         Objective currentObj = objectives[objectivesIndex];
+
+        if(objectiveIconImage != null)
+        {
+            objectiveIconImage.sprite = diamondIconSprite;
+            objectiveIconImage.color = Color.white;
+        }
 
         if(currentObj.waveContainter != null)
         {
@@ -143,15 +179,54 @@ public class ObjectiveManager : MonoBehaviour
 
         if (zombiesCleared && spawnersCleaner)
         {
-            objectives[objectivesIndex].completeEvent?.Invoke();
-            SetcurrentObjective(objectivesIndex + 1);
+            objectives[objectivesIndex].isComplete = true;
+            StartCoroutine(CompleteObjectiveRoutine());
+        }
+    }
+
+    IEnumerator CompleteObjectiveRoutine()
+    {
+        if(objectiveIconImage != null)
+        {
+            objectiveIconImage.sprite = checkmarkIconSprite;
+            GameManager.instance.objectiveText.text = "<s>" + GameManager.instance.objectiveText.text + "</s>";
+            objectiveIconImage.color = Color.green;
         }
 
+        objectives[objectivesIndex].completeEvent?.Invoke();
 
+        if(objectivesIndex == objectives.Length - 1)
+        {
+            objectiveIconImage.enabled = false;
+            GameManager.instance.objectiveText.text = "";
+            if(cryptExitDoor != null)
+            {
+                cryptExitDoor.enabled = true;
+            } else
+            {
+                Debug.Log("Objective Manager: no door found in this scene.");
+            }
+            yield return new WaitForSeconds(iconDisplayDuration * 2);
+        }
+        else
+        {
+            yield return new WaitForSeconds(iconDisplayDuration);
+
+            SetcurrentObjective(objectivesIndex + 1);
+        }
     }
 
     public int GetZombieCount()
     {
         return zombieCount;
+    }
+
+    public bool IsObjectiveComplete(int index)
+    {
+        if(index < 0 || index >= objectives.Length)
+        {
+            return false;
+        }
+        return objectives[index].isComplete;
     }
 }

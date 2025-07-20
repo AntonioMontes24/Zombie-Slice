@@ -57,15 +57,15 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     //casched player transofrm for effeciency
     private Transform playerTransform;
 
-    int iEnemyHealth.CurrentHealth
-    {
-        get {  return currHealth; }
-    }
+    //int iEnemyHealth.CurrentHealth
+    //{
+    //    get {  return currHealth; }
+    //}
 
-    int iEnemyHealth.maxHealth
-    {
-        get {  return _maxHealth; }
-    }
+    //int iEnemyHealth.maxHealth
+    //{
+    //    get {  return _maxHealth; }
+    //}
 
     public int CurrentHealth
     {

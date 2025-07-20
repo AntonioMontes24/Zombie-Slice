@@ -71,6 +71,7 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 
     IEnumerator removeCorpse()
     {
+        ObjectiveManager.instance.updateZombieCount(-1);
         animator.enabled = false;
 
         // Enable the Animator
