@@ -57,15 +57,15 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     //casched player transofrm for effeciency
     private Transform playerTransform;
 
-    //int iEnemyHealth.CurrentHealth
-    //{
-    //    get {  return currHealth; }
-    //}
+    int iEnemyHealth.CurrentHealth
+    {
+        get {  return currHealth; }
+    }
 
-    //int iEnemyHealth.maxHealth
-    //{
-    //    get {  return _maxHealth; }
-    //}
+    int iEnemyHealth.maxHealth
+    {
+        get {  return _maxHealth; }
+    }
 
     public int CurrentHealth
     {
@@ -127,16 +127,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 
         playAudioDeath();
         ObjectiveManager.instance.updateZombieCount(-1);
-
-        if(PickupSpawner.instance != null)
-        {
-            PickupSpawner.instance.SpawnPickupsAtLocation(transform.position);
-        } else
-        {
-            Debug.LogWarning("Pickup Spawner: pickup spawner is null");
-        }
-
-            yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(4);
         Destroy(gameObject);
     }
 

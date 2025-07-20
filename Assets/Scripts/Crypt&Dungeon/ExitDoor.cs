@@ -12,27 +12,13 @@ public class ExitDoor : MonoBehaviour
     private PlayerHealth playerHealth;
     private PlayerWeaponManager weaponManager;
     private bool playerInRange = false;
-    private TutorialManager tutorialManager;
-
-    void Start()
-    {
-        tutorialManager = FindObjectOfType<TutorialManager>();
-    }
 
     void Update()
     {
         if (playerInRange && PlayerController.inputActions.Input.Interact.triggered)
         {
-            // Block exit if tutorial not complete
-            if (tutorialManager != null && !tutorialManager.IsTutorialComplete)
-            {
-                Debug.Log("You must complete all tutorial steps before exiting.");
-                return;
-            }
-
             if (!string.IsNullOrEmpty(spawnPointName))
                 PlayerPrefs.SetString("LastSpawnPoint", spawnPointName);
-
             switch (exitType)
             {
                 case ExitType.LoadNextScene:

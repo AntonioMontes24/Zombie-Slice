@@ -1,5 +1,4 @@
 using System.IO;
-using Mono.Cecil;
 using TMPro;
 using UnityEngine;
 
@@ -10,31 +9,24 @@ public class TextReaderController : MonoBehaviour
     // public string filename = "StoryIntro";  //Intro file name
     private string[] lines;
     private int currentLine = -1;//Default first line of text file
-    public GameObject creditContainer;
-    public bool isCreditsMode = false; //Default false
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        LoadTextFile(filename);  // Same as your original Start logic, now reusable.
-    }
-
-    public void LoadTextFile(string file)
-    {
-        filename = file;
-        TextAsset textAsset = Resources.Load<TextAsset>("Narration/" + filename);
-        if (textAsset != null)
+        //string path = Path.Combine(Application.streamingAssetsPath, filename + ".txt");
+        TextAsset file = Resources.Load<TextAsset>("Narration/" + filename);
+        if (file != null)
         {
-            lines = textAsset.text.Split('\n');
-            currentLine = -1;
+            // lines = File.ReadAllLines(path);
+            lines = file.text.Split('\n');
             narrationText.text = "";
         }
         else
         {
-            Debug.LogError("Text file not found in Resources/Narration: " + filename);
+            Debug.LogError("Story file not found: " + filename);
         }
+        
     }
-
 
     public void ShowNextLine()
     {

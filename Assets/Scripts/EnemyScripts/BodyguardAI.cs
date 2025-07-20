@@ -96,7 +96,6 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
                 // remove the corpse by destroying the gameObject
                 StartCoroutine(removeCorpse());
                 GameManager.instance.enemyInfoPanel.SetActive(false);
-                ObjectiveManager.instance.updateZombieCount(-1);
             }
         }
     }
@@ -202,7 +201,6 @@ public class ZBodyguardAI : MonoBehaviour, IDamage, iEnemyHealth
 
         audioCounter = 399;
         attackCounter = attackRate - 1;
-        ObjectiveManager.instance.updateZombieCount(1);
 
     }
 

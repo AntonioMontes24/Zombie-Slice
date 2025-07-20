@@ -28,7 +28,7 @@ public class LastLevelWin : MonoBehaviour
     {
         if (hasWon) return;
 
-        if (GameObject.FindGameObjectsWithTag("enemy").Length == 0 && GameObject.FindGameObjectsWithTag("Boss").Length == 0)
+        if (GameObject.FindGameObjectsWithTag("enemy").Length == 0 && GameObject.FindGameObjectsWithTag("Boss").Length == 0 )
         {
             Win();
         }
@@ -53,3 +53,4 @@ public class LastLevelWin : MonoBehaviour
         Debug.Log("All enemies cleared! You win!");
     }
 }
+

@@ -17,38 +17,20 @@ public class TutorialManager : MonoBehaviour
 
         public Key[] requiredKeys;
         public GameObject keyItemToHighlight;
-        public InputActionReference[] requiredActions; // Unity Input System references
-
     }
-    
+
+    private GameObject lastHighlightedObject;
 
     public TutorialSteps[] steps;
     public TMP_Text tutorialText;
 
     private int currentStep = 0;
     private Transform player;
-
     private HashSet<Key> keysPressed = new HashSet<Key>();
-    private HashSet<InputActionReference> actionsTriggered = new HashSet<InputActionReference>();
-
-    private GameObject lastHighlightedObject;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
-
-        // Enable all required actions
-        foreach (var step in steps)
-        {
-            if (step.requiredActions != null)
-            {
-                foreach (var actionRef in step.requiredActions)
-                {
-                    actionRef?.action.Enable();
-                }
-            }
-        }
-
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         if (steps.Length > 0)
         {
             ShowCurrentStep();
@@ -57,7 +39,7 @@ public class TutorialManager : MonoBehaviour
 
     void Update()
     {
-        if (currentStep >= steps.Length || player == null) return;
+        if (currentStep >= steps.Length) return;
 
         TutorialSteps step = steps[currentStep];
         bool inRange = true;
@@ -69,9 +51,8 @@ public class TutorialManager : MonoBehaviour
             inRange = distance <= step.triggerRadius;
         }
 
-        // Key press check (legacy keys)
-        bool legacyKeysCompleted = true;
-        if (step.requireKeyPress && step.requiredKeys != null && step.requiredKeys.Length > 0)
+        // Key press check 
+        if (step.requireKeyPress && inRange)
         {
             foreach (Key key in step.requiredKeys)
             {
@@ -81,46 +62,23 @@ public class TutorialManager : MonoBehaviour
                 }
             }
 
+            // All keys in requiredKeys must be pressed
+            bool allKeysPressed = true;
             foreach (Key key in step.requiredKeys)
             {
                 if (!keysPressed.Contains(key))
                 {
-                    legacyKeysCompleted = false;
+                    allKeysPressed = false;
                     break;
                 }
             }
-        }
 
-        // Input system actions check
-        bool inputActionsCompleted = true;
-        if (step.requireKeyPress && step.requiredActions != null && step.requiredActions.Length > 0)
-        {
-            foreach (var actionRef in step.requiredActions)
-            {
-                if (actionRef != null && actionRef.action.triggered)
-                {
-                    actionsTriggered.Add(actionRef);
-                }
-            }
-
-            foreach (var actionRef in step.requiredActions)
-            {
-                if (!actionsTriggered.Contains(actionRef))
-                {
-                    inputActionsCompleted = false;
-                    break;
-                }
-            }
-        }
-
-        // Decide if we should advance
-        if (step.requireKeyPress && inRange)
-        {
-            if (legacyKeysCompleted && inputActionsCompleted)
+            if (allKeysPressed)
             {
                 AdvanceStep();
             }
         }
+        // Proximity only steps
         else if (!step.requireKeyPress && step.requireProximity && inRange)
         {
             AdvanceStep();
@@ -131,9 +89,6 @@ public class TutorialManager : MonoBehaviour
     {
         tutorialText.gameObject.SetActive(true);
         tutorialText.text = steps[currentStep].message;
-
-        keysPressed.Clear();
-        actionsTriggered.Clear();
 
         // Disable highlight on last object
         if (lastHighlightedObject != null)
@@ -175,7 +130,4 @@ public class TutorialManager : MonoBehaviour
             tutorialText.gameObject.SetActive(false);
         }
     }
-
-
-    public bool IsTutorialComplete => currentStep >= steps.Length;
 }

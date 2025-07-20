@@ -122,16 +122,8 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
         }
 
         PlayAudioDeath();
-
-        if(PickupSpawner.instance != null)
-        {
-            PickupSpawner.instance.SpawnPickupsAtLocation(transform.position);
-        } else
-        {
-            Debug.LogWarning("Pickup Spawner: pickups are null!");
-        }
-
-            StartCoroutine(RemoveCorpseRoutine());
+        ObjectiveManager.instance.updateZombieCount(-1);
+        StartCoroutine(RemoveCorpseRoutine());
 
         if(GameManager.instance != null && GameManager.instance.enemyInfoPanel != null)
         {
@@ -271,6 +263,11 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
 
         if(clawCollider != null) clawCollider.enabled = false;
         if(teethCollider != null) teethCollider.enabled = false;
+
+        if(ObjectiveManager.instance != null)
+        {
+            ObjectiveManager.instance.updateZombieCount(1);
+        }
 
         roamTimer = roamInterval;
 
