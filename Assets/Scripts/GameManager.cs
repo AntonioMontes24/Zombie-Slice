@@ -74,9 +74,6 @@ public class GameManager : MonoBehaviour
     public GameObject flashHealScreen;
     public GameObject flashAmmoPickUp;
 
-    //input system
-    private PlayerInputActions inputActions;
-
     public bool isPaused;
 
     float timeScaleOrig;
@@ -97,6 +94,7 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         
         }
         else if (instance != this)
@@ -165,9 +163,7 @@ public class GameManager : MonoBehaviour
         {
             inGameUI.SetActive(true);
         }
-
-        inputActions = new PlayerInputActions();
-        inputActions.UI.Enable();
+        PlayerController.inputActions?.UI.Enable();
     }
 
     private void Start()
@@ -189,7 +185,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (inputActions.UI.Cancel.triggered)
+        if (PlayerController.inputActions.UI.Cancel.triggered)
         {
             if (menuActive == null)
             {
