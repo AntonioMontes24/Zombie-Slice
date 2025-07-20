@@ -382,6 +382,9 @@ public class PlayerHealth : MonoBehaviour, IDamage
     {
         hasDied = false;
 
+
+        currentHealth = maxHealth;
+
         // Re-enable player controller
         PlayerController controller = GetComponent<PlayerController>();
         if (controller != null)
