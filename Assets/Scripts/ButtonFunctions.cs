@@ -29,20 +29,18 @@ public class ButtonFunctions : MonoBehaviour
 
     public void Respawn()
     {
-        if (GameManager.instance != null && GameManager.instance.player != null)
+        if (GameManager.instance != null)
         {
-            
-            GameManager.instance.player.transform.position = GameManager.instance.playerSpawnPoint;
+            // Destroy old player
+            if (GameManager.instance.player != null)
 
-           
-            GameManager.instance.player.GetComponent<PlayerHealth>().Revive();
 
-            GameManager.instance.statePause();
+                // Instantiate a fresh player from prefab at spawn point
+                GameManager.instance.player.transform.position = GameManager.instance.playerSpawnPoint;
 
             GameManager.instance.stateUnpause();
         }
     }
-
 
 
     private void OnSceneReloaded(Scene scene, LoadSceneMode mode)  //makes sure you reload the scene with the barriers getting reset
