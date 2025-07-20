@@ -16,6 +16,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
+    
 
     [SerializeField] Renderer model;                        // Model we will use when we flash a new color on hit or when damaged.
     [SerializeField] NavMeshAgent agent;                    // NavMeshAgent to traverse our navmesh
@@ -37,6 +38,8 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] Transform shoot_pos6;
     [SerializeField] Transform shoot_pos7;
     [SerializeField] Transform shoot_pos8;
+
+    [SerializeField] Collider fist_collider;
 
     
 
@@ -90,6 +93,18 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         }
     }
 
+    public void fistColliderOn()
+    {
+        if (fist_collider)
+            fist_collider.enabled = true;
+    }
+
+    public void fistColliderOff()
+    {
+        if (fist_collider)
+            fist_collider.enabled = false;
+    }
+
     public void assignHeavyAttackDamage()
     {
         // assign damage to the player
@@ -109,10 +124,12 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
         // check if the position is on the navmesh
         NavMeshHit hit;
-        NavMesh.SamplePosition(randPos, out hit, search_distance, 1);
+        if(NavMesh.SamplePosition(randPos, out hit, search_distance, 1))
+            agent.SetDestination(hit.position);
+            agent.isStopped = false;
 
-        // move
-        agent.SetDestination(hit.position);
+        // NavMesh.SamplePosition(randPos, out hit, search_distance, 1);
+
         animator.SetFloat("Speed", 1);
 
         aud.PlayOneShot(aud_clip_engaged);
@@ -202,26 +219,19 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
     IEnumerator chargeAttack()
     {
-        // this will find the players location
-        // reset the sound meter to 0
-        // run towards the players location
-        // when we arrive we do a heavy attack
+      
+        players_last_location = GameManager.instance.player.transform.position;
 
-        // find the player
-        // take the players current position from the game manager and subtract our position
-        // playerDirection = GameManager.instance.player.transform.position - headPos.position;
-
-        // Option 2: Smooth rotation using Quaternion.RotateTowards
         Vector3 targetDirection = GameManager.instance.player.transform.position - transform.position;
-        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+        Quaternion targetRotation = Quaternion.LookRotation(new Vector3 (targetDirection.x, 0, targetDirection.z));
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 3.0f * Time.deltaTime);
 
-
-        agent.SetDestination(GameManager.instance.player.transform.position);
+        // while was here
+        agent.SetDestination(players_last_location);
         animator.SetFloat("Speed", 1);
-
-
-        yield return new WaitForSeconds(1);
+        
+           
+        yield return new WaitForSeconds(4);
     }
 
     IEnumerator leapAttack()
@@ -248,7 +258,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
         yield return new WaitForSeconds(4);
 
-        has_moved_to_spawn = true;
+        
     }
 
     IEnumerator roar()
@@ -326,7 +336,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
         executing_phase = false;
 
-        current_phase = 2;
+        // current_phase = 2;
     }
 
     IEnumerator Phase2()
@@ -339,19 +349,24 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
         // set our bool so that we know we are executing a state
         executing_phase = true;
-        if(!has_moved_to_spawn)
-            StartCoroutine(moveToSpawn());
 
+        
         animator.SetFloat("Speed", 0);
-
         StartCoroutine(roar());
-       
-
+        
         yield return new WaitForSeconds(4);
+
+        // rotate the enemy
+        float angle = 1;
+        int offset = Random.Range(1, 360);
+        angle = offset * angle;
+
+        Quaternion roar_rotation = Quaternion.Euler(0f, angle, 0);
+        transform.rotation = Quaternion.Slerp(transform.rotation, roar_rotation, Time.deltaTime * 3);
 
         executing_phase = false;
 
-        current_phase = 3;
+        // current_phase = 3;
     }
 
     IEnumerator Phase3()
@@ -360,11 +375,13 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // Boss will use phase 1 attacks until his sound counter is above its threshold. 
         // when sound threshold is hit .. it is reset and boss will charge at the player and power attack for big damage. 
         // repeat this process until dead.
-        executing_phase = true; 
+        executing_phase = true;
 
+      
         StartCoroutine(chargeAttack());
-        yield return new WaitForSeconds(2);
 
+
+       
         StartCoroutine(heavyAttack());
 
         yield return new WaitForSeconds(4);
@@ -393,7 +410,8 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     {
         if (currHealth > 0)
         {
-            // checkForPhase();
+            // check what phase we are in based off our health percentage
+            checkForPhase();
 
             switch(current_phase)
             {
