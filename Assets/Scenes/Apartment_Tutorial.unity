@@ -2560,6 +2560,14 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: objectives.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[0].objectiveDescription
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[0].completeEvent.m_PersistentCalls.m_Calls.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2946873011948580738, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
@@ -3367,75 +3375,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4994523689525668647, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
   m_PrefabInstance: {fileID: 254898167}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1597754865
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1597754867}
-  - component: {fileID: 1597754866}
-  m_Layer: 0
-  m_Name: ObjectiveTest
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1597754866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1597754865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a23c9e7ec4edd65448e61b6150a89ceb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectives:
-  - completeEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-    objectiveDescription: Get Past the trucks
-    waveContainter: {fileID: 0}
-  - completeEvent:
-      m_PersistentCalls:
-        m_Calls: []
-    objectiveDescription: 'Kill the rest of the horde
-
-'
-    waveContainter: {fileID: 0}
---- !u!4 &1597754867
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1597754865}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 972.75, y: 560.375, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1625821460 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1314193541681366, guid: 361e3d5cdb2eadb43a7e7bacd9accd86, type: 3}
@@ -18123,7 +18062,6 @@ SceneRoots:
   - {fileID: 1158950419}
   - {fileID: 6277197716350042726}
   - {fileID: 2020279493}
-  - {fileID: 1597754867}
   - {fileID: 126433991}
   - {fileID: 458016849}
   - {fileID: 2000418544}

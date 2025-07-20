@@ -122,7 +122,16 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
         }
 
         PlayAudioDeath();
-        StartCoroutine(RemoveCorpseRoutine());
+
+        if(PickupSpawner.instance != null)
+        {
+            PickupSpawner.instance.SpawnPickupsAtLocation(transform.position);
+        } else
+        {
+            Debug.LogWarning("Pickup Spawner: pickups are null!");
+        }
+
+            StartCoroutine(RemoveCorpseRoutine());
 
         if(GameManager.instance != null && GameManager.instance.enemyInfoPanel != null)
         {
