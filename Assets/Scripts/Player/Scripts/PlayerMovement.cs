@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -21,10 +22,21 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Stamina Settings")]
     [SerializeField] public float maxStamina;
-    [SerializeField] private float staminaDrainRate;
+    [SerializeField] public float staminaDrainRate;
     [SerializeField] private float staminaRegenRate;
     [SerializeField] private float staminaRegenDelay;
     [SerializeField] private UnityEngine.UI.Slider staminaSlider;
+
+    [Header("Crouch Settings")]
+    [SerializeField] float crouchHeight = 1f;
+    [SerializeField] float standHeight = 2f;
+    [SerializeField] float crouchSpeedMultiplier = 0.5f;
+    [SerializeField] Transform cameraTransform;
+    [SerializeField] float crouchCameraY = 0.8f;
+    [SerializeField] float standCameraY = 1.6f;
+
+    private bool isCrouching = false;
+    private float originalWalkSpeed;
 
     public float currentStamina;
     private float regenTimer;
@@ -39,32 +51,45 @@ public class PlayerMovement : MonoBehaviour
     bool isPlayingStep;
     bool wasGrounded;
 
+    private Vector2 inputMove;
+    private bool jumpPressed;
+    private bool sprintHeld;
+
+    void Start()
+    {
+        originalWalkSpeed = walkSpeed;
+    }
+
     public void HandleMove()//Movement
     {
         HandleJump();
 
+        inputMove = PlayerController.inputActions.Input.Move.ReadValue<Vector2>();
+        moveDir = (inputMove.x * transform.right) +
+                  (inputMove.y * transform.forward);
 
-        if (controller.isGrounded && playerVel.y < 0)
-        {
-            isJumped = false;
-            playerVel.y = 0f;
-            currentJumpCount = 0;
-        }
-
-
-        moveDir = (Input.GetAxis("Horizontal") * transform.right) +
-                  (Input.GetAxis("Vertical") * transform.forward);
         float currentSpeed = isSprinting ? walkSpeed * sprintMultiplier : walkSpeed;
         controller.Move(moveDir * currentSpeed * Time.deltaTime);
 
         SetAnimations();
-
 
         controller.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
 
         if (controller.isGrounded && moveDir.magnitude > 0.3f && !isPlayingStep)
             StartCoroutine(PlaySteps());
+
+        // NEW: Proper jump reset on landing
+        if (controller.isGrounded && !wasGrounded)
+        {
+            currentJumpCount = 0;
+            isJumped = false;
+
+            if (audioLand != null && audioLand.Length > 0)
+                aud.PlayOneShot(audioLand[Random.Range(0, audioLand.Length)]/*, audioLandVol*/);
+        }
+
+        wasGrounded = controller.isGrounded;
     }
 
     void SetAnimations()
@@ -92,15 +117,21 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
-    public void HandleSprint()//Sprint
+    public void HandleSprint() //Sprint
     {
-        bool sprintInput = Input.GetButton("Sprint") && moveDir.magnitude > 0.1f;
+        if (isCrouching)// This flag checks if the player is crouching// If crouching forces isprinting to false; this will allow the player to hold sprint  button and still fire
+        {
+            isSprinting = false;
+            return;
+        }
+
+        sprintHeld = PlayerController.inputActions.Input.Sprint.ReadValue<float>() > 0.1f;
+        bool sprintInput = sprintHeld && moveDir.magnitude > 0.1f;
 
         if (sprintInput && canSprint)
         {
             isSprinting = true;
-            currentStamina -= staminaDrainRate * Time.deltaTime;
+            currentStamina -= staminaDrainRate * Time.deltaTime;//Drain stamina
             regenTimer = 0f;
             currentStamina = Mathf.Max(currentStamina, 0f); // Clamp to 0
         }
@@ -111,12 +142,12 @@ public class PlayerMovement : MonoBehaviour
 
             if (regenTimer >= staminaRegenDelay)
             {
-                currentStamina += staminaRegenRate * Time.deltaTime;
+                currentStamina += staminaRegenRate * Time.deltaTime; // Regenerate stamina
                 currentStamina = Mathf.Min(currentStamina, maxStamina); // Clamp to max
             }
         }
 
-       SetAnimations();
+        SetAnimations();
 
         if (staminaSlider != null)
             staminaSlider.value = currentStamina;
@@ -125,7 +156,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleJump()//Jump
     {
-        if (Input.GetButtonDown("Jump") && currentJumpCount < jumpMax)
+        jumpPressed = PlayerController.inputActions.Input.Jump.triggered;
+
+        if (jumpPressed && currentJumpCount < jumpMax)
         {
             playerVel.y = jumpForce;
             isJumped = true;
@@ -154,5 +187,29 @@ public class PlayerMovement : MonoBehaviour
         else
             yield return new WaitForSeconds(0.3f);
         isPlayingStep = false;
+    }
+
+    public void HandleCrouch()//Toggle crouch on key press
+    {
+        if (PlayerController.inputActions.Input.Crouch.triggered)
+        {
+            isCrouching = !isCrouching;
+
+            controller.height = isCrouching ? crouchHeight : standHeight;
+
+            if (cameraTransform != null)
+            {
+                Vector3 camPos = cameraTransform.localPosition;
+                camPos.y = isCrouching ? crouchCameraY : standCameraY;
+                cameraTransform.localPosition = camPos;
+            }
+
+            walkSpeed = isCrouching ? originalWalkSpeed * crouchSpeedMultiplier : originalWalkSpeed;
+        }
+    }
+
+    public bool IsActuallySprinting()
+    {
+        return isSprinting && !isCrouching;
     }
 }

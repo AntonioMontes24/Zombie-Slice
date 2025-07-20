@@ -27,6 +27,11 @@ public class PlayerHealth : MonoBehaviour, IDamage
     [Header("Animator")]
     [SerializeField] private Animator animator;
 
+    [Header("Bleed Effect")]
+    private Coroutine bleedCoroutine;
+    private int activeBleedDamagePerTick;
+    private float activeBleedTickInterval;
+
     private bool isFlashingLowHealth = false;
 
     Coroutine damageSoundRoutine;
@@ -35,18 +40,17 @@ public class PlayerHealth : MonoBehaviour, IDamage
     bool isTakingDotDamage;
     public bool hasDied;
 
-    public int playerHP;
+
     private AudioSource audioSource;
 
     private void Start()
     {
         currentHealth = maxHealth;
         updatePlayerUI();
-        playerHP = currentHealth;
-        Debug.Log(playerHP);
+
         audioSource = GetComponent<AudioSource>();
 
-        if(lowHealthFlashAnimator != null)
+        if (lowHealthFlashAnimator != null)
         {
             lowHealthFlashAnimator.SetBool("IsLowHealth", false);
             isFlashingLowHealth = false;
@@ -61,6 +65,7 @@ public class PlayerHealth : MonoBehaviour, IDamage
         StartCoroutine(damageFlash());
 
         currentHealth -= amount;
+        currentHealth = Mathf.Max(currentHealth, 0); // ensure health doesnt go below 0
         updatePlayerUI();
 
         if (currentHealth <= 0)
@@ -72,11 +77,11 @@ public class PlayerHealth : MonoBehaviour, IDamage
                     audioSource.PlayOneShot(deathSound);
                 Die();
                 StartCoroutine(HandleDeathSequence());
-
+                RemoveBleed();
                 if (damageSoundRoutine != null)
                     StopCoroutine(damageSoundRoutine);
 
-                if(lowHealthFlashAnimator != null)
+                if (lowHealthFlashAnimator != null)
                 {
                     lowHealthFlashAnimator.SetBool("IsLowHealth", false);
                     isFlashingLowHealth = false;
@@ -101,7 +106,35 @@ public class PlayerHealth : MonoBehaviour, IDamage
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         updatePlayerUI();
         StartCoroutine(HealFlash());
+
+        // stop low health flashing if healed above threshold
+        if (((float)currentHealth / maxHealth) > lowHealthThreashHold && isFlashingLowHealth)
+        {
+            if (lowHealthFlashAnimator != null)
+            {
+                lowHealthFlashAnimator.SetBool("IsLowHealth", false);
+                isFlashingLowHealth = false;
+            }
+        }
+
     }
+
+    public int CurrentHealth // saving health for player state
+    {
+        get => currentHealth;
+        set
+        {
+            currentHealth = Mathf.Clamp(value, 0, maxHealth);
+            updatePlayerUI();
+        }
+    }
+
+    public void SetHealth(int newHealth)
+    {
+        currentHealth = Mathf.Clamp(newHealth, 0, maxHealth);
+        updatePlayerUI();
+    }
+
 
     // only call this when resetting gamestate
     public void ResetHealth()
@@ -109,12 +142,15 @@ public class PlayerHealth : MonoBehaviour, IDamage
         currentHealth = maxHealth;
         updatePlayerUI();
         hasDied = false;
+        RemoveBleed();
 
-        if(lowHealthFlashAnimator != null)
+        if (lowHealthFlashAnimator != null)
         {
             lowHealthFlashAnimator.SetBool("IsLowHealth", false);
             isFlashingLowHealth = false;
         }
+
+        CancelHurtLoop();
 
     }
 
@@ -136,7 +172,6 @@ public class PlayerHealth : MonoBehaviour, IDamage
             }
         }
 
-        if (deathSound && audioSource) audioSource.PlayOneShot(deathSound);
         if (animator != null)
             animator.SetTrigger("IsDead");
 
@@ -174,12 +209,11 @@ public class PlayerHealth : MonoBehaviour, IDamage
     public void CancelHurtLoop()//Cancels the hurt loop sound
     {
         isTakingDotDamage = false;
-        if(damageSoundRoutine != null)
+        if (damageSoundRoutine != null)
         {
             StopCoroutine(damageSoundRoutine);
             damageSoundRoutine = null;
         }
-        //playedHurtSound = false;
     }
 
     void updatePlayerUI()
@@ -197,18 +231,18 @@ public class PlayerHealth : MonoBehaviour, IDamage
         }
         else if (healthPercent >= 0.25f)
         {
-            GameManager.instance.playerHPBar.color = Color.yellow;
+            GameManager.instance.playerHPBar.color = Color.orange;
         }
         else
         {
             GameManager.instance.playerHPBar.color = Color.red;
         }
 
-        if(lowHealthFlashAnimator != null)
+        if (lowHealthFlashAnimator != null)
         {
-            if(healthPercent <= lowHealthThreashHold && !hasDied)
+            if (healthPercent <= lowHealthThreashHold && !hasDied)
             {
-                if(!isFlashingLowHealth)
+                if (!isFlashingLowHealth)
                 {
                     lowHealthFlashAnimator.SetBool("IsLowHealth", true);
                     isFlashingLowHealth = true;
@@ -220,13 +254,13 @@ public class PlayerHealth : MonoBehaviour, IDamage
                 if (isFlashingLowHealth)
                 {
                     lowHealthFlashAnimator.SetBool("IsLowHealth", false);
-                    isFlashingLowHealth= false;
+                    isFlashingLowHealth = false;
                     Debug.Log("Low Health flashing stopped.");
                 }
             }
         }
 
-        
+
     }
 
     void EnableDeathCamera()//Enable second camera on death to follow death animation view
@@ -283,6 +317,77 @@ public class PlayerHealth : MonoBehaviour, IDamage
 
             yield return null;
         }
+    }
+
+
+    public void ApplyBleed(int damagePerTick, float tickInterval, float duration)
+    {
+        if (bleedCoroutine != null)
+        {
+            StopCoroutine(bleedCoroutine);
+        }
+
+        activeBleedDamagePerTick = damagePerTick;
+        activeBleedTickInterval = tickInterval;
+
+        // start bleed coroutine
+        bleedCoroutine = StartCoroutine(BleedRoutine(duration));
+    }
+
+    public void RemoveBleed()
+    {
+        if (bleedCoroutine != null)
+        {
+            StopCoroutine(bleedCoroutine);
+            bleedCoroutine = null;
+        }
+    }
+
+    private IEnumerator BleedRoutine(float duration)
+    {
+        float timer = 0f;
+        while (timer < duration)
+        {
+            yield return new WaitForSeconds(activeBleedTickInterval);
+
+            if (hasDied)
+            {
+                RemoveBleed();
+                yield break;
+            }
+
+            takeDamage(activeBleedDamagePerTick);
+            timer += activeBleedTickInterval;
+        }
+        RemoveBleed();
+    }
+
+    public void Revive()
+    {
+        hasDied = false;
+
+        // Re-enable player controller
+        PlayerController controller = GetComponent<PlayerController>();
+        if (controller != null)
+            controller.enabled = true;
+
+        // Re-enable weapon firing
+        PlayerWeaponManager weaponManager = GetComponent<PlayerWeaponManager>();
+        if (weaponManager != null)
+            weaponManager.SetCanFire(true);
+
+        // Re-enable camera controls
+        CameraController cameraController = GetComponentInChildren<CameraController>();
+        if (cameraController != null)
+            cameraController.enabled = true;
+
+        // Hide death camera
+        if (deathCamera != null)
+            deathCamera.gameObject.SetActive(false);
+
+        // Reset death animation
+        if (animator != null)
+            animator.Rebind(); // Resets all animation states
     }
 
 }

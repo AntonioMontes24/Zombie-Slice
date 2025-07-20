@@ -27,7 +27,36 @@ public class ButtonFunctions : MonoBehaviour
         //}
     }
 
-   private void OnSceneReloaded(Scene scene, LoadSceneMode mode)  //makes sure you reload the scene with the barriers getting reset
+    public void Respawn()
+    {
+        if (GameManager.instance != null)
+        {
+            // Destroy old player
+            if (GameManager.instance.player != null)
+
+
+                // Instantiate a fresh player from prefab at spawn point
+                GameManager.instance.player.transform.position = GameManager.instance.playerSpawnPoint;
+
+            // Restore health
+            var playerHealth = GameManager.instance.player.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.SetHealth((int)GameManager.instance.savedHealth);
+                playerHealth.Revive(); // <-- Reset death state here (must be implemented)
+            }
+
+            // Restore weapons
+            var weaponManager = GameManager.instance.player.GetComponent<PlayerWeaponManager>();
+            if (weaponManager != null)
+                weaponManager.LoadWeaponData(GameManager.instance.savedWeaponData);
+
+            GameManager.instance.stateUnpause();
+        }
+    }
+
+
+    private void OnSceneReloaded(Scene scene, LoadSceneMode mode)  //makes sure you reload the scene with the barriers getting reset
     {
 
         SceneManager.sceneLoaded -= OnSceneReloaded;
@@ -101,75 +130,27 @@ public class ButtonFunctions : MonoBehaviour
     [Header("Door Interaction")]
     [SerializeField] private float holdDuration = 1f;
     [SerializeField] private int sceneBuildIndex = 2;
-    [SerializeField] private KeyCode interactKey = KeyCode.X;
+    //[SerializeField] private KeyCode interactKey = KeyCode.X;
     [SerializeField] private TMP_Text InteractText;
 
     [Header("UI")]
     [SerializeField] private TMP_Text interactPrompt;
 
-   // private float holdTimer = 0f;
+  
     private bool isPlayerNearDoor = false;
 
     private void Start()
     {
-        //if (interactPrompt != null)
-        //{
-
-        //    interactPrompt.gameObject.SetActive(false);
-        //}
+    
 
     }
 
 
     private void Update()
     {
-        //if (isPlayerNearDoor && ObjectiveManager.instance != null && ObjectiveManager.instance.GetZombieCount() == 0)
-        //{
-        //    InteractText.gameObject.SetActive(true);
-
-        //    if (Input.GetKey(interactKey))
-        //    {
-        //        holdTimer += Time.deltaTime;
-
-        //        if (holdTimer >= holdDuration)
-        //        {
-        //            LoadTargetScene();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        holdTimer = 0f;
-        //    }
-        //}
-
-        //else
-        //{
-        //    InteractText.gameObject.SetActive(false);
-        //    holdTimer = 0f;
-        //}
+        
 
     }
 
-    //private void LoadTargetScene()
-    //{
-    //    Debug.Log("Loading scene: " + sceneBuildIndex);
-    //    SceneManager.LoadScene(sceneBuildIndex);
-    //}
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.CompareTag("Player"))
-    //    {
-    //        isPlayerNearDoor = true;
-    //    }
-    //}
-
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.CompareTag("Player"))
-    //    {
-    //        isPlayerNearDoor = false;
-    //        //holdTimer = 0f;
-    //    }
-    //}
+   
 }

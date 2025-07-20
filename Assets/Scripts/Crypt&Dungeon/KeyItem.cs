@@ -3,16 +3,37 @@ using UnityEngine;
 public class KeyItem : MonoBehaviour
 {
     public string keyID;
-    void OnTriggerStay(Collider other)
+
+    private bool playerInRange = false;
+    private PlayerInventory playerInventory;
+
+    void Update()
     {
-        if (other.CompareTag("Player") && Input.GetKeyDown(KeyCode.F))
+        if (playerInRange && PlayerController.inputActions.Input.Interact.triggered)
         {
-            PlayerInventory inventory = other.GetComponent<PlayerInventory>();
-            if (inventory != null)
+            if (playerInventory != null)
             {
-                inventory.AddKey(keyID);
+                playerInventory.AddKey(keyID);
                 Destroy(gameObject);
             }
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = true;
+            playerInventory = other.GetComponent<PlayerInventory>();
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = false;
+            playerInventory = null;
         }
     }
 }

@@ -4,8 +4,10 @@ public class KillManager : MonoBehaviour
 {
 
     private int killCount = 0;
+    private int checkpointKillCount = 0;
 
     public int KillCount => killCount;
+    public int CheckpointKillCount => checkpointKillCount;
 
     public static KillManager instance;
 
@@ -34,4 +36,16 @@ public class KillManager : MonoBehaviour
         killCount = 0;
         Debug.Log("Kill count reset to zero.");
     }
+    public void SaveCheckpointKills()
+    {
+        checkpointKillCount = killCount;
+        Debug.Log("Checkpoint kill count saved: " + checkpointKillCount);
+    }
+
+    public void RestoreCheckpointKills()
+    {
+        killCount = checkpointKillCount;
+        Debug.Log("Kill count restored to checkpoint value: " + killCount);
+    }
+
 }

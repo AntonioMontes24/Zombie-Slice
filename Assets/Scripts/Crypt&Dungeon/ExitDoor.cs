@@ -10,13 +10,27 @@ public class ExitDoor : MonoBehaviour
     [SerializeField] string spawnPointName = "";//Choose a specific spawn point location 
 
     private bool playerInRange = false;
+    private TutorialManager tutorialManager;
+
+    void Start()
+    {
+        tutorialManager = FindObjectOfType<TutorialManager>();
+    }
 
     void Update()
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.F))
+        if (playerInRange && PlayerController.inputActions.Input.Interact.triggered)
         {
+            // Block exit if tutorial not complete
+            if (tutorialManager != null && !tutorialManager.IsTutorialComplete)
+            {
+                Debug.Log("You must complete all tutorial steps before exiting.");
+                return;
+            }
+
             if (!string.IsNullOrEmpty(spawnPointName))
                 PlayerPrefs.SetString("LastSpawnPoint", spawnPointName);
+
             switch (exitType)
             {
                 case ExitType.LoadNextScene:

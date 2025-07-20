@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine.UI;
 using NUnit.Framework;
 using UnityEngine.Audio;
+using UnityEngine.InputSystem;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
@@ -53,6 +54,18 @@ public class PlayerWeaponManager : MonoBehaviour
     [Header("Animations")]
     [SerializeField] Animator animator;
 
+    [Header("Fire mode Icons")]
+    [SerializeField] private Image fireModeIcon;
+    [SerializeField] private Sprite semiFireModeIcon;
+    [SerializeField] private Sprite fullFireModeIcon;
+
+    [Header("Stamina Settings")]
+    [SerializeField] private float heavyStaminaThreshold = 5f;
+    [SerializeField] private float lightStaminaThreshold = 1f;
+    [SerializeField] private float lightAttackStaminaCost = 1f;
+    [SerializeField] private float heavyAttackStaminaCost = 5f;
+
+
     [Header("Runtime State")]
     Transform currentHipPosition;
     Transform currentAdsPosition;
@@ -76,6 +89,8 @@ public class PlayerWeaponManager : MonoBehaviour
     private Vector3 initialRightHandPos;
     private Vector3 currentLeftHandOffset;
     private Vector3 currentRightHandOffset;
+
+
 
     private void Start()
     {
@@ -102,7 +117,6 @@ public class PlayerWeaponManager : MonoBehaviour
 
         if (startingKnife != null)
             GetGunStats(startingKnife, autoEquip: true);
-
     }
 
     public void GetGunStats(WeaponStats gun, int startingAmmo = -1, int reserveAmmo = -1, bool autoEquip = true)// Optional Parameters to modify starting ammo and auto equip
@@ -134,7 +148,7 @@ public class PlayerWeaponManager : MonoBehaviour
     public void HandleShooting()//Handles Shooting
     {
         if (!canFire) return;
-        if (movement != null && movement.canSprint && Input.GetButton("Sprint"))
+        if (movement != null && movement.IsActuallySprinting())
             return;
 
         shootCooldown -= Time.deltaTime;
@@ -142,7 +156,9 @@ public class PlayerWeaponManager : MonoBehaviour
         FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
         if (currentGun == null || isReloading) return;
 
-        bool fireInput = isAutomaticMode ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1");
+        bool fireInput = isAutomaticMode ?
+            PlayerController.inputActions.Input.Fire.ReadValue<float>() > 0.1f :
+            PlayerController.inputActions.Input.Fire.triggered;
 
         if (fireInput && shootCooldown <= 0f)
         {
@@ -169,10 +185,12 @@ public class PlayerWeaponManager : MonoBehaviour
             }
         }
 
-        if (!Input.GetButton("Fire1"))
+        if (PlayerController.inputActions.Input.Fire.ReadValue<float>() == 0f)
             playedEmptySound = false;
 
-        if (Input.GetKeyDown(KeyCode.R) && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
+        bool reloadInput = PlayerController.inputActions.Input.Reload.IsPressed();
+
+        if (reloadInput && currentGun.ammoCur < currentGun.ammoMax && currentGun.ammoReserve > 0 && !isReloading)
             reloadCoroutine = StartCoroutine(ReloadRoutine(currentGun));// Starts Reload
     }
 
@@ -190,7 +208,7 @@ public class PlayerWeaponManager : MonoBehaviour
             ray = gameplayCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         else
         {
-            float spreadAngle = 5f;
+            float spreadAngle = 2f;
             Vector3 spreadDir = Quaternion.Euler(
                 Random.Range(-spreadAngle, spreadAngle),
                 Random.Range(-spreadAngle, spreadAngle),
@@ -282,58 +300,151 @@ public class PlayerWeaponManager : MonoBehaviour
             GameManager.instance.HideEnemyUI();
         }
     }
-
-    public void HandleMeleeAttack()//Handles melee attacks
+    public void HandleMeleeAttack()// Handles melee attacks light and heavy
     {
-        if (!canFire) return;
-        if (!HasGun()) return;
+        if (!canFire || !HasGun() || movement == null) return;
 
         var weapon = weaponList[currentWeaponIndex];
         if (weapon is not MeleeWeaponStats melee) return;
 
         meleeCooldownTimer -= Time.deltaTime;
 
-        if (!Input.GetButtonDown("Fire1")) return;
-        if (meleeCooldownTimer > 0f) return;
+        bool heavyAttackHeld = PlayerController.inputActions.Input.ADS.IsPressed();
+        bool normalAttackPressed = PlayerController.inputActions.Input.Fire.IsPressed();
 
+        if (heavyAttackHeld && movement.currentStamina >= heavyStaminaThreshold && meleeCooldownTimer <= 0f)
+        {
+            PerformHeavyAttack(melee);
+        }
+        else if (normalAttackPressed && movement.currentStamina >= lightStaminaThreshold && meleeCooldownTimer <= 0f)
+        {
+            PerformNormalAttack(melee);
+        }
+    }
+
+    public void PerformHeavyAttack(MeleeWeaponStats melee)
+    {
+        // Drain stamina for the heavy attack
+        movement.currentStamina -= heavyAttackStaminaCost;
+        movement.currentStamina = Mathf.Max(movement.currentStamina, 0f); // Prevent negative stamina
+
+        // Reset cooldown for heavy attack
         meleeCooldownTimer = melee.attackRate;
 
         if (animator != null)
         {
             animator.ResetTrigger("MeleeAttack");
-            animator.SetTrigger("MeleeAttack");
-            Collider knifeCollider = currentWeaponInstance.GetComponentInChildren<Collider>();
-            StartCoroutine(EnableKnifeHitBox(knifeCollider, 0.3f));
+            animator.SetTrigger("HeavyAttack");
         }
+
+        // Perform the attack (same as normal attack but with more damage)
+        Collider hitbox = currentWeaponInstance.GetComponentInChildren<Collider>();
+        StartCoroutine(EnableKnifeHitBox(hitbox, 0.5f)); // Increased duration for heavy attack hitbox
+
+        if (melee.swingSound != null)
+            aud.PlayOneShot(melee.swingSound);
+
+        // Perform hit detection
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        Debug.DrawRay(ray.origin, ray.direction * 2f, Color.red, 1f);
+
+        bool hitSomething = Physics.Raycast(ray, out RaycastHit hit, 2f);
+
+        if (hitSomething)
+        {
+
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
+
+            if (dmg != null)
+                dmg.takeDamage(melee.damage * 2); // More damage for heavy attack
+
+            if (hit.collider.CompareTag("Enemy"))
+            {     
+                    if (melee.zombieHit != null)
+                    aud.PlayOneShot(melee.zombieHit);
+
+                    if (enemyHealth != null)
+                    {
+                        if (enemyHealth.CurrentHealth <= 0)
+                        {
+                            GameManager.instance.HideEnemyUI();
+                        }
+                        else
+                        {
+                            GameManager.instance.SetCurrentEnemy(enemyHealth);
+                        }
+                    }
+             }
+             else
+             {
+                GameManager.instance.HideEnemyUI();
+             }
+        }
+        else
+        {
+            GameManager.instance.HideEnemyUI();
+        }
+    }
+
+    public void PerformNormalAttack(MeleeWeaponStats melee)
+    {
+        meleeCooldownTimer = melee.attackRate;
+        movement.currentStamina -= lightAttackStaminaCost;
+        movement.currentStamina = Mathf.Max(movement.currentStamina, 0f);
+        // Reset trigger and trigger normal attack animation
+        if (animator != null)
+        {
+            animator.ResetTrigger("HeavyAttack");
+            animator.SetTrigger("MeleeAttack");
+        }
+
+        // Perform the attack
+        Collider hitbox = currentWeaponInstance.GetComponentInChildren<Collider>();
+        StartCoroutine(EnableKnifeHitBox(hitbox, 0.3f));
 
         if (melee.swingSound != null)
             aud.PlayOneShot(melee.swingSound);
 
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        Debug.DrawRay(ray.origin, ray.direction * 2f, Color.red, 1f); // Debug line
+        Debug.DrawRay(ray.origin, ray.direction * 2f, Color.red, 1f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 2f))
+        bool hitSomething = Physics.Raycast(ray, out RaycastHit hit, 2f);
+
+        if (hitSomething)
         {
+
             IDamage dmg = hit.collider.GetComponent<IDamage>();
+            iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
+
             if (dmg != null)
-                dmg.takeDamage(melee.damage);
+                dmg.takeDamage(melee.damage); // More damage for heavy attack
 
-            bool isZombie = hit.collider.CompareTag("Enemy");
-
-            if (isZombie)
+            if (hit.collider.CompareTag("Enemy"))
             {
                 if (melee.zombieHit != null)
                     aud.PlayOneShot(melee.zombieHit);
 
-                iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
                 if (enemyHealth != null)
-                    GameManager.instance.SetCurrentEnemy(enemyHealth);
+                {
+                    if (enemyHealth.CurrentHealth <= 0)
+                    {
+                        GameManager.instance.HideEnemyUI();
+                    }
+                    else
+                    {
+                        GameManager.instance.SetCurrentEnemy(enemyHealth);
+                    }
+                }
             }
             else
             {
-                if (melee.otherHit != null)
-                    aud.PlayOneShot(melee.otherHit);
+                GameManager.instance.HideEnemyUI();
             }
+        }
+        else
+        {
+            GameManager.instance.HideEnemyUI();
         }
     }
 
@@ -376,10 +487,19 @@ public class PlayerWeaponManager : MonoBehaviour
 
     public void HandleADS()//Handles ads position/recoil
     {
-        if (currentHipPosition == null || currentAdsPosition == null)
+        // Block ADS if current weapon is melee
+        if (weaponList.Count == 0 || currentWeaponIndex >= weaponList.Count)
             return;
 
         if (weaponList[currentWeaponIndex] is MeleeWeaponStats)
+        {
+            isAiming = false;
+            if (animator != null)
+                animator.SetBool("IsAiming", false);
+            return;
+        }
+
+        if (currentHipPosition == null || currentAdsPosition == null)
             return;
 
         Transform target = isAiming ? currentAdsPosition : currentHipPosition;
@@ -422,16 +542,18 @@ public class PlayerWeaponManager : MonoBehaviour
     public void ToggleFireMode()//Sets Firemode
     {
         if (weaponList.Count == 0) return;
-        FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
-        if (currentGun == null) return;
 
-        if (currentGun.canSwitchFireMode)
-        {
-            isAutomaticMode = !isAutomaticMode;
-            if (currentGun.fireModeSwitchSound != null)
-                aud.PlayOneShot(currentGun.fireModeSwitchSound);
-        }
+        FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
+        if (currentGun == null || !currentGun.canSwitchFireMode) return;
+
+        isAutomaticMode = !isAutomaticMode;
+
+        if (currentGun.fireModeSwitchSound != null)
+            aud.PlayOneShot(currentGun.fireModeSwitchSound);
+
+        UpdateFireModeUI();
     }
+
     public bool HasGun() // This checks if player has any weapon
     {
         return weaponList.Count > 0;
@@ -517,7 +639,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             isAutomaticMode = gun.isAutomaticDefault;
         }
-
+        UpdateFireModeUI();
         if (currentWeaponInstance != null)
             Destroy(currentWeaponInstance);
 
@@ -605,6 +727,36 @@ public class PlayerWeaponManager : MonoBehaviour
     IEnumerator EnableKnifeHitBox(Collider hitbox, float duration)
     {
         hitbox.enabled = true;
+
+        // Force overlap check
+        Vector3 center = hitbox.bounds.center;
+        Vector3 halfExtents = hitbox.bounds.extents;
+        Collider[] hits = Physics.OverlapBox(center, halfExtents, hitbox.transform.rotation, ~ignoreLayer);
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.CompareTag("Enemy"))
+            {
+                IDamage dmg = hit.GetComponent<IDamage>();
+                if (dmg != null)
+                {
+                    dmg.takeDamage(weaponList[currentWeaponIndex] is MeleeWeaponStats melee ? melee.damage : 10);
+                }
+
+                iEnemyHealth enemyHealth = hit.GetComponent<iEnemyHealth>();
+                if (enemyHealth != null)
+                {
+                    GameManager.instance.SetCurrentEnemy(enemyHealth);
+                }
+
+                // Play zombie hit sound
+                if (weaponList[currentWeaponIndex] is MeleeWeaponStats meleeStats && meleeStats.zombieHit != null)
+                {
+                    aud.PlayOneShot(meleeStats.zombieHit);
+                }
+            }
+        }
+
         yield return new WaitForSeconds(duration);
         hitbox.enabled = false;
     }
@@ -621,4 +773,64 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         canFire = value;
     }
+
+    private void UpdateFireModeUI()// Changes firemode ICon
+    {
+        if (fireModeIcon == null)
+            return;
+
+        FireArmStats gun = weaponList[currentWeaponIndex] as FireArmStats;
+
+        if (gun == null)
+        {
+            fireModeIcon.enabled = false; // Hide icon for melee or null
+        }
+        else
+        {
+            fireModeIcon.enabled = true;
+            fireModeIcon.sprite = isAutomaticMode ? fullFireModeIcon : semiFireModeIcon;
+        }
+    }
+
+    public List<WeaponSaveData> GetWeaponSaveData()
+    {
+        List<WeaponSaveData> saveDataList = new List<WeaponSaveData>();
+
+        foreach (WeaponStats weapon in weaponList)
+        {
+            var data = new WeaponSaveData
+            {
+                weaponId = weapon.weaponNameId,
+                currentAmmo = 0,
+                reserveAmmo = 0
+            };
+
+            if (weapon is FireArmStats firearm)
+            {
+                data.currentAmmo = firearm.ammoCur;
+                data.reserveAmmo = firearm.ammoReserve;
+            }
+
+            saveDataList.Add(data);
+        }
+
+        return saveDataList;
+    }
+
+    public void LoadWeaponData(List<WeaponSaveData> savedData)
+    {
+        for (int i = 0; i < savedData.Count && i < weaponList.Count; i++)
+        {
+            var weapon = weaponList[i];
+            var data = savedData[i];
+
+            if (weapon is FireArmStats firearm)
+            {
+                firearm.ammoCur = data.currentAmmo;
+                firearm.ammoReserve = data.reserveAmmo;
+            }
+        }
+    } 
+
 }
+
