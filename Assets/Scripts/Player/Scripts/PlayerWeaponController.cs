@@ -830,7 +830,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 firearm.ammoReserve = data.reserveAmmo;
             }
         }
-    }
+    } 
 
 }
 
