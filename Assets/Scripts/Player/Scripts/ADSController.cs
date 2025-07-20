@@ -9,13 +9,10 @@ public class AimDownSights : MonoBehaviour
     [SerializeField] float adsFov = 35f;
     [SerializeField] float zoomSpeed = 8f;
 
-    [Header("Controls")]
-
-
     Camera cam;
     float targetFov;
     PlayerWeaponManager weaponManager;
-    private PlayerInputActions inputActions;
+    private PlayerInputActions inputActions => PlayerController.inputActions;
 
     void Awake()
     {
@@ -24,8 +21,6 @@ public class AimDownSights : MonoBehaviour
         targetFov = hipFov;
 
         weaponManager = Object.FindFirstObjectByType<PlayerWeaponManager>();
-        inputActions = new PlayerInputActions();
-        inputActions.Input.Enable();
     }
 
     void Update()
@@ -33,7 +28,7 @@ public class AimDownSights : MonoBehaviour
         if (weaponManager == null) return;
 
         bool isGun = weaponManager.CurrentGun is FireArmStats;
-        bool adsPressed = PlayerController.inputActions.Input.ADS.IsPressed();
+        bool adsPressed = inputActions.Input.ADS.IsPressed();
 
         bool isAiming = isGun && adsPressed;
         targetFov = isAiming ? adsFov : hipFov;

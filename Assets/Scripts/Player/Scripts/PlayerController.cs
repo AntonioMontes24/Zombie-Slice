@@ -29,12 +29,16 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     void Awake()
     {
-        inputActions = new PlayerInputActions();
+        if (inputActions == null)
+        {
+            inputActions = new PlayerInputActions();
+        }
     }
 
     private void OnEnable()
     {
         inputActions.Input.Enable();
+        inputActions.UI.Enable();
     }
 
     private void OnDisable()
