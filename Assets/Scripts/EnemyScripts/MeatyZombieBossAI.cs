@@ -5,7 +5,6 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Audio;
-using UnityEngine.SceneManagement;
 
 
 public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
@@ -13,9 +12,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
     // create some serialized variables
     [SerializeField] int currHealth;                        // the current health
-    [SerializeField] int _maxHealth;                        // max health 
-    float health_percentage;
-
+    [SerializeField] int _maxHealth;                        // max health of lich
     [SerializeField] float speed;                           // the speed when walking normally
     [SerializeField] float speedModifier;                   // the modifier if running or slowed
     [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
@@ -43,7 +40,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] Transform shoot_pos8;
 
     [SerializeField] Collider fist_collider;
-    [SerializeField] private string outroScene = "OutroScene";
+
     
 
     [SerializeField] GameObject blightBall;                 // our projectile
@@ -85,14 +82,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         {
             currHealth -= amount;
 
-            if (GameManager.instance != null)
-            {
-                GameManager.instance.UpdateEnemyHealthBar(this);
-                if (GameManager.instance.enemyInfoPanel != null)
-                {
-                    GameManager.instance.enemyInfoPanel.SetActive(true);
-                }
-            }
+            GameManager.instance.UpdateEnemyHealthBar(this);
 
             if (currHealth <= 0)
             {
@@ -211,13 +201,13 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     public void checkForPhase()
     {
         // get or current health percentage
-        health_percentage = currHealth * 100 / maxHealth ;
+        float HP_Percent = currHealth / maxHealth;
 
-        if(health_percentage > 80)
+        if(HP_Percent > .70)
         {
             current_phase = 1;
         }
-        else if (health_percentage > 40)
+        else if (HP_Percent < .40)
         {
             current_phase = 2;
         }
@@ -307,7 +297,6 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
 
         Destroy(gameObject);
-        SceneManager.LoadScene(outroScene);
     }
 
     IEnumerator startOfFight()
@@ -316,7 +305,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         if(fight_start != null)
            aud.PlayOneShot(fight_start);
 
-        fistColliderOff();
+
 
         yield return new WaitForSeconds(2);
 
@@ -405,8 +394,6 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // set our data here
         
         currHealth = maxHealth;
-        health_percentage = currHealth / maxHealth;
-
         initial_start_position = transform.position;
         executing_phase = false;
         
