@@ -5,6 +5,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 
 public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
@@ -42,7 +43,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] Transform shoot_pos8;
 
     [SerializeField] Collider fist_collider;
-
+    [SerializeField] private string outroScene = "OutroScene";
     
 
     [SerializeField] GameObject blightBall;                 // our projectile
@@ -306,6 +307,7 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
 
         Destroy(gameObject);
+        SceneManager.LoadScene(outroScene);
     }
 
     IEnumerator startOfFight()
