@@ -558,6 +558,7 @@ public class GameManager : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
         }
     }
+
     //    if (playerHealth != null)
     //        playerHealth.ResetHealth();
     //}
