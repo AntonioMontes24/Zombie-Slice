@@ -129,6 +129,9 @@ public class TutorialManager : MonoBehaviour
 
     void ShowCurrentStep()
     {
+        if (tutorialText == null)
+            return;
+
         tutorialText.gameObject.SetActive(true);
         tutorialText.text = steps[currentStep].message;
 
@@ -157,7 +160,7 @@ public class TutorialManager : MonoBehaviour
 
     void AdvanceStep()
     {
-        if (steps[currentStep].target != null)
+        if (currentStep < steps.Length && steps[currentStep].target != null)
         {
             HighlightObject highlight = steps[currentStep].target.GetComponent<HighlightObject>();
             if (highlight != null)
@@ -172,9 +175,11 @@ public class TutorialManager : MonoBehaviour
         }
         else
         {
-            tutorialText.gameObject.SetActive(false);
+            if (tutorialText != null)
+                tutorialText.gameObject.SetActive(false);
         }
     }
+
     private void OnDisable()
     {
         foreach (var step in steps)
