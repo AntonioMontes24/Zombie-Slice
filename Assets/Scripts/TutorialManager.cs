@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -37,6 +38,11 @@ public class TutorialManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
+        if (steps.Length > 0)
+        {
+            ShowCurrentStep();
+        }
+
         // Enable all required actions
         foreach (var step in steps)
         {
@@ -49,10 +55,17 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-        if (steps.Length > 0)
+    }
+
+    private void Awake()
+    {
+        // Ensure this is the only TutorialManager in the scene
+        if (FindObjectsOfType<TutorialManager>().Length > 1)
         {
-            ShowCurrentStep();
+            Destroy(gameObject); // Destroy any duplicates
+            return;
         }
+
     }
 
     void Update()
@@ -179,9 +192,16 @@ public class TutorialManager : MonoBehaviour
                 tutorialText.gameObject.SetActive(false);
         }
     }
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
 
     private void OnDisable()
     {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+
         foreach (var step in steps)
         {
             if (step.requiredActions != null)
@@ -191,6 +211,16 @@ public class TutorialManager : MonoBehaviour
                     actionRef?.action?.Disable();
                 }
             }
+        }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        
+        if (steps != null && steps.Length > 0)
+        {
+            player = GameObject.FindGameObjectWithTag("Player")?.transform;
+            StartTutorial();
         }
     }
 
