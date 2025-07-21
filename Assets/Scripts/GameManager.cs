@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+           
         
         }
         else if (instance != this)
