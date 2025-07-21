@@ -8,6 +8,19 @@ public class ButtonFunctions : MonoBehaviour
     {
         GameManager.instance.stateUnpause();
     }
+
+    public void backToMain()
+    {
+        SceneManager.LoadScene(1);
+
+        // int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        // SceneManager.LoadScene(currentSceneIndex);
+
+        //if (KillManager.instance != null)
+        //{
+        //    KillManager.instance.ResetKills();
+        //}
+    }
     public void restart()
     {
         //GameManager.instance.respawnHook?.Invoke();
