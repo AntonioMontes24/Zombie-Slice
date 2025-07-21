@@ -29,12 +29,16 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     void Awake()
     {
-        inputActions = new PlayerInputActions();
+        if (inputActions == null)
+        {
+            inputActions = new PlayerInputActions();
+        }
     }
 
     private void OnEnable()
     {
         inputActions.Input.Enable();
+        inputActions.UI.Enable();
     }
 
     private void OnDisable()
@@ -51,8 +55,22 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     public void SpawnPlayer()
     {
-        playerMovement.controller.transform.position = GameManager.instance.playerSpawnPoint;
-        playerHealth.ResetHealth();
+        transform.position = GameManager.instance.playerSpawnPoint;
+        transform.rotation = Quaternion.identity;
+
+        PlayerHealth health = GetComponent<PlayerHealth>();
+        if (health != null)
+        {
+            if (GameManager.instance.savedHealth > 0)
+            {
+                health.CurrentHealth = (int)GameManager.instance.savedHealth;
+            }
+            else
+            {
+                health.LoadHealth();
+            }
+        }
+
     }
 
     // Update is called once per frame

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,15 +22,17 @@ public class ExitDoor : MonoBehaviour
     {
         if (playerInRange && PlayerController.inputActions.Input.Interact.triggered)
         {
-            // Block exit if tutorial not complete
             if (tutorialManager != null && !tutorialManager.IsTutorialComplete)
             {
                 Debug.Log("You must complete all tutorial steps before exiting.");
                 return;
             }
 
+            // Save spawn point name if specified
             if (!string.IsNullOrEmpty(spawnPointName))
                 PlayerPrefs.SetString("LastSpawnPoint", spawnPointName);
+
+            
 
             switch (exitType)
             {
@@ -46,6 +49,8 @@ public class ExitDoor : MonoBehaviour
             }
         }
     }
+
+    
 
     void LoadNext()
     {

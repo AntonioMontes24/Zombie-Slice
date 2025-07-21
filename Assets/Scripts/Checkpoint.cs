@@ -12,8 +12,8 @@ public class Checkpoint : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player") ||
-            GameManager.instance.playerSpawnPoint == transform.position)
+        if (!other.CompareTag("Player") || 
+            Vector3.Distance(GameManager.instance.playerSpawnPoint, transform.position) < 0.1f)
             return;
 
         if (usesSceneChange)
@@ -24,20 +24,6 @@ public class Checkpoint : MonoBehaviour
         {
             // Save new spawn point
             GameManager.instance.playerSpawnPoint = transform.position;
-
-            // Save player health
-            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                GameManager.instance.savedHealth = playerHealth.CurrentHealth;
-            }
-
-            // Save weapon data
-            PlayerWeaponManager weaponManager = other.GetComponent<PlayerWeaponManager>();
-            if (weaponManager != null)
-            {
-                GameManager.instance.savedWeaponData = weaponManager.GetWeaponSaveData();
-            }
 
             // Save checkpoint kills
             if (KillManager.instance != null)

@@ -74,9 +74,6 @@ public class GameManager : MonoBehaviour
     public GameObject flashHealScreen;
     public GameObject flashAmmoPickUp;
 
-    //input system
-    private PlayerInputActions inputActions;
-
     public bool isPaused;
 
     float timeScaleOrig;
@@ -86,23 +83,26 @@ public class GameManager : MonoBehaviour
     private Coroutine bittenEffectCoroutine;
 
     //saving player health and equipped weapons
-    public List<WeaponSaveData> savedWeaponData = new List<WeaponSaveData>();
-    public float savedHealth;
+    
+    public float savedHealth = 100f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
+
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+           
+        
         }
         else if (instance != this)
         {
             Destroy(gameObject);
             return;
         }
+
 
         Time.timeScale = 1.0f;
         timeScaleOrig = Time.timeScale;
@@ -163,9 +163,7 @@ public class GameManager : MonoBehaviour
         {
             inGameUI.SetActive(true);
         }
-
-        inputActions = new PlayerInputActions();
-        inputActions.UI.Enable();
+        PlayerController.inputActions?.UI.Enable();
     }
 
     private void Start()
@@ -187,7 +185,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (inputActions.UI.Cancel.triggered)
+        if (PlayerController.inputActions.UI.Cancel.triggered)
         {
             if (menuActive == null)
             {
@@ -560,6 +558,7 @@ public class GameManager : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
         }
     }
+
     //    if (playerHealth != null)
     //        playerHealth.ResetHealth();
     //}

@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using System.Linq;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ObjectiveManager : MonoBehaviour
 {
@@ -36,7 +37,7 @@ public class ObjectiveManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance != null && instance != this)
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
             return;
@@ -44,7 +45,7 @@ public class ObjectiveManager : MonoBehaviour
 
         instance = this;
 
-        if(objectives == null || objectives.Length == 0)
+        if (objectives == null || objectives.Length == 0)
         {
             Debug.LogError("Objective Manager: No objectives defined!");
             enabled = false;
@@ -53,16 +54,18 @@ public class ObjectiveManager : MonoBehaviour
         objectivesIndex = 0;
         SetcurrentObjective(objectivesIndex);
 
-        cryptExitDoor = FindObjectOfType<ExitDoor>();
-        if(cryptExitDoor != null)
+        if (SceneManager.GetActiveScene().name != "Apartment_Tutorial")
         {
-            cryptExitDoor.enabled = false;
+            cryptExitDoor = FindObjectOfType<ExitDoor>();
+            if (cryptExitDoor != null)
+            {
+                cryptExitDoor.enabled = false;
+            }
+            else
+            {
+                Debug.Log("ObjectiveManager: no exitdoor found in this scene. no door functionality to control. This is fine for scenes with no door.");
+            }
         }
-        else
-        {
-            Debug.Log("ObjectiveManager: no exitdoor found in this scene. no door functionality to control. This is fine for scenes with no door.");
-        }
-
     }
 
     //private void Start()

@@ -57,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 327613589320343396}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.92387956, z: 0, w: 0.38268343}
-  m_LocalPosition: {x: 1, y: 1, z: -1}
+  m_LocalPosition: {x: -1.5, y: 1, z: -1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -230,7 +230,7 @@ Transform:
   m_GameObject: {fileID: 719007984904384279}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 1, y: 1, z: 0}
+  m_LocalPosition: {x: 1.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -540,6 +540,7 @@ GameObject:
   - component: {fileID: 3890819595550051532}
   - component: {fileID: 6237841799805597797}
   - component: {fileID: 70992594009722396}
+  - component: {fileID: 9112336256015694258}
   m_Layer: 9
   m_Name: Meaty Zombie
   m_TagString: Enemy
@@ -585,7 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currHealth: 0
-  _maxHealth: 20
+  _maxHealth: 100
   speed: 5
   speedModifier: 1
   faceTargetSpeed: 120
@@ -603,18 +604,19 @@ MonoBehaviour:
   shoot_pos7: {fileID: 6953677732940922900}
   shoot_pos8: {fileID: 715728574742977041}
   fist_collider: {fileID: 0}
+  outroScene: Outro
   blightBall: {fileID: 2554906872843287506, guid: ad4c2c4a93e73d04bb7ed717a568b42b, type: 3}
   blightBallDuration: 30
   search_distance: 10
   blight_pool_spawns: []
   aud: {fileID: 5540201183152655068}
-  fight_start: {fileID: 8300000, guid: 6b13387a7205b3d4ebb8cc103fbeb299, type: 3}
-  aud_clip_engaged: {fileID: 8300000, guid: 5f86a422841f50c4f804d4da90228fac, type: 3}
-  aud_clip_leap: {fileID: 8300000, guid: 463dc08e449a39e49a11e8a368f5b748, type: 3}
-  aud_clip_roar: {fileID: 8300000, guid: ffee3634158a6ae4680664dae5f604cb, type: 3}
-  aud_clip_charge: {fileID: 8300000, guid: 496a55fe42ada9440a2a7e4c9088afee, type: 3}
-  aud_clip_heavy_attack: {fileID: 8300000, guid: 68f0099c20c478f4ba288e66f4fd8835, type: 3}
-  aud_clip_death: {fileID: 8300000, guid: 2f6065255618fea4485c18b96523a389, type: 3}
+  fight_start: {fileID: 8300000, guid: a907037d858b69e448fdda32b0cb4b4a, type: 3}
+  aud_clip_engaged: {fileID: 8300000, guid: 1ccb226f04b0afc4d9bd4d479bda501e, type: 3}
+  aud_clip_leap: {fileID: 8300000, guid: 2238e06af62b99349b4fe511b5f11d7f, type: 3}
+  aud_clip_roar: {fileID: 8300000, guid: 92cf963d51788314a8b3e6cb930941b6, type: 3}
+  aud_clip_charge: {fileID: 8300000, guid: 92cf963d51788314a8b3e6cb930941b6, type: 3}
+  aud_clip_heavy_attack: {fileID: 8300000, guid: a907037d858b69e448fdda32b0cb4b4a, type: 3}
+  aud_clip_death: {fileID: 8300000, guid: e641bf1870e224b47912878c2489c9c0, type: 3}
   audioCounter: 0
 --- !u!82 &5540201183152655068
 AudioSource:
@@ -845,6 +847,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &9112336256015694258
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2379339336345025250}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2.2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.2, z: 0}
 --- !u!1 &2895313864324681520
 GameObject:
   m_ObjectHideFlags: 0
@@ -933,7 +958,7 @@ Transform:
   m_GameObject: {fileID: 3264868845729997654}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -1, y: 1, z: 0}
+  m_LocalPosition: {x: -1.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1062,7 +1087,7 @@ Transform:
   m_GameObject: {fileID: 4242624795365542405}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 1, z: -1}
+  m_LocalPosition: {x: 0, y: 1, z: -1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1157,7 +1182,7 @@ Transform:
   m_GameObject: {fileID: 5164319101287447063}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: -1, y: 1, z: 1}
+  m_LocalPosition: {x: -1.5, y: 1, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1348,7 +1373,7 @@ Transform:
   m_GameObject: {fileID: 7541784386951011090}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1443,7 +1468,7 @@ Transform:
   m_GameObject: {fileID: 8368411564575113083}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.92387956, z: 0, w: 0.38268343}
-  m_LocalPosition: {x: -1, y: 1, z: -1}
+  m_LocalPosition: {x: -1.5, y: 1, z: -1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1540,7 +1565,7 @@ Transform:
   m_GameObject: {fileID: 9153122460997369179}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1.5, y: 1, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
