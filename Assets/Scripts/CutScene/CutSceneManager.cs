@@ -14,7 +14,7 @@ public class CutSceneManager : MonoBehaviour
     // [SerializeField] private TextMeshProUGUI loadingPercent;
     // [SerializeField] private GameObject loadingUI;
     private bool hasSkipped = false; //Default
-                                     //public GameObject skipButton;
+    //[SerializeField] public GameObject skipButton;
 
     private PlayerInputActions inputActions;
 
