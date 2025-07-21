@@ -1088,6 +1088,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &718366027 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2946873011948580738, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+  m_PrefabInstance: {fileID: 416451917}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &947825213
 GameObject:
   m_ObjectHideFlags: 0
@@ -2669,6 +2674,7 @@ MonoBehaviour:
     m_Signals:
     - {fileID: 11400000, guid: fd094a62dc92e4242afb15f96bdd19ed, type: 2}
     - {fileID: 11400000, guid: 65af1ec98de327b43b9bad6609740907, type: 2}
+    - {fileID: 11400000, guid: 96d0999287aa4ae4db0a714bdbad46db, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -2697,6 +2703,20 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 1
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 718366027}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
           m_CallState: 2
 --- !u!114 &1909605866
 MonoBehaviour:
