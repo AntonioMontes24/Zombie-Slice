@@ -603,6 +603,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 758870458}
   m_SourcePrefab: {fileID: 100100000, guid: 0830086465bbffd4ab64ee6fc8c82d74, type: 3}
+--- !u!4 &147732860 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3667211753972221885, guid: 0830086465bbffd4ab64ee6fc8c82d74, type: 3}
+  m_PrefabInstance: {fileID: 147732859}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &165669808
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4004,6 +4009,14 @@ MonoBehaviour:
     requireProximity: 1
     requiredKeys: 
     keyItemToHighlight: {fileID: 283162145}
+    requiredActions: []
+  - message: Kill the zombies and get to the car
+    target: {fileID: 147732860}
+    triggerRadius: 2
+    requireKeyPress: 0
+    requireProximity: 1
+    requiredKeys: 
+    keyItemToHighlight: {fileID: 758870457}
     requiredActions: []
   tutorialText: {fileID: 1399532251}
 --- !u!4 &1896259114
