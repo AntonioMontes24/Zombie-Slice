@@ -29,7 +29,7 @@ public class ApartmentTutorialZombieChecker : MonoBehaviour
 
     private IEnumerator DelayThenLoadNextScene()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
 
         
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;

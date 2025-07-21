@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -37,10 +38,9 @@ public class TutorialManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
-        if(tutorialText == null)
+        if (steps.Length > 0)
         {
-            enabled = false;
-            return;
+            ShowCurrentStep();
         }
 
         // Enable all required actions
@@ -55,30 +55,25 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
-        if(steps.Length > 0 && tutorialText != null)
+    }
+
+    private void Awake()
+    {
+        // Ensure this is the only TutorialManager in the scene
+        if (FindObjectsOfType<TutorialManager>().Length > 1)
         {
-            ShowCurrentStep();
-        } 
-        else if (tutorialText != null)
-        {
-            tutorialText.gameObject.SetActive(false);
-            tutorialText.text = "";
+            Destroy(gameObject); // Destroy any duplicates
+            return;
         }
 
     }
 
     void Update()
     {
-        //if (steps.Length > 0)
-        //{
-        //    ShowCurrentStep();
-        //}
-
-        if (currentStep >= steps.Length || player == null || tutorialText == null) return;
+        if (currentStep >= steps.Length || player == null) return;
 
         TutorialSteps step = steps[currentStep];
         bool inRange = true;
-
 
         // Proximity check
         if (step.requireProximity && step.target != null)
@@ -147,10 +142,8 @@ public class TutorialManager : MonoBehaviour
 
     void ShowCurrentStep()
     {
-        if(tutorialText == null)
-        {
+        if (tutorialText == null)
             return;
-        }
 
         tutorialText.gameObject.SetActive(true);
         tutorialText.text = steps[currentStep].message;
@@ -180,7 +173,7 @@ public class TutorialManager : MonoBehaviour
 
     void AdvanceStep()
     {
-        if (steps[currentStep].target != null)
+        if (currentStep < steps.Length && steps[currentStep].target != null)
         {
             HighlightObject highlight = steps[currentStep].target.GetComponent<HighlightObject>();
             if (highlight != null)
@@ -195,15 +188,20 @@ public class TutorialManager : MonoBehaviour
         }
         else
         {
-            if(tutorialText != null)
-            { 
+            if (tutorialText != null)
                 tutorialText.gameObject.SetActive(false);
-                tutorialText.text = "";
-            }
         }
     }
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+
     private void OnDisable()
     {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+
         foreach (var step in steps)
         {
             if (step.requiredActions != null)
@@ -211,6 +209,43 @@ public class TutorialManager : MonoBehaviour
                 foreach (var actionRef in step.requiredActions)
                 {
                     actionRef?.action?.Disable();
+                }
+            }
+        }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        
+        if (steps != null && steps.Length > 0)
+        {
+            player = GameObject.FindGameObjectWithTag("Player")?.transform;
+            StartTutorial();
+        }
+    }
+
+    public void StartTutorial()
+    {
+        currentStep = 0;
+        keysPressed.Clear();
+        actionsTriggered.Clear();
+
+        // Reassign player in case it changed between scenes
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+
+        if (steps.Length > 0)
+        {
+            ShowCurrentStep();
+        }
+
+        // Enable input actions again (in case they were disabled)
+        foreach (var step in steps)
+        {
+            if (step.requiredActions != null)
+            {
+                foreach (var actionRef in step.requiredActions)
+                {
+                    actionRef?.action?.Enable();
                 }
             }
         }
