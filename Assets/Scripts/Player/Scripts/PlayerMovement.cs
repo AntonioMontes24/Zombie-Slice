@@ -34,9 +34,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform cameraTransform;
     [SerializeField] float crouchCameraY = 0.8f;
     [SerializeField] float standCameraY = 1.6f;
+    [SerializeField] float crouchGravMultiplier = 0.5f;
 
     private bool isCrouching = false;
     private float originalWalkSpeed;
+    private float originalGravity;
 
     public float currentStamina;
     private float regenTimer;
@@ -58,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         originalWalkSpeed = walkSpeed;
+        originalGravity = gravity;
     }
 
     public void HandleMove()//Movement
@@ -204,7 +207,8 @@ public class PlayerMovement : MonoBehaviour
                 cameraTransform.localPosition = camPos;
             }
 
-            walkSpeed = isCrouching ? originalWalkSpeed * crouchSpeedMultiplier : originalWalkSpeed;
+            walkSpeed = isCrouching ? originalWalkSpeed / crouchSpeedMultiplier : originalWalkSpeed;
+            gravity = isCrouching ? originalGravity / crouchGravMultiplier : originalGravity;
         }
     }
 
