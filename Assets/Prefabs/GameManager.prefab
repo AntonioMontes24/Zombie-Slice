@@ -4675,10 +4675,11 @@ MonoBehaviour:
   staminaSlider: {fileID: 0}
   crouchHeight: 1
   standHeight: 2
-  crouchSpeedMultiplier: 0.5
+  crouchSpeedMultiplier: 2
   cameraTransform: {fileID: 0}
   crouchCameraY: 0.8
   standCameraY: 1.6
+  crouchGravMultiplier: 0.2
   currentStamina: 0
 --- !u!114 &855683197046869054
 MonoBehaviour:
@@ -11728,7 +11729,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2946873011948580738}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -26.13402}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -13281,7 +13282,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8758634833996296010}
-  - component: {fileID: 235392718374117849}
   m_Layer: 5
   m_Name: InputManager
   m_TagString: Untagged
@@ -13308,19 +13308,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &235392718374117849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3471086689169232055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8a613c905c7fe6489c24b7e78db221a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerInputActions: {fileID: -944628639613478452, guid: d13a2d4c0d828214d80ec5af07d8c48e, type: 3}
 --- !u!1 &3478763766794489626
 GameObject:
   m_ObjectHideFlags: 0
