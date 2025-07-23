@@ -35477,63 +35477,6 @@ CapsuleCollider:
   m_Height: 1.9
   m_Direction: 1
   m_Center: {x: 7.250841e-10, y: 0.5, z: 0.0000019071102}
---- !u!1001 &1203103564
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1497622230}
-    m_Modifications:
-    - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -16.68
-      objectReference: {fileID: 0}
-    - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.752
-      objectReference: {fileID: 0}
-    - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 53.193
-      objectReference: {fileID: 0}
-    - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4670040315049821404, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-      propertyPath: m_Name
-      value: Z2 (8)
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
 --- !u!1001 &1203788563
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44532,7 +44475,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.54
+      value: -10.14
       objectReference: {fileID: 0}
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -45706,7 +45649,6 @@ Transform:
   - {fileID: 1766820787}
   - {fileID: 136109083}
   - {fileID: 214032407}
-  - {fileID: 1819556729}
   m_Father: {fileID: 872095124}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1499522156
@@ -56182,11 +56124,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9415722}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1819556729 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
-  m_PrefabInstance: {fileID: 1203103564}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1821912376 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 331e6cacaa5064ecb91f918c9aca93fd, type: 3}
@@ -71500,6 +71437,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[0].objectiveDescription
+      value: Clear out the zombies and make your way to the trucks
+      objectReference: {fileID: 0}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: objectives.Array.data[3].objectiveDescription
       value: Enter the Crypt.
       objectReference: {fileID: 0}
@@ -71594,6 +71535,14 @@ PrefabInstance:
     - target: {fileID: 3677047681861178868, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4031332649897497026, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 4031332649897497026, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 4763773620804508333, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: m_Pivot.x
