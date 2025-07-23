@@ -18371,7 +18371,7 @@ MonoBehaviour:
     requireKeyPress: 0
     requireProximity: 1
     requiredKeys: 
-    keyItemToHighlight: {fileID: 1000012294529566}
+    keyItemToHighlight: {fileID: 1000013831640962}
     requiredActions: []
   tutorialText: {fileID: 479896593}
 --- !u!4 &1647080497
@@ -24550,6 +24550,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4000011714004298}
+  - component: {fileID: 205000010786021459}
   - component: {fileID: 205000010786021458}
   - component: {fileID: 1794985804}
   - component: {fileID: 1794985801}
@@ -27311,6 +27312,20 @@ LODGroup:
     renderers:
     - renderer: {fileID: 23000011922174552}
   m_Enabled: 1
+--- !u!114 &205000010786021459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013831640962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 217cce93e21ec874ca273c638428cec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderersToHighlight: []
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!4 &286543582649037508
 Transform:
   m_ObjectHideFlags: 0

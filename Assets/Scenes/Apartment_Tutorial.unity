@@ -15782,9 +15782,10 @@ MonoBehaviour:
   requiredKeyID: 
   enemyRoom: {fileID: 0}
   doorHinge: {fileID: 6277625979776440598}
-  openAngleOffsetY: 90
+  openAngleOffsetY: -90
   useSlidingDoor: 0
-  openPositionOffSet: {x: 0, y: 0, z: -3}
+  openPositionOffSet: {x: 0, y: 0, z: 3}
+  flipOpenDirection: 1
   doorCollider: {fileID: 6339937127194153311}
 --- !u!65 &6339937127563840890
 BoxCollider:
@@ -16164,6 +16165,7 @@ MonoBehaviour:
   openAngleOffsetY: -90
   useSlidingDoor: 0
   openPositionOffSet: {x: 0, y: 0, z: -3}
+  flipOpenDirection: 0
   doorCollider: {fileID: 6339937130689455085}
 --- !u!65 &6339937130706937512
 BoxCollider:
