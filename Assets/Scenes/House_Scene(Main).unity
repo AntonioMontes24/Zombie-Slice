@@ -1431,6 +1431,7 @@ MonoBehaviour:
   openAngleOffsetY: -90
   useSlidingDoor: 0
   openPositionOffSet: {x: 0, y: 0, z: -3}
+  flipOpenDirection: 0
   doorCollider: {fileID: 78956276}
 --- !u!64 &78956276
 MeshCollider:
@@ -3052,8 +3053,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 14, y: 2, z: 0.3}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 14, y: 4, z: 0.3}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!4 &229654495 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000013950294986, guid: 2ebdc32c603c0f74a8df3ff23c55e8e0, type: 3}
@@ -7124,8 +7125,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.207345, y: 1.9405835, z: 8}
-  m_Center: {x: 0, y: 1.2124912, z: -0.0031918294}
+  m_Size: {x: 2.207345, y: 4, z: 8}
+  m_Center: {x: 0, y: 2, z: -0.0031918294}
 --- !u!4 &676867643 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400006, guid: cba6fc8289144c9488fb38e666c8eeb0, type: 3}
@@ -8344,8 +8345,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.207345, y: 1.9405835, z: 8}
-  m_Center: {x: 0, y: 1.2124912, z: -0.0031918294}
+  m_Size: {x: 2.207345, y: 4, z: 8}
+  m_Center: {x: 0, y: 1.5, z: -0.0031918294}
 --- !u!1001 &787034445
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9516,8 +9517,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2073452, y: 1.9405835, z: 7.5}
-  m_Center: {x: 0, y: 1.2124912, z: -0.00319183}
+  m_Size: {x: 2.2073452, y: 4, z: 7.5}
+  m_Center: {x: 0, y: 2, z: -0.00319183}
 --- !u!4 &869418727 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400006, guid: cba6fc8289144c9488fb38e666c8eeb0, type: 3}
@@ -10733,8 +10734,8 @@ BoxCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 11, y: 2, z: 0.1}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 11, y: 5, z: 0.1}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!1001 &1004271529
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12085,8 +12086,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 2, z: 0.3}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 3, y: 4, z: 0.3}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!4 &1102148443 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000012378391202, guid: ecc15abaa2d4963428bdf7fc9eb09410, type: 3}
@@ -12563,8 +12564,8 @@ BoxCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 11, y: 2, z: 0.1}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 11, y: 5, z: 0.1}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!1001 &1150947553
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13043,8 +13044,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 14, y: 2, z: 0.3}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 14, y: 4, z: 0.3}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!4 &1196537476 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000013950294986, guid: 2ebdc32c603c0f74a8df3ff23c55e8e0, type: 3}
@@ -13208,8 +13209,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 14, y: 2, z: 0.3}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 14, y: 4, z: 0.3}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!4 &1208104784 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000013950294986, guid: 2ebdc32c603c0f74a8df3ff23c55e8e0, type: 3}
@@ -14976,8 +14977,8 @@ BoxCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 11, y: 2, z: 0.1}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 11, y: 4, z: 0.1}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1001 &1314811658
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15582,6 +15583,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 65650491891984060, guid: ddf4f45c150785f4685630ead1bdbe25, type: 3}
+      propertyPath: m_Size.z
+      value: 0.015
+      objectReference: {fileID: 0}
+    - target: {fileID: 65650491891984060, guid: ddf4f45c150785f4685630ead1bdbe25, type: 3}
+      propertyPath: m_Center.z
+      value: -0.0008
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15826,8 +15835,8 @@ BoxCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 11, y: 2, z: 0.1}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 11, y: 4, z: 0.1}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1 &1402510961
 GameObject:
   m_ObjectHideFlags: 0
@@ -16365,8 +16374,8 @@ BoxCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 11, y: 2, z: 0.1}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 11, y: 5, z: 0.1}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!1001 &1456744996
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18076,6 +18085,7 @@ MonoBehaviour:
   openAngleOffsetY: -90
   useSlidingDoor: 0
   openPositionOffSet: {x: 0, y: 0, z: -3}
+  flipOpenDirection: 0
   doorCollider: {fileID: 1622507384}
 --- !u!1001 &1629945659
 PrefabInstance:
@@ -18235,8 +18245,8 @@ BoxCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 11, y: 2, z: 0.1}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 11, y: 5, z: 0.1}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!1001 &1643574518
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20231,6 +20241,7 @@ MonoBehaviour:
   openAngleOffsetY: -90
   useSlidingDoor: 0
   openPositionOffSet: {x: 0, y: 0, z: -3}
+  flipOpenDirection: 0
   doorCollider: {fileID: 1759063893}
 --- !u!82 &1761352213 stripped
 AudioSource:
@@ -20405,6 +20416,7 @@ MonoBehaviour:
   openAngleOffsetY: -90
   useSlidingDoor: 1
   openPositionOffSet: {x: 0, y: 0, z: 2.7}
+  flipOpenDirection: 0
   doorCollider: {fileID: 1794985801}
 --- !u!1 &1803410949 stripped
 GameObject:
@@ -20430,8 +20442,8 @@ BoxCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 11, y: 2, z: 0.1}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 11, y: 5, z: 0.1}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!1001 &1804759718
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20595,8 +20607,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2073452, y: 1.9405835, z: 7.5}
-  m_Center: {x: 0, y: 1.2124912, z: -0.00319183}
+  m_Size: {x: 2.2073452, y: 4, z: 7.5}
+  m_Center: {x: 0, y: 1.5, z: -0.00319183}
 --- !u!1 &1816205454
 GameObject:
   m_ObjectHideFlags: 0
@@ -21313,6 +21325,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 65306593261982976, guid: 43a17864c509699478646582a6a377c0, type: 3}
+      propertyPath: m_Size.y
+      value: 0.042418614
+      objectReference: {fileID: 0}
+    - target: {fileID: 65306593261982976, guid: 43a17864c509699478646582a6a377c0, type: 3}
+      propertyPath: m_Size.z
+      value: 0.015
+      objectReference: {fileID: 0}
+    - target: {fileID: 65306593261982976, guid: 43a17864c509699478646582a6a377c0, type: 3}
+      propertyPath: m_Center.x
+      value: 0.0003199653
+      objectReference: {fileID: 0}
+    - target: {fileID: 65306593261982976, guid: 43a17864c509699478646582a6a377c0, type: 3}
+      propertyPath: m_Center.y
+      value: -0.00051859114
+      objectReference: {fileID: 0}
+    - target: {fileID: 65306593261982976, guid: 43a17864c509699478646582a6a377c0, type: 3}
+      propertyPath: m_Center.z
+      value: -0.0008
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21407,8 +21439,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 14, y: 2, z: 0.3}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 14, y: 4, z: 0.3}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!4 &1852279351 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000013950294986, guid: 2ebdc32c603c0f74a8df3ff23c55e8e0, type: 3}
@@ -21572,8 +21604,8 @@ BoxCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 11, y: 2, z: 0.1}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 11, y: 4, z: 0.1}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1001 &1875989127
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35940,6 +35972,7 @@ MonoBehaviour:
   openAngleOffsetY: -90
   useSlidingDoor: 0
   openPositionOffSet: {x: 0, y: 0, z: -3}
+  flipOpenDirection: 0
   doorCollider: {fileID: 8203948545409818314}
 --- !u!1 &8203948545409818313
 GameObject:
