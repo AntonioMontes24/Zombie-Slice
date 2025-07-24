@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     private void OnDisable()
     {
+        inputActions.UI.Disable();
         inputActions.Input.Disable();
     }
 
