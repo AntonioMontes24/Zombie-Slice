@@ -101,6 +101,7 @@ public class PlayerWeaponManager : MonoBehaviour
             initialRightHandPos = rightHandGrip.localPosition;
 
         ammoText.SetText("00");
+        GameManager.instance.ammoyBar.fillAmount = 0f;
 
         movement = GetComponentInParent<PlayerMovement>();
         if (movement == null)
@@ -169,6 +170,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 Shoot();
                 currentGun.ammoCur--;
                 ammoText.SetText(currentGun.ammoCur + " / " + currentGun.ammoReserve);
+                GameManager.instance.ammoyBar.fillAmount = (float)currentGun.ammoCur / currentGun.ammoMax;
                 playedEmptySound = false;
 
                 if (currentGun.ammoCur <= 0 && currentGun.ammoReserve > 0)
@@ -503,6 +505,7 @@ public class PlayerWeaponManager : MonoBehaviour
         isReloading = false;
         reloadCoroutine = null;
         ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+        GameManager.instance.ammoyBar.fillAmount = gun.ammoCur;
     }
 
     public void SetAiming(bool aim)//Sets aiming bool
@@ -637,6 +640,7 @@ public class PlayerWeaponManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.flashAmmoPickUp.SetActive(false);
         ammoText.SetText(CurrentGun.ammoCur + " / " + CurrentGun.ammoReserve);
+        GameManager.instance.ammoyBar.fillAmount = CurrentGun.ammoCur;
     }
 
     public void UpdateAmmoUi()// Helper to update Ammo UI
@@ -645,6 +649,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             FireArmStats gun = CurrentGun;
             ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+            GameManager.instance.ammoyBar.fillAmount = gun.ammoCur;
         }
     }
 
@@ -698,6 +703,7 @@ public class PlayerWeaponManager : MonoBehaviour
             barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
             shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
             ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+            GameManager.instance.ammoyBar.fillAmount = gun.ammoCur;
         }
         else
         {
@@ -706,6 +712,7 @@ public class PlayerWeaponManager : MonoBehaviour
             barrelTip = null;
             shellEjectionPoint = null;
             ammoText.SetText("∞");
+            GameManager.instance.ammoyBar.fillAmount = 100f;
         }
 
         var player = Object.FindFirstObjectByType<PlayerController>();
