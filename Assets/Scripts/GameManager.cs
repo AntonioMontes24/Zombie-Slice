@@ -185,38 +185,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerController.inputActions.UI.Cancel.triggered)
-        {
-            if (menuActive == null)
-            {
-                statePause();
-                menuActive = menuPause;
-                menuActive.SetActive(isPaused);
-                if (inGameUI != null)
-                {
-                    inGameUI.SetActive(false);
-                }
-                SelectFirstButton(menuActive);
-            }
-            else if (menuActive == menuPause)
-            {
-                stateUnpause();
-            }
-            else if (menuActive == menuOptions)
-            {
-                menuActive.SetActive(false);
-                menuActive = menuPause;
-                menuActive.SetActive(true);
-                SelectFirstButton(menuActive);
-            }
-            else if (menuActive == menuAudio || menuActive == menuVideo || menuActive == menuControls)
-            {
-                menuActive.SetActive(false);
-                menuActive = menuOptions;
-                menuActive.SetActive(true);
-                SelectFirstButton(menuActive);
-            }
-        }
+        HandlePauseInput();
 
         // only update game timer if not paused
         if (!isPaused)
@@ -558,7 +527,53 @@ public class GameManager : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
         }
     }
+    private void HandlePauseInput()
+    {
+#if UNITY_STANDALONE
+        if (PlayerController.inputActions.UI.Cancel.triggered)
+        {
+            ProcessPauseInput();
+        }
+#elif UNITY_WEBGL
+    if (PlayerController.inputActions.UI.Pause.triggered)
+    {
+        ProcessPauseInput();
+    }
+#endif
+    }
 
+    private void ProcessPauseInput()
+    {
+        if (menuActive == null)
+        {
+            statePause();
+            menuActive = menuPause;
+            menuActive.SetActive(isPaused);
+            if (inGameUI != null)
+            {
+                inGameUI.SetActive(false);
+            }
+            SelectFirstButton(menuActive);
+        }
+        else if (menuActive == menuPause)
+        {
+            stateUnpause();
+        }
+        else if (menuActive == menuOptions)
+        {
+            menuActive.SetActive(false);
+            menuActive = menuPause;
+            menuActive.SetActive(true);
+            SelectFirstButton(menuActive);
+        }
+        else if (menuActive == menuAudio || menuActive == menuVideo || menuActive == menuControls)
+        {
+            menuActive.SetActive(false);
+            menuActive = menuOptions;
+            menuActive.SetActive(true);
+            SelectFirstButton(menuActive);
+        }
+    }
     //    if (playerHealth != null)
     //        playerHealth.ResetHealth();
     //}
