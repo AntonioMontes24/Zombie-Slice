@@ -330,6 +330,8 @@ public class PlayerWeaponManager : MonoBehaviour
     public void HandleMeleeAttack()// Handles melee attacks light and heavy
     {
         if (!canFire || !HasGun() || movement == null) return;
+        if (GameManager.instance != null && GameManager.instance.isPaused)
+            return;
 
         var weapon = weaponList[currentWeaponIndex];
         if (weapon is not MeleeWeaponStats melee) return;
