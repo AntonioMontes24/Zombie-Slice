@@ -122,16 +122,21 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleSprint() //Sprint
     {
-        if (isCrouching)// This flag checks if the player is crouching// If crouching forces isprinting to false; this will allow the player to hold sprint  button and still fire
-        {
-            isSprinting = false;
-            return;
-        }
-
         sprintHeld = PlayerController.inputActions.Input.Sprint.ReadValue<float>() > 0.1f;
         bool sprintInput = sprintHeld && moveDir.magnitude > 0.1f;
 
-        if (sprintInput && canSprint)
+        if (isCrouching)// This flag checks if the player is crouching// If crouching forces isprinting to false; this will allow the player to hold sprint  button and still fire
+        {
+            isSprinting = false;
+            regenTimer += Time.deltaTime;
+
+            if (regenTimer >= staminaRegenDelay)
+            {
+                currentStamina += staminaRegenRate * Time.deltaTime; // Regenerate stamina
+                currentStamina = Mathf.Min(currentStamina, maxStamina); // Clamp to max
+            }
+        }
+        else if (sprintInput && canSprint)
         {
             isSprinting = true;
             currentStamina -= staminaDrainRate * Time.deltaTime;//Drain stamina
@@ -155,6 +160,7 @@ public class PlayerMovement : MonoBehaviour
         if (staminaSlider != null)
             staminaSlider.value = currentStamina;
     }
+
 
 
     public void HandleJump()//Jump
