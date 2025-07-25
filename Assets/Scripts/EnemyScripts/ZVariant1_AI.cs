@@ -149,6 +149,12 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         }
         yield return new WaitForSeconds(1.0f);
         isAttacking = false;
+        if (playerTransform != null && canWeSeeThePlayer())
+        {
+            agent.SetDestination(playerTransform.position);
+            agent.isStopped = false;
+            SetTargetAnimSpeed(speed * speedModifier);
+        }
     }
 
     public void assignAttackDamage()
