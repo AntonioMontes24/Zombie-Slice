@@ -84,6 +84,7 @@ public class ObjectiveManager : MonoBehaviour
                 objectiveIconImage.sprite = checkmarkIconSprite;
                 GameManager.instance.objectiveText.text = "<s>" + GameManager.instance.objectiveText.text + "</s>";
                 objectiveIconImage.color = Color.green;
+                GameManager.instance.objectiveText.color = Color.gray;
             }
 
             return;
@@ -91,8 +92,8 @@ public class ObjectiveManager : MonoBehaviour
 
         objectivesIndex = index;
         Objective currentObj = objectives[objectivesIndex];
-
-        if(objectiveIconImage != null)
+        GameManager.instance.objectiveText.color = Color.white;
+        if (objectiveIconImage != null)
         {
             objectiveIconImage.sprite = diamondIconSprite;
             objectiveIconImage.color = Color.white;
@@ -194,6 +195,7 @@ public class ObjectiveManager : MonoBehaviour
             objectiveIconImage.sprite = checkmarkIconSprite;
             GameManager.instance.objectiveText.text = "<s>" + GameManager.instance.objectiveText.text + "</s>";
             objectiveIconImage.color = Color.green;
+            GameManager.instance.objectiveText.color = Color.gray;
         }
 
         objectives[objectivesIndex].completeEvent?.Invoke();
@@ -202,7 +204,8 @@ public class ObjectiveManager : MonoBehaviour
         {
             objectiveIconImage.enabled = false;
             GameManager.instance.objectiveText.text = "";
-            if(cryptExitDoor != null)
+            GameManager.instance.objectiveText.color = Color.white;
+            if (cryptExitDoor != null)
             {
                 cryptExitDoor.enabled = true;
             } else
