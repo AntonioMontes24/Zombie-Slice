@@ -23,6 +23,9 @@ public class AudioManager : MonoBehaviour
     public AudioClip buttonHoverClip;
     public AudioClip buttonSelectClip;
 
+    public AudioSource MusicSource => musicSource;
+
+
     private void Awake()
     {
         if(instance == null)

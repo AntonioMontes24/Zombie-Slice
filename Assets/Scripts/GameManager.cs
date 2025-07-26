@@ -263,6 +263,7 @@ public class GameManager : MonoBehaviour
     {
         isPaused = true;
         Time.timeScale = 0;
+        AudioManager.instance?.MusicSource?.Pause();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         EventSystem.current.SetSelectedGameObject(null);
@@ -272,6 +273,7 @@ public class GameManager : MonoBehaviour
     {
         isPaused = false;
         Time.timeScale = timeScaleOrig;
+        AudioManager.instance?.MusicSource?.UnPause();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
