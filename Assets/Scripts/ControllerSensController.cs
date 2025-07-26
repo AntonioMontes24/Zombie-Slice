@@ -11,9 +11,9 @@ public class ControllerSensController : MonoBehaviour
     [SerializeField] private Button controllerResetButton;
 
     [Header("Settings")]
-    [SerializeField] private float defaultControllerSens = 50.0f;
+    [SerializeField] private float defaultControllerSens = 70.0f;
     [SerializeField] private float minControllerSens = 10.0f;
-    [SerializeField] private float maxControllerSens = 400.0f;
+    [SerializeField] private float maxControllerSens = 600.0f;
 
     private const string ControllerSensKey = "ControllerSensitivity";
 
