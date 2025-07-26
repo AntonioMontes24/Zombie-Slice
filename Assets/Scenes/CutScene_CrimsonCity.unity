@@ -12897,8 +12897,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 383748957}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.5851888, z: 0, w: 0.8108971}
-  m_LocalPosition: {x: 43.34, y: -1.67, z: 42.93}
+  m_LocalRotation: {x: 0, y: 0.99999994, z: 0, w: -0.00036427382}
+  m_LocalPosition: {x: 18.310051, y: -1.02, z: -46.869713}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18078,6 +18078,7 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: fd094a62dc92e4242afb15f96bdd19ed, type: 2}
+    - {fileID: 11400000, guid: b86e7cb4af52d394fbab829ab6610d9a, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -18092,6 +18093,20 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 798791591}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
           m_CallState: 2
 --- !u!114 &554530448
 MonoBehaviour:
@@ -27296,6 +27311,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+--- !u!1 &798791591 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2946873011948580738, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+  m_PrefabInstance: {fileID: 798791590}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &799010212 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}

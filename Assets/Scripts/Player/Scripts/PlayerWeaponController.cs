@@ -101,6 +101,7 @@ public class PlayerWeaponManager : MonoBehaviour
             initialRightHandPos = rightHandGrip.localPosition;
 
         ammoText.SetText("00");
+        GameManager.instance.ammoyBar.fillAmount = 0f;
 
         movement = GetComponentInParent<PlayerMovement>();
         if (movement == null)
@@ -169,6 +170,7 @@ public class PlayerWeaponManager : MonoBehaviour
                 Shoot();
                 currentGun.ammoCur--;
                 ammoText.SetText(currentGun.ammoCur + " / " + currentGun.ammoReserve);
+                GameManager.instance.ammoyBar.fillAmount = (float)currentGun.ammoCur / currentGun.ammoMax;
                 playedEmptySound = false;
 
                 if (currentGun.ammoCur <= 0 && currentGun.ammoReserve > 0)
@@ -288,12 +290,12 @@ public class PlayerWeaponManager : MonoBehaviour
             }
             else if (hit.collider.CompareTag("Enemy") && currentGun.zombieBloodHit != null)
             {
-                GameObject bloodEffect = Instantiate(currentGun.zombieBloodHit, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal));
+                GameObject bloodEffect = Instantiate(currentGun.zombieBloodHit, hit.point + hit.normal * -0.1f, Quaternion.LookRotation(hit.normal));
                 bloodEffect.transform.SetParent(hit.transform);
                 Destroy(bloodEffect, 0.5f);
             }
 
-            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            IDamage dmg = hit.collider.GetComponentInParent<IDamage>();
             if (dmg != null)
                 dmg.takeDamage(currentGun.shootDamage);
 
@@ -328,6 +330,8 @@ public class PlayerWeaponManager : MonoBehaviour
     public void HandleMeleeAttack()// Handles melee attacks light and heavy
     {
         if (!canFire || !HasGun() || movement == null) return;
+        if (GameManager.instance != null && GameManager.instance.isPaused)
+            return;
 
         var weapon = weaponList[currentWeaponIndex];
         if (weapon is not MeleeWeaponStats melee) return;
@@ -386,7 +390,8 @@ public class PlayerWeaponManager : MonoBehaviour
             if (dmg != null)
                 dmg.takeDamage(melee.damage * 2); // More damage for heavy attack
 
-            if (hit.collider.CompareTag("Enemy"))
+            if ((hit.transform.root.CompareTag("Enemy"))
+)
             {     
                     if (melee.zombieHit != null)
                     aud.PlayOneShot(melee.zombieHit);
@@ -449,9 +454,10 @@ public class PlayerWeaponManager : MonoBehaviour
             if (dmg != null)
                 dmg.takeDamage(melee.damage); // More damage for heavy attack
 
-            if (hit.collider.CompareTag("Enemy"))
-            {
-                if (melee.zombieHit != null)
+            if ((hit.transform.root.CompareTag("Enemy")))
+
+                {
+                    if (melee.zombieHit != null)
                     aud.PlayOneShot(melee.zombieHit);
 
                 if (enemyHealth != null)
@@ -503,6 +509,7 @@ public class PlayerWeaponManager : MonoBehaviour
         isReloading = false;
         reloadCoroutine = null;
         ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+        GameManager.instance.ammoyBar.fillAmount = gun.ammoCur;
     }
 
     public void SetAiming(bool aim)//Sets aiming bool
@@ -637,6 +644,7 @@ public class PlayerWeaponManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.flashAmmoPickUp.SetActive(false);
         ammoText.SetText(CurrentGun.ammoCur + " / " + CurrentGun.ammoReserve);
+        GameManager.instance.ammoyBar.fillAmount = CurrentGun.ammoCur;
     }
 
     public void UpdateAmmoUi()// Helper to update Ammo UI
@@ -645,6 +653,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             FireArmStats gun = CurrentGun;
             ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+            GameManager.instance.ammoyBar.fillAmount = gun.ammoCur;
         }
     }
 
@@ -698,6 +707,7 @@ public class PlayerWeaponManager : MonoBehaviour
             barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
             shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
             ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
+            GameManager.instance.ammoyBar.fillAmount = gun.ammoCur;
         }
         else
         {
@@ -706,6 +716,7 @@ public class PlayerWeaponManager : MonoBehaviour
             barrelTip = null;
             shellEjectionPoint = null;
             ammoText.SetText("∞");
+            GameManager.instance.ammoyBar.fillAmount = 100f;
         }
 
         var player = Object.FindFirstObjectByType<PlayerController>();
@@ -766,7 +777,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             if (hit.CompareTag("Enemy"))
             {
-                IDamage dmg = hit.GetComponent<IDamage>();
+                IDamage dmg = hit.GetComponentInParent<IDamage>();
                 if (dmg != null)
                 {
                     dmg.takeDamage(weaponList[currentWeaponIndex] is MeleeWeaponStats melee ? melee.damage : 10);

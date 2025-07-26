@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
     public GameObject flashAmmoPickUp;
 
     public bool isPaused;
+    private bool gameEnded = false;
 
     float timeScaleOrig;
     [SerializeField] private Button resetControlsButton;//For controllerNav
@@ -187,23 +188,55 @@ public class GameManager : MonoBehaviour
     {
         HandlePauseInput();
 
+        if (PlayerController.inputActions.UI.Cancel.triggered)
+        {
+            if (!gameEnded)
+            {
+                if (menuActive == null)
+                {
+                    statePause();
+                    menuActive = menuPause;
+                    menuActive.SetActive(isPaused);
+                    if (inGameUI != null)
+                    {
+                        inGameUI.SetActive(false);
+                    }
+                    SelectFirstButton(menuActive);
+                }
+                else if (menuActive == menuPause)
+                {
+                    stateUnpause();
+                }
+                else if (menuActive == menuOptions)
+                {
+                    menuActive.SetActive(false);
+                    menuActive = menuPause;
+                    menuActive.SetActive(true);
+                    SelectFirstButton(menuActive);
+                }
+                else if (menuActive == menuAudio || menuActive == menuVideo || menuActive == menuControls)
+                {
+                    menuActive.SetActive(false);
+                    menuActive = menuOptions;
+                    menuActive.SetActive(true);
+                    SelectFirstButton(menuActive);
+                }
+            }
+        }
+
         // only update game timer if not paused
-        if (!isPaused)
+        if (!isPaused && !gameEnded)
         {
             if (remainingTime > 0)
             {
                 remainingTime -= Time.deltaTime;
             }
-            else if (remainingTime <= 0)
+            else 
             {
                 remainingTime = 0;
-                if (!isPaused)
+                if (!gameEnded)
                 {
                     youRanOutOfTime();
-                }
-                if (AudioManager.instance != null)
-                {
-                    AudioManager.instance.StopMusic();
                 }
             }
         }
@@ -234,9 +267,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        menuPause.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
-        SelectFirstButton(menuPause);
     }
 
     public void stateUnpause()
@@ -357,46 +388,66 @@ public class GameManager : MonoBehaviour
 
     public void youLose()
     {
+        if (gameEnded) return;
+
+        gameEnded = true;
         statePause();
+
         //hide ingame ui when you have lost
         if (inGameUI != null)
         {
             inGameUI.SetActive(false);
         }
+
         AudioManager.instance.StopMusic();
         menuActive = menuLose;
         menuActive.SetActive(true);
+
         if (flashDamageScreen != null)
         {
             flashDamageScreen.SetActive(false);
         }
+        SelectFirstButton(menuLose);
     }
 
     public void youRanOutOfTime()
     {
+        if(gameEnded) return;
+
+        gameEnded = true;
         statePause();
+
         if (inGameUI != null)
         {
             inGameUI.SetActive(false);
         }
         AudioManager.instance.StopMusic();
+
         menuActive = menuNoTime;
         menuActive.SetActive(true);
+
         if (flashDamageScreen != null)
         {
             flashDamageScreen.SetActive(false);
         }
+        SelectFirstButton(menuNoTime);
     }
 
     public void youWin()
     {
+        if (gameEnded) return;
+        gameEnded = true;
         statePause();
+
         if (inGameUI != null)
         {
             inGameUI.SetActive(false);
         }
+        AudioManager.instance.StopMusic();
+
         menuActive = menuWin;
         menuActive.SetActive(true);
+        SelectFirstButton(menuWin);
     }
 
     public void SetCurrentEnemy(iEnemyHealth en)
@@ -574,7 +625,12 @@ public class GameManager : MonoBehaviour
             SelectFirstButton(menuActive);
         }
     }
-    //    if (playerHealth != null)
-    //        playerHealth.ResetHealth();
-    //}
+    private void OnDestroy()
+    {
+        if(PlayerController.inputActions != null)
+        {
+            PlayerController.inputActions.UI.Disable();
+            PlayerController.inputActions.Input.Disable();
+        }
+    }
 }
