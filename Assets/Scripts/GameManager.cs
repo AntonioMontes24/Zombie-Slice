@@ -186,7 +186,38 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandlePauseInput();
+        if (PlayerController.inputActions.UI.Cancel.triggered)
+        {
+            if (menuActive == null)
+            {
+                statePause();
+                menuActive = menuPause;
+                menuActive.SetActive(isPaused);
+                if (inGameUI != null)
+                {
+                    inGameUI.SetActive(false);
+                }
+                SelectFirstButton(menuActive);
+            }
+            else if (menuActive == menuPause)
+            {
+                stateUnpause();
+            }
+            else if (menuActive == menuOptions)
+            {
+                menuActive.SetActive(false);
+                menuActive = menuPause;
+                menuActive.SetActive(true);
+                SelectFirstButton(menuActive);
+            }
+            else if (menuActive == menuAudio || menuActive == menuVideo || menuActive == menuControls)
+            {
+                menuActive.SetActive(false);
+                menuActive = menuOptions;
+                menuActive.SetActive(true);
+                SelectFirstButton(menuActive);
+            }
+        }
 
         if (PlayerController.inputActions.UI.Cancel.triggered)
         {
@@ -578,21 +609,8 @@ public class GameManager : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
         }
     }
-    private void HandlePauseInput()
-    {
-#if UNITY_STANDALONE
-        if (PlayerController.inputActions.UI.Cancel.triggered)
-        {
-            ProcessPauseInput();
-        }
-#elif UNITY_WEBGL
-    if (PlayerController.inputActions.UI.Pause.triggered)
-    {
-        ProcessPauseInput();
-    }
-#endif
-    }
 
+<<<<<<< HEAD
     private void ProcessPauseInput()
     {
         if (menuActive == null)
@@ -633,4 +651,9 @@ public class GameManager : MonoBehaviour
             PlayerController.inputActions.Input.Disable();
         }
     }
+=======
+    //    if (playerHealth != null)
+    //        playerHealth.ResetHealth();
+    //}
+>>>>>>> parent of a241b0d3 (Input action and WebGL condition)
 }
