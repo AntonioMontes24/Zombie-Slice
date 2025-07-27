@@ -12,8 +12,7 @@ public class ButtonFunctions : MonoBehaviour
     public void backToMain()
     {
         // Destroy persistent singletons
-    if (GameManager.instance != null) Destroy(GameManager.instance.gameObject);
-    if (KillManager.instance != null) Destroy(KillManager.instance.gameObject);
+        if (GameManager.instance != null) Destroy(GameManager.instance.gameObject);
     if (AudioManager.instance != null) Destroy(AudioManager.instance.gameObject);
 
     // Optionally clear Time.timeScale if paused
@@ -64,12 +63,6 @@ public class ButtonFunctions : MonoBehaviour
     {
 
         SceneManager.sceneLoaded -= OnSceneReloaded;
-
-        if (KillManager.instance != null)
-        {
-            KillManager.instance.ResetKills();
-        }
-
         if (GameManager.instance != null) {
 
             GameManager.instance.ResetBarriers();
