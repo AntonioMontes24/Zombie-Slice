@@ -383,9 +383,21 @@ public class PlayerHealth : MonoBehaviour, IDamage
     public void Revive()
     {
         hasDied = false;
-
-
         currentHealth = maxHealth;
+
+        if (GameManager.instance != null)
+        {
+            if (GameManager.instance.playerHPBar != null)
+            {
+                GameManager.instance.playerHPBar.fillAmount = 1f;
+                GameManager.instance.playerHPBar.color = Color.green; 
+            }
+
+            if (GameManager.instance.playerHPText != null)
+            {
+                GameManager.instance.playerHPText.text = $"{maxHealth}";
+            }
+        }
 
         // Re-enable player controller
         PlayerController controller = GetComponent<PlayerController>();
