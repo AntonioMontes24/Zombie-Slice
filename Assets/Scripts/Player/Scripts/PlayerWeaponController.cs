@@ -384,7 +384,7 @@ public class PlayerWeaponManager : MonoBehaviour
             if (hit.collider.gameObject == gameObject)
                 return; // ← Prevent stabbing self
 
-            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            IDamage dmg = hit.collider.GetComponentInParent<IDamage>();
             iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
 
             if (dmg != null)
@@ -448,7 +448,7 @@ public class PlayerWeaponManager : MonoBehaviour
             if (hit.collider.gameObject == gameObject)
                 return; // ← Prevent stabbing self
 
-            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            IDamage dmg = hit.collider.GetComponentInParent<IDamage>();
             iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
 
             if (dmg != null)
