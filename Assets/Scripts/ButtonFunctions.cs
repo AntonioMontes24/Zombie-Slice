@@ -121,13 +121,24 @@ public class ButtonFunctions : MonoBehaviour
 
     public void quit()
     {
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#else
+#if UNITY_WEBGL
+        if (GameManager.instance != null)
+        {
+            if (GameManager.instance.menuActive != null)
+            {
+                GameManager.instance.menuActive.SetActive(false);
+            }
 
-        Application.Quit();
+            GameManager.instance.menuActive = GameManager.instance.menuWebGLQuit;
+            GameManager.instance.menuActive.SetActive(true);
+        }
+#elif UNITY_EDITOR
+    UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
 #endif
     }
+
 
     [Header("Door Interaction")]
     [SerializeField] private float holdDuration = 1f;

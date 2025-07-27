@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
 
-    [SerializeField] GameObject menuActive;
+    [SerializeField] public GameObject menuActive;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuVideo;
     [SerializeField] GameObject menuControls;
 
+    [SerializeField] public GameObject menuWebGLQuit;
     [SerializeField] GameObject inGameUI;
 
     public GameObject bittenStatusGroup;
@@ -164,6 +165,11 @@ public class GameManager : MonoBehaviour
         {
             inGameUI.SetActive(true);
         }
+        if (menuWebGLQuit != null)
+        {
+            menuWebGLQuit.SetActive(false);
+        }
+
         PlayerController.inputActions?.UI.Enable();
     }
 
@@ -186,7 +192,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+#if UNITY_WEBGL
+    if (PlayerController.inputActions.UI.WebGLPause.triggered)
+#else
         if (PlayerController.inputActions.UI.Cancel.triggered)
+#endif
         {
             if (!gameEnded)
             {
