@@ -60,16 +60,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     private bool isAttacking = false;
     //casched player transofrm for effeciency
     private Transform playerTransform;
-
-    //int iEnemyHealth.CurrentHealth
-    //{
-    //    get {  return currHealth; }
-    //}
-
-    //int iEnemyHealth.maxHealth
-    //{
-    //    get {  return _maxHealth; }
-    //}
+    private bool isDead = false;
 
     public int CurrentHealth
     {
@@ -83,31 +74,36 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 
     public void takeDamage(int amount)
     {
-        if(currHealth > 0)
-        {
-            currHealth -= amount;
-            currHealth = Mathf.Max(currHealth, 0);
+        if (isDead) return;
 
-            if(GameManager.instance != null)
-                GameManager.instance.UpdateEnemyHealthBar(this); //Moved it to a single statemenet
-            else                                                 
-                Debug.LogError("GameManager.instance is NULL!!");
+        currHealth -= amount;
+        currHealth = Mathf.Max(currHealth, 0);
 
-            if(playerTransform != null)
-            {
-                agent.SetDestination(playerTransform.position);
-                agent.isStopped = false;
-                SetTargetAnimSpeed(speed * speedModifier);
-            }
-        }
+        if (GameManager.instance != null)
+            GameManager.instance.UpdateEnemyHealthBar(this); //Moved it to a single statemenet
+        else
+            Debug.LogError("GameManager.instance is NULL!!");
+
+        
 
         if (currHealth <= 0)
         {
+            isDead = true;
+
             if (GetComponent<Collider>() != null) GetComponent<Collider>().enabled = false;
             if (agent.enabled) agent.enabled = false;
             this.enabled = false;
             StartCoroutine(removeCorpse());
             GameManager.instance.enemyInfoPanel.SetActive(false);
+        }
+        else // only chase if alive
+        {
+            if (playerTransform != null)
+            {
+                agent.SetDestination(playerTransform.position);
+                agent.isStopped = false;
+                SetTargetAnimSpeed(speed * speedModifier);
+            }
         }
     }
 

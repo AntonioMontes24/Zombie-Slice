@@ -49,8 +49,8 @@ MonoBehaviour:
     spawnChance: 2
   - pickupPrefab: {fileID: 5835967704610880946, guid: 2cccb8545c7e49b46a8c999a4388ff5f, type: 3}
     spawnChance: 0.5
-  maxSpawn: 0
-  minSpawn: 1
+  maxSpawn: 1
+  minSpawn: 0
   spawnProbabilityFalloff:
     serializedVersion: 2
     m_Curve:
@@ -78,3 +78,5 @@ MonoBehaviour:
   maxSpawnArea: 3
   minSpawnArea: 1
   spawnForce: 5
+  navMeshSampleRadius: 2
+  navMeshAreaMask: -1
