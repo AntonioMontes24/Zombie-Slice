@@ -8,8 +8,8 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 00000000000000000000000000000000
-  m_OcclusionCullingData: {fileID: 0}
+  m_SceneGUID: baedef13501753c48987c3707b8ad606
+  m_OcclusionCullingData: {fileID: 36300000, guid: 7b02cf6fd92b74042b18b0f003c8401f, type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -358,10 +358,12 @@ Transform:
   - {fileID: 210419333}
   - {fileID: 1041199274}
   - {fileID: 2035666485}
+  - {fileID: 835639625}
   - {fileID: 2048439603}
   - {fileID: 679741734}
   - {fileID: 254486035}
   - {fileID: 1817860491}
+  - {fileID: 2146447830}
   - {fileID: 524392621}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -519,7 +521,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &26189836
 Transform:
@@ -753,6 +755,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (49)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 39.29571
@@ -817,6 +823,10 @@ PrefabInstance:
     - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_Name
       value: Pistol_AmmoPickUp (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1113,7 +1123,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &53627268
 Transform:
@@ -1221,6 +1231,10 @@ PrefabInstance:
     - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_Name
       value: Pistol_AmmoPickUp (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2003,6 +2017,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Goblet (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_LocalPosition.x
       value: 22.719662
@@ -2252,6 +2270,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pistol_AmmoPickUp
       objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_LocalPosition.x
       value: 17.233
@@ -2447,7 +2469,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &92499534
 Transform:
@@ -2691,6 +2713,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeartPickup (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 6916835057799141805, guid: 2a170ef7959983b488c654233376192f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2713,7 +2739,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &96593036
 Transform:
@@ -2724,7 +2750,7 @@ Transform:
   m_GameObject: {fileID: 96593035}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 18.25, y: 0, z: 49.472}
+  m_LocalPosition: {x: 18.25, y: 0.01, z: 49.472}
   m_LocalScale: {x: 0.2, y: 1, z: 6.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3164,7 +3190,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &119331128
 Transform:
@@ -4827,6 +4853,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (20)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.5456817
@@ -5189,6 +5219,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeartPickup
       objectReference: {fileID: 0}
+    - target: {fileID: 6916835057799141805, guid: 2a170ef7959983b488c654233376192f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5243,7 +5277,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &193175674
 Transform:
@@ -5346,6 +5380,10 @@ PrefabInstance:
     - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_Name
       value: Pistol_AmmoPickUp (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6017,9 +6055,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1594564807}
     m_Modifications:
+    - target: {fileID: 1289021106497550, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602288087390512, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_Name
       value: Magic fire 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946108650276192, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4283311113454432, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6189,6 +6243,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (33)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 46.99
@@ -6253,6 +6311,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_Name
       value: Goblet (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6323,9 +6385,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1144713614}
     m_Modifications:
+    - target: {fileID: 1289021106497550, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602288087390512, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_Name
       value: Magic fire 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946108650276192, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4283311113454432, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6595,6 +6673,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone12 (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.553119
@@ -6802,6 +6884,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (35)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7253,7 +7339,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &257257124
 Transform:
@@ -7929,6 +8015,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_Name
       value: Tombstone08 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8733,6 +8823,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeartPickup (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 6916835057799141805, guid: 2a170ef7959983b488c654233376192f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8970,6 +9064,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (29)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9791,6 +9889,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone08 (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.024624586
@@ -10257,6 +10359,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_Name
       value: Goblet (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11693,7 +11799,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &386072634
 Transform:
@@ -11796,6 +11902,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_Name
       value: Goblet
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12481,6 +12591,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -13811,6 +13925,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone12 (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.553149
@@ -14220,6 +14338,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (23)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14713,6 +14835,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (17)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.239957
@@ -14777,6 +14903,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (25)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15049,6 +15179,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone08 (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 31.274609
@@ -15276,6 +15410,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (57)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -16466,9 +16604,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 79091557}
     m_Modifications:
+    - target: {fileID: 1289021106497550, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602288087390512, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_Name
       value: Magic fire 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946108650276192, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4283311113454432, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_LocalPosition.x
@@ -17220,7 +17374,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &531404973
 Transform:
@@ -17918,6 +18072,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (41)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 44.29568
@@ -18207,6 +18365,10 @@ PrefabInstance:
     - target: {fileID: 6916835057799141805, guid: 2a170ef7959983b488c654233376192f, type: 3}
       propertyPath: m_Name
       value: HeartPickup (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6916835057799141805, guid: 2a170ef7959983b488c654233376192f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18741,6 +18903,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (19)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.2400026
@@ -18828,6 +18994,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (43)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 44.295757
@@ -18897,6 +19067,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (53)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -19230,6 +19404,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (63)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 36.545696
@@ -19300,7 +19478,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &580491532
 Transform:
@@ -19495,6 +19673,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (37)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -19779,6 +19961,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (24)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.4542878
@@ -19848,6 +20034,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (23)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -20064,6 +20254,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (15)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -20838,6 +21032,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (25)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -22725,29 +22923,57 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1546283741542947102, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1683942993322894009, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1683942993322894009, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 2705928236959014449, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2705928236959014449, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3317275293591633601, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317275293591633601, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 3569946143500913938, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3569946143500913938, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 4994523689525668647, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4994523689525668647, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5056833939814743779, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5056833939814743779, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 5101751982561402909, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_LocalPosition.x
@@ -22797,13 +23023,25 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6578526200004073672, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7129139510674217144, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7129139510674217144, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7432029863803437155, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7432029863803437155, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 8288027974032219213, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_Name
@@ -22813,9 +23051,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8288027974032219213, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 8535152708847276597, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535152708847276597, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22865,6 +23111,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (27)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -23476,6 +23726,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone12 (19)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
       value: 34.196804
@@ -23817,6 +24071,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pistol_AmmoPickUp (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_LocalPosition.x
       value: -37.809113
@@ -24119,7 +24377,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &757710546
 Transform:
@@ -24425,6 +24683,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (45)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 44.29571
@@ -24596,6 +24858,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (28)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -25707,6 +25973,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 628422473757085306, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 939369792913850167, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
       propertyPath: barrierRootGameObject
       value: 
@@ -25755,6 +26025,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 6173930526754791882, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6995854719899009937, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
       propertyPath: m_Size.y
       value: 5
@@ -25767,9 +26041,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 7307090835848003664, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7806608329294367032, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
       propertyPath: m_Layer
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7806608329294367032, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 9085359148761879285, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
       propertyPath: m_Name
@@ -25779,9 +26061,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 9085359148761879285, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 9191208848789397803, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
       propertyPath: m_Layer
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 9191208848789397803, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6937229031160399254, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
@@ -26686,6 +26976,115 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1795617478}
   m_SourcePrefab: {fileID: 100100000, guid: 331e6cacaa5064ecb91f918c9aca93fd, type: 3}
+--- !u!1 &835639624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 835639625}
+  - component: {fileID: 835639628}
+  - component: {fileID: 835639627}
+  - component: {fileID: 835639626}
+  m_Layer: 15
+  m_Name: Road (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &835639625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835639624}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.70710576, z: -0, w: 0.70710784}
+  m_LocalPosition: {x: 96.22, y: 0, z: 43.47}
+  m_LocalScale: {x: 1, y: 1, z: 3}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9415722}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!64 &835639626
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835639624}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &835639627
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835639624}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 19bebca5ccca0684fa87a79a8d9f56b1, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &835639628
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835639624}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &838815363
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27725,7 +28124,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &872095124
 Transform:
   m_ObjectHideFlags: 0
@@ -27920,6 +28319,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crypt05
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: f216e63967c76493196bc8dc075bb684, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: f216e63967c76493196bc8dc075bb684, type: 3}
       propertyPath: m_LocalPosition.x
       value: 18.473583
@@ -28018,7 +28421,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &885106462
 Transform:
@@ -28366,6 +28769,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (55)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -29069,6 +29476,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (59)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 36.545727
@@ -29261,7 +29672,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &936178219
 Transform:
@@ -29928,7 +30339,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &953095785
 Transform:
@@ -30342,6 +30753,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pistol_AmmoPickUp (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_LocalPosition.x
       value: -34.54
@@ -30398,6 +30813,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (21)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -31156,6 +31575,10 @@ PrefabInstance:
     - target: {fileID: 5835967704610880946, guid: 0e1f3803cc87e5242bc90d535835a84f, type: 3}
       propertyPath: m_Name
       value: SMG_AmmoPickUp (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: 0e1f3803cc87e5242bc90d535835a84f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: 0e1f3803cc87e5242bc90d535835a84f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -32369,7 +32792,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1041199274
 Transform:
@@ -33252,6 +33675,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (27)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -34340,7 +34767,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1112491856
 Transform:
@@ -35032,9 +35459,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1906533896}
     m_Modifications:
+    - target: {fileID: 1289021106497550, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602288087390512, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_Name
       value: Magic fire 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946108650276192, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4283311113454432, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_LocalPosition.x
@@ -35677,6 +36120,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeartPickup (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6916835057799141805, guid: 2a170ef7959983b488c654233376192f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -36020,7 +36467,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1154649611
 Transform:
@@ -37136,9 +37583,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1491171749}
     m_Modifications:
+    - target: {fileID: 1289021106497550, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602288087390512, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_Name
       value: Magic fire 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946108650276192, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4283311113454432, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_LocalPosition.x
@@ -38509,6 +38972,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone08 (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.47539
@@ -38766,6 +39233,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (29)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -39110,6 +39581,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone08 (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 41.774624
@@ -39206,6 +39681,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_Name
       value: Tombstone08 (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -39384,7 +39863,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1262453537
 Transform:
@@ -39567,6 +40046,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (51)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -39882,9 +40365,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2076421147}
     m_Modifications:
+    - target: {fileID: 1289021106497550, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602288087390512, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_Name
       value: Magic fire 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946108650276192, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4283311113454432, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_LocalPosition.x
@@ -40085,6 +40584,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (14)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -40679,7 +41182,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1294695602
 Transform:
@@ -40988,6 +41491,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SMG_AmmoPickUp (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: 0e1f3803cc87e5242bc90d535835a84f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: 0e1f3803cc87e5242bc90d535835a84f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -31.21
@@ -41153,7 +41660,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1309359965
 Transform:
@@ -41551,6 +42058,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeartPickup (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6916835057799141805, guid: 2a170ef7959983b488c654233376192f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -41593,6 +42104,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (21)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -43563,6 +44078,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeartPickup (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 6916835057799141805, guid: 2a170ef7959983b488c654233376192f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -43579,6 +44098,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (17)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -43922,7 +44445,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1410829511
 Transform:
@@ -44614,6 +45137,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone12 (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.3031495
@@ -45275,7 +45802,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1441836693
 Transform:
@@ -45576,6 +46103,10 @@ PrefabInstance:
     - target: {fileID: 5835967704610880946, guid: 2cccb8545c7e49b46a8c999a4388ff5f, type: 3}
       propertyPath: m_Name
       value: Rifle_AmmoPickUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: 2cccb8545c7e49b46a8c999a4388ff5f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: 2cccb8545c7e49b46a8c999a4388ff5f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -46373,6 +46904,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (22)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.5457122
@@ -46846,7 +47381,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.54
+      value: -11.42
       objectReference: {fileID: 0}
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -46854,11 +47389,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 17.56
+      value: 17.6
       objectReference: {fileID: 0}
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9542905
       objectReference: {fileID: 0}
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalRotation.x
@@ -46866,7 +47401,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.2988806
       objectReference: {fileID: 0}
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalRotation.z
@@ -46878,7 +47413,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -34.781
       objectReference: {fileID: 0}
     - target: {fileID: 3288185707640497357, guid: 8c37c43c0771c824b91f2ffb48b7105f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -47567,6 +48102,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Goblet (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_LocalPosition.x
       value: 22.719662
@@ -47976,6 +48515,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -48545,7 +49088,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1509668136
 Transform:
@@ -49427,9 +49970,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 225592566}
     m_Modifications:
+    - target: {fileID: 1289021106497550, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602288087390512, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_Name
       value: Magic fire 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946108650276192, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4283311113454432, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_LocalPosition.x
@@ -50705,6 +51264,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pistol_AmmoPickUp (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.712
@@ -50971,6 +51534,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone08 (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 41.774624
@@ -51098,6 +51665,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_Name
       value: Goblet (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_LocalPosition.x
@@ -51331,7 +51902,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1597632768
 Transform:
@@ -51440,7 +52011,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1599639746
 Transform:
@@ -51940,6 +52511,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SMG_AmmoPickUp (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: 0e1f3803cc87e5242bc90d535835a84f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: 0e1f3803cc87e5242bc90d535835a84f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -22.88911
@@ -52256,6 +52831,10 @@ PrefabInstance:
     - target: {fileID: 5835967704610880946, guid: 2cccb8545c7e49b46a8c999a4388ff5f, type: 3}
       propertyPath: m_Name
       value: Rifle_AmmoPickUp (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: 2cccb8545c7e49b46a8c999a4388ff5f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: 2cccb8545c7e49b46a8c999a4388ff5f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -53164,6 +53743,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (39)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 46.99
@@ -53586,7 +54169,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1672947873
 Transform:
@@ -53795,6 +54378,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 628422473757085306, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 939369792913850167, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
       propertyPath: barrierRootGameObject
       value: 
@@ -53843,6 +54430,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 6173930526754791882, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6995854719899009937, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
       propertyPath: m_Size.y
       value: 5
@@ -53855,9 +54446,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 7307090835848003664, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7806608329294367032, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
       propertyPath: m_Layer
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7806608329294367032, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 9085359148761879285, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
       propertyPath: m_Name
@@ -53867,9 +54466,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 9085359148761879285, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 9191208848789397803, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
       propertyPath: m_Layer
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 9191208848789397803, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 873337018419257756, guid: 3acb5fb4438c58c438c3bb92ce1ac151, type: 3}
@@ -54162,7 +54769,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!64 &1689804471
 MeshCollider:
@@ -54383,7 +54990,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!64 &1693776041
 MeshCollider:
@@ -55162,33 +55769,65 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 568217877299446208, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2105078652501808503, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2105078652501808503, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 2686802426397254675, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2686802426397254675, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2770353064123073857, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2770353064123073857, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 3678638398862325774, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3678638398862325774, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3751082961159060568, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3751082961159060568, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4010422793136326860, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4010422793136326860, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 4013545531828356754, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4013545531828356754, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 5619331849647102321, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Name
@@ -55197,6 +55836,10 @@ PrefabInstance:
     - target: {fileID: 5619331849647102321, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619331849647102321, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 5640394401122326996, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -55242,21 +55885,41 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6325380859275064098, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6577195026279337964, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6577195026279337964, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6633826634165602815, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6633826634165602815, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7764478909961681626, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7764478909961681626, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 8402666246666268953, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8402666246666268953, guid: 731f1e3f6c24fba458838b1d723649cb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -55386,6 +56049,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (31)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -56965,6 +57632,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (47)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 33.79568
@@ -57035,7 +57706,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1758019210
 Transform:
@@ -58050,6 +58721,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (18)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.239957
@@ -58517,7 +59192,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1809329084
 Transform:
@@ -58528,8 +59203,8 @@ Transform:
   m_GameObject: {fileID: 1809329083}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 61.77, y: 0, z: 49.472}
-  m_LocalScale: {x: 0.2, y: 1, z: 2.24}
+  m_LocalPosition: {x: 63.25, y: 0.01, z: 49.472}
+  m_LocalScale: {x: 0.2, y: 1, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2045821808}
@@ -59063,7 +59738,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1823951537
 Transform:
@@ -59520,6 +60195,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pistol_AmmoPickUp (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_LocalPosition.x
       value: -42.227
@@ -59581,6 +60260,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (30)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -59969,7 +60652,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1851500213
 Transform:
@@ -60520,7 +61203,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1865428264
 Transform:
@@ -61123,6 +61806,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (26)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.454318
@@ -61508,6 +62195,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -61895,6 +62586,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Goblet (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_LocalPosition.x
       value: 22.719662
@@ -62090,6 +62785,10 @@ PrefabInstance:
     - target: {fileID: 5835967704610880946, guid: 0e1f3803cc87e5242bc90d535835a84f, type: 3}
       propertyPath: m_Name
       value: SMG_AmmoPickUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5835967704610880946, guid: 0e1f3803cc87e5242bc90d535835a84f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: 0e1f3803cc87e5242bc90d535835a84f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -62813,7 +63512,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1957643387
 Transform:
@@ -63565,6 +64264,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_Name
       value: Tombstone09 (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -64518,6 +65221,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tombstone09 (61)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 09074b85ad0074c8682a28ec25cc67ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 31.545696
@@ -65264,6 +65971,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_Name
       value: Tombstone12 (31)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: be803616a36874bbb8f81943b1fb6742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -66166,7 +66877,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2035666485
 Transform:
@@ -66177,8 +66888,8 @@ Transform:
   m_GameObject: {fileID: 2035666484}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.70710576, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: 61.9, y: 0, z: 43.46999}
-  m_LocalScale: {x: 1, y: 1, z: 2.17}
+  m_LocalPosition: {x: 66.22, y: 0, z: 43.47}
+  m_LocalScale: {x: 1, y: 1, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9415722}
@@ -66275,7 +66986,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2038573252
 Transform:
@@ -66686,7 +67397,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2046025996
 Transform:
@@ -67065,7 +67776,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!64 &2054804634
 MeshCollider:
@@ -67480,6 +68191,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_Name
       value: Goblet (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: fa4d4b0803dcb48ec87d94181a8fe441, type: 3}
       propertyPath: m_LocalPosition.x
@@ -73821,6 +74536,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeartPickup (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6916835057799141805, guid: 2a170ef7959983b488c654233376192f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -74017,6 +74736,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_Name
       value: Tombstone08 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: a6ce93d8a3f914604b62cb4a6972d6f8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -74272,6 +74995,99 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4790000225344279549, guid: 331e6cacaa5064ecb91f918c9aca93fd, type: 3}
+--- !u!1 &2146447829
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2146447830}
+  - component: {fileID: 2146447832}
+  - component: {fileID: 2146447831}
+  m_Layer: 15
+  m_Name: Terrain_(22.00, 0.00, 39.78) (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &2146447830
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146447829}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 75.416, y: 0, z: 48.471}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9415722}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!154 &2146447831
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146447829}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_TerrainData: {fileID: 15600000, guid: 6459ff944c8e2514a941f0fa23796f73, type: 2}
+  m_EnableTreeColliders: 1
+--- !u!218 &2146447832
+Terrain:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146447829}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_TerrainData: {fileID: 15600000, guid: 6459ff944c8e2514a941f0fa23796f73, type: 2}
+  m_TreeDistance: 5000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 57
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMinimumLODSimplification: 0
+  m_HeightmapMaximumLOD: 0
+  m_ShadowCastingMode: 2
+  m_DrawHeightmap: 1
+  m_DrawInstanced: 0
+  m_DrawTreesAndFoliage: 1
+  m_StaticShadowCaster: 0
+  m_IgnoreQualitySettings: 0
+  m_ReflectionProbeUsage: 1
+  m_MaterialTemplate: {fileID: 10652, guid: 0000000000000000f000000000000000, type: 0}
+  m_BakeLightProbesForTrees: 1
+  m_PreserveTreePrototypeLayers: 0
+  m_DeringLightProbesForTrees: 1
+  m_ReceiveGI: 1
+  m_ScaleInLightmap: 0.6190731
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_GroupingID: 0
+  m_RenderingLayerMask: 1
+  m_AllowAutoConnect: 1
+  m_EnableHeightmapRayTracing: 1
+  m_EnableTreesAndDetailsRayTracing: 0
+  m_TreeMotionVectorModeOverride: 3
 --- !u!1 &2146884809 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 331e6cacaa5064ecb91f918c9aca93fd, type: 3}
@@ -74307,9 +75123,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 352630742}
     m_Modifications:
+    - target: {fileID: 1289021106497550, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602288087390512, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_Name
       value: Magic fire 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900756431413560, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946108650276192, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4283311113454432, guid: 529eb4216865eba419c1a4a68d0b0388, type: 3}
       propertyPath: m_LocalPosition.x
@@ -74937,6 +75769,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: objectives.Array.data[0].objectiveDescription
+      value: Clear the zombies and get to the trucks
+      objectReference: {fileID: 0}
+    - target: {fileID: 479210312004227081, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: objectives.Array.data[3].objectiveDescription
       value: Enter the Crypt. Go to the Crypt entrance and hold F.
       objectReference: {fileID: 0}
@@ -75028,6 +75864,10 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2587469582908287154, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2696069737792858726, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: m_Layer
       value: 17
@@ -75051,6 +75891,14 @@ PrefabInstance:
     - target: {fileID: 3677047681861178868, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4031332649897497026, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 4031332649897497026, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 4254459058727220636, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
       propertyPath: m_IsActive

@@ -46,12 +46,12 @@ public class ButtonFunctions : MonoBehaviour
         {
             
             GameManager.instance.player.transform.position = GameManager.instance.playerSpawnPoint;
-
-           
             GameManager.instance.player.GetComponent<PlayerHealth>().Revive();
 
-            GameManager.instance.statePause();
+            GameManager.instance.ResetAfterRespawn();
+            GameManager.instance.respawnHook?.Invoke();
 
+            GameManager.instance.statePause();
             GameManager.instance.stateUnpause();
         }
     }

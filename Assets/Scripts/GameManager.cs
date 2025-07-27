@@ -587,4 +587,25 @@ public class GameManager : MonoBehaviour
             PlayerController.inputActions.Input.Disable();
         }
     }
+    public void ResetAfterRespawn()
+    {
+        gameEnded = false;
+        isPaused = false;
+
+        Time.timeScale = timeScaleOrig;
+
+        if (menuLose != null) menuLose.SetActive(false);
+        if (menuWin != null) menuWin.SetActive(false);
+        if (menuNoTime != null) menuNoTime.SetActive(false);
+        if (menuPause != null) menuPause.SetActive(false);
+        if (menuOptions != null) menuOptions.SetActive(false);
+
+        menuActive = null;
+
+        if (inGameUI != null)
+            inGameUI.SetActive(true);
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 }
