@@ -1074,6 +1074,7 @@ GameObject:
   - component: {fileID: 5130409792389016940}
   - component: {fileID: 8144434321061865313}
   - component: {fileID: -8948445506226107619}
+  - component: {fileID: 3245998679573404388}
   m_Layer: 9
   m_Name: Z1
   m_TagString: Enemy
@@ -1335,6 +1336,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.52, y: 1.93, z: 0.34}
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!135 &3245998679573404388
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3724468654230534146}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 8
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3865094614615260920
 GameObject:
   m_ObjectHideFlags: 0

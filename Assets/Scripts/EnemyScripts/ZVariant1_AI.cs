@@ -271,16 +271,17 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
             agent.isStopped = true;
             SetTargetAnimSpeed(0);
             UpdateAnimSpeed(); // keep blend tree synced
+            faceTarget();
             return;
         }
 
         // check if player is visible
-        bool playerIsVisible = canWeSeeThePlayer();
+        bool playerIsDetected = playerInRange || canWeSeeThePlayer();
 
-        if(playerIsVisible)
+        if(playerIsDetected)
         {
-            roamTime = 0;
             faceTarget();
+            roamTime = 0;
 
             float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
 
