@@ -192,6 +192,8 @@ public class PlayerHealth : MonoBehaviour, IDamage
             GameManager.instance.flashDamageScreen.SetActive(true);
         }
         EnableDeathCamera();
+
+
     }
 
 
@@ -388,10 +390,19 @@ public class PlayerHealth : MonoBehaviour, IDamage
         // Re-enable player controller
         PlayerController controller = GetComponent<PlayerController>();
         if (controller != null)
+        {
             controller.enabled = true;
 
-        // Re-enable weapon firing
-        PlayerWeaponManager weaponManager = GetComponent<PlayerWeaponManager>();
+            if (PlayerController.inputActions != null)
+            {
+                PlayerController.inputActions.Input.Enable();
+                PlayerController.inputActions.UI.Enable();
+                Debug.Log("InputActions re-enabled in Revive()");
+            }
+        }
+
+    // Re-enable weapon firing
+    PlayerWeaponManager weaponManager = GetComponent<PlayerWeaponManager>();
         if (weaponManager != null)
             weaponManager.SetCanFire(true);
 
