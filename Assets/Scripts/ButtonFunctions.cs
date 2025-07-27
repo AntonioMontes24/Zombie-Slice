@@ -23,15 +23,17 @@ public class ButtonFunctions : MonoBehaviour
 
     public void backToMain()
     {
+        // Destroy persistent singletons
+    if (GameManager.instance != null) Destroy(GameManager.instance.gameObject);
+    if (KillManager.instance != null) Destroy(KillManager.instance.gameObject);
+    if (AudioManager.instance != null) Destroy(AudioManager.instance.gameObject);
+
+    // Optionally clear Time.timeScale if paused
+    Time.timeScale = 1f;
+    
         SceneManager.LoadScene(1);
 
-        // int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        // SceneManager.LoadScene(currentSceneIndex);
-
-        //if (KillManager.instance != null)
-        //{
-        //    KillManager.instance.ResetKills();
-        //}
+        
     }
     public void restart()
     {
