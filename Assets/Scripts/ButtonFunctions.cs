@@ -141,18 +141,5 @@ public class ButtonFunctions : MonoBehaviour
   
     private bool isPlayerNearDoor = false;
 
-    private void Start()
-    {
-    
-
-    }
-
-
-    private void Update()
-    {
-        
-
-    }
-
    
 }

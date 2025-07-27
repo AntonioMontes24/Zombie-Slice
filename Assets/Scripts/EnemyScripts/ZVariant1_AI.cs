@@ -143,18 +143,47 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         if (animator != null && animator.runtimeAnimatorController != null)
         {
             isAttacking = true;
+            animator.SetBool("isAttacking", true);  // Set animator param
             agent.isStopped = true;
             SetTargetAnimSpeed(0);
             animator.SetTrigger("swipe");
         }
+
         yield return new WaitForSeconds(1.0f);
+
         isAttacking = false;
+        animator.SetBool("isAttacking", false); // Reset animator param
+
         if (playerTransform != null && canWeSeeThePlayer())
         {
-            agent.SetDestination(playerTransform.position);
-            agent.isStopped = false;
-            SetTargetAnimSpeed(speed * speedModifier);
+            if (agent != null && agent.enabled && agent.isOnNavMesh)
+            {
+                if (agent.SetDestination(playerTransform.position))
+                {
+                    if (agent.pathStatus == NavMeshPathStatus.PathComplete)
+                    {
+                        agent.isStopped = false;
+                        agent.speed = speed * speedModifier;
+                        SetTargetAnimSpeed(speed * speedModifier);
+                    }
+                    else
+                    {
+                        agent.isStopped = true;
+                        SetTargetAnimSpeed(0);
+                    }
+                }
+            }
         }
+        else
+        {
+            if (agent != null && agent.enabled && agent.isOnNavMesh)
+            {
+                agent.isStopped = false;
+                roamTime = roamStopTimer;  // this triggers roam() soon in Update
+                SetTargetAnimSpeed(0);     // stop animation until next movement
+            }
+        }
+
     }
 
     public void assignAttackDamage()
@@ -232,18 +261,20 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     {
         if(currHealth <= 0) return;
 
+        // handle cooldown
         if(attackCounter < attackRate)
             attackCounter += Time.deltaTime;
 
+        // if currently attacking, freeze movement and animation
         if(isAttacking)
         {
-            // Freeze movement and animation while attacking
             agent.isStopped = true;
             SetTargetAnimSpeed(0);
-            UpdateAnimSpeed(); // <-- still update anim speed to match blend tree
+            UpdateAnimSpeed(); // keep blend tree synced
             return;
         }
 
+        // check if player is visible
         bool playerIsVisible = canWeSeeThePlayer();
 
         if(playerIsVisible)
@@ -253,6 +284,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 
             float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
 
+            // player in melee range
             if(distanceToPlayer <= meleeAttackRange)
             {
                 agent.isStopped = true;
@@ -263,18 +295,38 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
                     StartCoroutine(attackAnimationTrigger());
                     attackCounter = 0;
                 }
-            } else
+            }else
             {
-                agent.SetDestination(playerTransform.position);
-                agent.isStopped = false;
-                agent.speed = speed * speedModifier;
-                SetTargetAnimSpeed(speed * speedModifier);
+                // player visible and not in melee range → chase player with destination safety
+                if(agent.SetDestination(playerTransform.position))
+                {
+                    if(agent.pathStatus == NavMeshPathStatus.PathComplete)
+                    {
+                        agent.isStopped = false;
+                        agent.speed = speed * speedModifier;
+                        SetTargetAnimSpeed(speed * speedModifier);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Zombie path to player is invalid or partial.");
+                        agent.isStopped = true;
+                        SetTargetAnimSpeed(0);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Zombie failed to set destination.");
+                    agent.isStopped = true;
+                    SetTargetAnimSpeed(0);
+                }
             }
         } else
         {
+            // no player in sight → roam logic
             roamCheck();
         }
-        UpdateAnimSpeed(); // <-- smoothly transitions speed every frame
+
+        UpdateAnimSpeed(); // always smooth out blend transitions
     }
 
     private void OnTriggerEnter(Collider other)
@@ -353,11 +405,20 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         NavMeshHit hit;
         if(NavMesh.SamplePosition(randPos, out hit, roamDistance, NavMesh.AllAreas))
         {
-            agent.SetDestination(hit.position);
-            agent.isStopped = false;
-            agent.speed = speed * 0.5f * speedModifier;
-            SetTargetAnimSpeed(speed * 0.5f * speedModifier);
-        } else
+            if(agent.SetDestination(hit.position))
+            {
+                if(agent.pathStatus == NavMeshPathStatus.PathComplete)
+                {
+                    agent.isStopped = false;
+                    agent.speed = speed * 0.5f * speedModifier;
+                    SetTargetAnimSpeed(speed * 0.5f * speedModifier);
+                }else
+                {
+                    agent.isStopped = true;
+                    SetTargetAnimSpeed(0);
+                }
+            }
+        }else
         {
             roamTime = roamStopTimer;
             SetTargetAnimSpeed(0);
@@ -373,19 +434,31 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
             return;
         }
 
+        // if we're idle at our destination
         if(agent.remainingDistance < 0.1f && !agent.pathPending && agent.velocity.sqrMagnitude < 0.1f)
         {
             agent.isStopped = true;
             roamTime += Time.deltaTime;
 
-            SetTargetAnimSpeed(0);
+            SetTargetAnimSpeed(0); // stop anim
 
-            if (roamTime >= roamStopTimer)
+            if(roamTime >= roamStopTimer)
                 roam();
-        } else
+        }else
         {
-            agent.speed = speed * 0.5f * speedModifier;
-            SetTargetAnimSpeed(speed * 0.5f * speedModifier);
+            // walking to roam destination
+            if(agent.pathStatus == NavMeshPathStatus.PathComplete)
+            {
+                agent.speed = speed * 0.5f * speedModifier;
+                SetTargetAnimSpeed(speed * 0.5f * speedModifier);
+            }
+            else
+            {
+                // incomplete/invalid path
+                agent.isStopped = true;
+                SetTargetAnimSpeed(0);
+            }
+
             roamTime = 0;
         }
     }
@@ -401,8 +474,18 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
-            float smoothSpeed = Mathf.MoveTowards(animator.GetFloat("Speed"), targetAnimSpeed, Time.deltaTime * 5f);
-            animator.SetFloat("Speed", smoothSpeed);
+            float actualSpeed = agent.velocity.magnitude;
+
+            // If agent barely moves, force animation to idle
+            if (actualSpeed < 0.05f || agent.isStopped)
+            {
+                animator.SetFloat("Speed", 0f);
+            }
+            else
+            {
+                float smoothSpeed = Mathf.MoveTowards(animator.GetFloat("Speed"), targetAnimSpeed, Time.deltaTime * 5f);
+                animator.SetFloat("Speed", smoothSpeed);
+            }
         }
     }
     void SetAnimationSpeed(float currentSpeed)

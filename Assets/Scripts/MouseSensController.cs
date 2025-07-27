@@ -12,9 +12,9 @@ public class MouseSensController : MonoBehaviour
     [SerializeField] private Button resetButton;
 
     [Header("Settings")]
-    [SerializeField] private float defaultSens = 1.0f;
+    [SerializeField] private float defaultSens = 70.0f;
     [SerializeField] private float minSens = 0.1f;
-    [SerializeField] private float maxSens = 10f;
+    [SerializeField] private float maxSens = 150f;
 
     private const string SensPlayerPrefKey = "MouseSensitivity";
 

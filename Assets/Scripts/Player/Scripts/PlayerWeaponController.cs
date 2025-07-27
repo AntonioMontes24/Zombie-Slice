@@ -390,7 +390,8 @@ public class PlayerWeaponManager : MonoBehaviour
             if (dmg != null)
                 dmg.takeDamage(melee.damage * 2); // More damage for heavy attack
 
-            if (hit.collider.CompareTag("Enemy"))
+            if ((hit.transform.root.CompareTag("Enemy"))
+)
             {     
                     if (melee.zombieHit != null)
                     aud.PlayOneShot(melee.zombieHit);
@@ -453,9 +454,10 @@ public class PlayerWeaponManager : MonoBehaviour
             if (dmg != null)
                 dmg.takeDamage(melee.damage); // More damage for heavy attack
 
-            if (hit.collider.CompareTag("Enemy"))
-            {
-                if (melee.zombieHit != null)
+            if ((hit.transform.root.CompareTag("Enemy")))
+
+                {
+                    if (melee.zombieHit != null)
                     aud.PlayOneShot(melee.zombieHit);
 
                 if (enemyHealth != null)
@@ -775,7 +777,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             if (hit.CompareTag("Enemy"))
             {
-                IDamage dmg = hit.GetComponent<IDamage>();
+                IDamage dmg = hit.GetComponentInParent<IDamage>();
                 if (dmg != null)
                 {
                     dmg.takeDamage(weaponList[currentWeaponIndex] is MeleeWeaponStats melee ? melee.damage : 10);
