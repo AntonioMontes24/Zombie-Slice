@@ -4,7 +4,19 @@ using TMPro;
 
 public class ButtonFunctions : MonoBehaviour
 {
-   public void resume()
+
+    [Header("Door Interaction")]
+    [SerializeField] private float holdDuration = 1f;
+    [SerializeField] private int sceneBuildIndex = 2;
+    //[SerializeField] private KeyCode interactKey = KeyCode.X;
+    [SerializeField] private TMP_Text InteractText;
+
+    [Header("UI")]
+    [SerializeField] private TMP_Text interactPrompt;
+
+
+    private bool isPlayerNearDoor = false;
+    public void resume()
     {
         GameManager.instance.stateUnpause();
     }
@@ -140,17 +152,7 @@ public class ButtonFunctions : MonoBehaviour
     }
 
 
-    [Header("Door Interaction")]
-    [SerializeField] private float holdDuration = 1f;
-    [SerializeField] private int sceneBuildIndex = 2;
-    //[SerializeField] private KeyCode interactKey = KeyCode.X;
-    [SerializeField] private TMP_Text InteractText;
-
-    [Header("UI")]
-    [SerializeField] private TMP_Text interactPrompt;
-
-  
-    private bool isPlayerNearDoor = false;
+    
 
    
 }
