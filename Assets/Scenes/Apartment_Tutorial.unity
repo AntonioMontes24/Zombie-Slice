@@ -2009,6 +2009,11 @@ MonoBehaviour:
   exitType: 0
   specificSceneName: 
   spawnPointName: 
+--- !u!4 &758870464 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3667211753972221885, guid: 0830086465bbffd4ab64ee6fc8c82d74, type: 3}
+  m_PrefabInstance: {fileID: 147732859}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &779215926 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5185380206506086631, guid: 27db3cba8c86e446e8f4641874116de7, type: 3}
@@ -4172,6 +4177,15 @@ MonoBehaviour:
     requiredKeys: 
     keyItemToHighlight: {fileID: 283162145}
     requiredActions: []
+  - message: Move to the car and leave. Hold F on the car.
+    target: {fileID: 758870464}
+    triggerRadius: 1
+    requireKeyPress: 1
+    requireProximity: 0
+    requiredKeys: 
+    keyItemToHighlight: {fileID: 758870457}
+    requiredActions:
+    - {fileID: -562302461316053730, guid: d13a2d4c0d828214d80ec5af07d8c48e, type: 3}
   tutorialText: {fileID: 472885549874095332}
 --- !u!4 &1896259114
 Transform:
@@ -50309,7 +50323,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Lean Left
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f23f146ca40ad50498f8b6e165c4c6f7, type: 2}
   m_sharedMaterial: {fileID: -5554311637290952672, guid: f23f146ca40ad50498f8b6e165c4c6f7, type: 2}
