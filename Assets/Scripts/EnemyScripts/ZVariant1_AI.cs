@@ -8,7 +8,6 @@ using UnityEngine.InputSystem.Editor;
 
 public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 {
-
     [Header("Zombie Health")]
     [SerializeField] int currHealth;                        // the current health 
     [SerializeField] int _maxHealth;                        // the max health
@@ -53,19 +52,15 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] AudioClip aud_clip_swipe;
     [SerializeField] int audioCounter;
 
+    [Header("Zombie Animation")]
+    private float currentAnimSpeed = 0f; // Smooth animation transition speed
+    private float targetAnimSpeed = 0f;
 
+
+    private bool isAttacking = false;
     //casched player transofrm for effeciency
     private Transform playerTransform;
-
-    //int iEnemyHealth.CurrentHealth
-    //{
-    //    get {  return currHealth; }
-    //}
-
-    //int iEnemyHealth.maxHealth
-    //{
-    //    get {  return _maxHealth; }
-    //}
+    private bool isDead = false;
 
     public int CurrentHealth
     {
@@ -77,52 +72,54 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         get { return _maxHealth; }
     }
 
-
-
     public void takeDamage(int amount)
     {
-        if (currHealth > 0)
+        if (isDead) return;
+
+        currHealth -= amount;
+        currHealth = Mathf.Max(currHealth, 0);
+
+        if (GameManager.instance != null)
         {
-            currHealth -= amount;
-            currHealth = Mathf.Max(currHealth, 0);
+            GameManager.instance.UpdateEnemyHealthBar(this); //Moved it to a single statemenet
+            GameManager.instance.enemyNameText.text = "Zombie";
+        } 
+        else
+            Debug.LogError("GameManager.instance is NULL!!");
 
-            if(GameManager.instance != null)
-            {
-                GameManager.instance.UpdateEnemyHealthBar(this);
-            } else
-            {
-                Debug.LogError("GameManager.instance is NULL!!");
-            }
+        
 
-            if(playerTransform != null)
-            {
-                agent.SetDestination(playerTransform.position);
-                agent.isStopped = false;
-                animator.SetFloat("Speed", speed * speedModifier);
-            }
-        }
         if (currHealth <= 0)
-         {
-            if(GetComponent<Collider>() != null) GetComponent<Collider>().enabled = false;
-            if(agent.enabled) agent.enabled = false;
+        {
+            isDead = true;
+
+            if (GetComponent<Collider>() != null) GetComponent<Collider>().enabled = false;
+            if (agent.enabled) agent.enabled = false;
             this.enabled = false;
             StartCoroutine(removeCorpse());
             GameManager.instance.enemyInfoPanel.SetActive(false);
-         }
-        
+        }
+        else // only chase if alive
+        {
+            if (playerTransform != null)
+            {
+                agent.SetDestination(playerTransform.position);
+                agent.isStopped = false;
+                SetTargetAnimSpeed(speed * speedModifier);
+            }
+        }
     }
 
     IEnumerator removeCorpse()
     {
-
         if (animator != null && animator.runtimeAnimatorController != null)
         {
             if(agent != null && agent.enabled && agent.isOnNavMesh)
             {
                 agent.isStopped = true;
             }
-            
-            animator.SetTrigger("isDead");
+
+            animator.SetTrigger("isDead"); // RoamerDeath state
         }
 
         playAudioDeath();
@@ -136,7 +133,7 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
             Debug.LogWarning("Pickup Spawner: pickup spawner is null");
         }
 
-            yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(4);
         Destroy(gameObject);
     }
 
@@ -144,9 +141,47 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
+            isAttacking = true;
+            animator.SetBool("isAttacking", true);  // Set animator param
+            agent.isStopped = true;
+            SetTargetAnimSpeed(0);
             animator.SetTrigger("swipe");
         }
-        yield return null;
+
+        yield return new WaitForSeconds(1.0f);
+
+        isAttacking = false;
+        animator.SetBool("isAttacking", false); // Reset animator param
+
+        if (playerTransform != null && canWeSeeThePlayer())
+        {
+            if (agent != null && agent.enabled && agent.isOnNavMesh)
+            {
+                if (agent.SetDestination(playerTransform.position))
+                {
+                    if (agent.pathStatus == NavMeshPathStatus.PathComplete)
+                    {
+                        agent.isStopped = false;
+                        agent.speed = speed * speedModifier;
+                        SetTargetAnimSpeed(speed * speedModifier);
+                    }
+                    else
+                    {
+                        agent.isStopped = true;
+                        SetTargetAnimSpeed(0);
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (agent != null && agent.enabled && agent.isOnNavMesh)
+            {
+                agent.isStopped = false;
+                roamTime = roamStopTimer;  // this triggers roam() soon in Update
+                SetTargetAnimSpeed(0);     // stop animation until next movement
+            }
+        }
 
     }
 
@@ -202,104 +237,118 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
             clawCollider.enabled = false;
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         currHealth = _maxHealth;
-
-
         playerTransform = GameManager.instance.player.transform; // cache player transform
 
         attackCounter = attackRate;
-        roamTime = 0f;
-
-        // set intial period before first roam
         roamTime = roamStopTimer;
-        agent.isStopped = true;
-        animator.SetFloat("Speed", 0);
-    }
 
+        agent.isStopped = true;
+        SetAnimationSpeed(0);
+    }
 
     private void Awake()
     {
-        // set our starting position so that we know how far we can roam. This is the point we will check from
         startingPostion = transform.position;
-
-        // set our stopping distance to the stopping distance in Unity
         stoppingDistanceOriginal = agent.stoppingDistance;
-
         agent.stoppingDistance = meleeAttackRange * 0.8f;
-
     }
-
     // Update is called once per frame
     void Update()
     {
-        if (currHealth > 0)
+        if(currHealth <= 0) return;
+
+        // handle cooldown
+        if(attackCounter < attackRate)
+            attackCounter += Time.deltaTime;
+
+        // if currently attacking, freeze movement and animation
+        if(isAttacking)
         {
-
-            if(attackCounter < attackRate)
-            {
-                attackCounter += Time.deltaTime;
-            }
-
-            bool playerIsVisible = canWeSeeThePlayer();
-
-            if(playerIsVisible)
-            {
-                roamTime = 0;
-                faceTarget();
-
-                float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
-
-                if(distanceToPlayer <= meleeAttackRange)
-                {
-                    agent.isStopped = true;
-                    animator.SetFloat("Speed", 0);
-
-                    if(attackCounter >= attackRate)
-                    {
-                        StartCoroutine(attackAnimationTrigger());
-                        attackCounter = 0;
-                    }
-                } else
-                {
-                    agent.SetDestination(playerTransform.position);
-                    agent.isStopped = false;
-                    animator.SetFloat("Speed", speed * speedModifier);
-                    agent.speed = speed * speedModifier;
-                }
-            } else
-            {
-                roamCheck();
-            }
+            agent.isStopped = true;
+            SetTargetAnimSpeed(0);
+            UpdateAnimSpeed(); // keep blend tree synced
+            faceTarget();
+            return;
         }
+
+        // check if player is visible
+        bool playerIsDetected = playerInRange || canWeSeeThePlayer();
+
+        if(playerIsDetected)
+        {
+            faceTarget();
+            roamTime = 0;
+
+            float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+
+            // player in melee range
+            if(distanceToPlayer <= meleeAttackRange)
+            {
+                agent.isStopped = true;
+                SetTargetAnimSpeed(0);
+
+                if(attackCounter >= attackRate)
+                {
+                    StartCoroutine(attackAnimationTrigger());
+                    attackCounter = 0;
+                }
+            }else
+            {
+                // player visible and not in melee range → chase player with destination safety
+                if(agent.SetDestination(playerTransform.position))
+                {
+                    if(agent.pathStatus == NavMeshPathStatus.PathComplete)
+                    {
+                        agent.isStopped = false;
+                        agent.speed = speed * speedModifier;
+                        SetTargetAnimSpeed(speed * speedModifier);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Zombie path to player is invalid or partial.");
+                        agent.isStopped = true;
+                        SetTargetAnimSpeed(0);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Zombie failed to set destination.");
+                    agent.isStopped = true;
+                    SetTargetAnimSpeed(0);
+                }
+            }
+        } else
+        {
+            // no player in sight → roam logic
+            roamCheck();
+        }
+
+        UpdateAnimSpeed(); // always smooth out blend transitions
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // the other object in range is Player
         if (other.CompareTag("Player"))
         {
-            // player is in range! 
             playerInRange = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // the other object leaving range is Player
         if (other.CompareTag("Player"))
         {
-            // player left our range
             playerInRange = false;
 
             if(agent != null && agent.enabled && agent.isOnNavMesh)
             {
                 agent.isStopped = true;
             }
-            
-            animator.SetFloat("Speed", 0);
+
+            SetAnimationSpeed(0);
             agent.stoppingDistance = stoppingDistanceOriginal;
             roamTime = roamStopTimer;
         }
@@ -307,10 +356,8 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
 
     void faceTarget()
     {
-
         if (playerTransform == null) return;
 
-        // direction to player ignoring y
         Vector3 directionToPlayer = playerTransform.position - transform.position;
         directionToPlayer.y = 0;
 
@@ -325,87 +372,128 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
     {
         if (playerTransform == null || headPos == null) return false;
 
-        // direction from head to player
         Vector3 directionToPlayerFromHead = GameManager.instance.player.transform.position - headPos.position;
         float distanceToPlayer = directionToPlayerFromHead.magnitude;
-
-        //angle to player relative to zombie's forward direction
-        Vector3 zombieFowardFlat = new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
+        Vector3 zombieForwardFlat = new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
         Vector3 playerDirectionFlat = new Vector3(directionToPlayerFromHead.x, 0, directionToPlayerFromHead.z).normalized;
-        angle_to_player = Vector3.Angle(zombieFowardFlat, playerDirectionFlat);
-
-        // check if player in fov
+        angle_to_player = Vector3.Angle(zombieForwardFlat, playerDirectionFlat);
+        //angle to player relative to zombie's forward direction
         bool inFOV = angle_to_player <= field_of_view / 2;
 
-        // make our Raycast to the player. If it hits the player, we have line of sight. 
+        // make our Raycast to the player. If it hits the player, we have line of sight.
         RaycastHit hit_player;
 
         if (Physics.Raycast(headPos.position, directionToPlayerFromHead.normalized, out hit_player, distanceToPlayer + 0.1f))
         {
             // check if its the player we hit
-            if ( hit_player.collider.CompareTag("Player"))
+            if (hit_player.collider.CompareTag("Player"))
             {
                 return inFOV;
             }
         }
-        // we did not hit the player
         return false;
     }
 
     void roam()
     {
-        // reset the timer
         roamTime = 0;
-
-        // make sure he is able to get to the location and not stop short
         agent.stoppingDistance = 0;
 
-        // grab a random spot in our sphere on the navmesh
         Vector3 randPos = Random.insideUnitSphere * roamDistance;
         randPos += startingPostion;
 
-        // check if the position is on the navmesh
         NavMeshHit hit;
         if(NavMesh.SamplePosition(randPos, out hit, roamDistance, NavMesh.AllAreas))
         {
-            // move
-            agent.SetDestination(hit.position);
-            agent.isStopped = false;
-            animator.SetFloat("Speed", speed * 0.5f * speedModifier);
-            agent.speed = speed * 0.5f * speedModifier;
-        } else
+            if(agent.SetDestination(hit.position))
+            {
+                if(agent.pathStatus == NavMeshPathStatus.PathComplete)
+                {
+                    agent.isStopped = false;
+                    agent.speed = speed * 0.5f * speedModifier;
+                    SetTargetAnimSpeed(speed * 0.5f * speedModifier);
+                }else
+                {
+                    agent.isStopped = true;
+                    SetTargetAnimSpeed(0);
+                }
+            }
+        }else
         {
             roamTime = roamStopTimer;
-            animator.SetFloat("Speed", 0);
+            SetTargetAnimSpeed(0);
             agent.isStopped = true;
         }
     }
 
     void roamCheck()
     {
-
         if(!agent.enabled || !agent.isOnNavMesh)
         {
-            animator.SetFloat("Speed", 0);
+            SetTargetAnimSpeed(0);
             return;
         }
 
+        // if we're idle at our destination
         if(agent.remainingDistance < 0.1f && !agent.pathPending && agent.velocity.sqrMagnitude < 0.1f)
         {
-            animator.SetFloat("Speed", 0);
             agent.isStopped = true;
-
             roamTime += Time.deltaTime;
 
+            SetTargetAnimSpeed(0); // stop anim
+
             if(roamTime >= roamStopTimer)
-            {
                 roam();
-            }
-        } else
+        }else
         {
-            animator.SetFloat("Speed", speed * 0.5f * speedModifier);
-            agent.speed = speed * 0.5f * speedModifier;
+            // walking to roam destination
+            if(agent.pathStatus == NavMeshPathStatus.PathComplete)
+            {
+                agent.speed = speed * 0.5f * speedModifier;
+                SetTargetAnimSpeed(speed * 0.5f * speedModifier);
+            }
+            else
+            {
+                // incomplete/invalid path
+                agent.isStopped = true;
+                SetTargetAnimSpeed(0);
+            }
+
             roamTime = 0;
+        }
+    }
+
+    void SetTargetAnimSpeed(float worldSpeed)
+    {
+        // Normalize agent speed to match blend tree input range
+        float normalizedSpeed = Mathf.Clamp01(worldSpeed / agent.speed);
+        targetAnimSpeed = normalizedSpeed;
+    }
+
+    void UpdateAnimSpeed()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            float actualSpeed = agent.velocity.magnitude;
+
+            // If agent barely moves, force animation to idle
+            if (actualSpeed < 0.05f || agent.isStopped)
+            {
+                animator.SetFloat("Speed", 0f);
+            }
+            else
+            {
+                float smoothSpeed = Mathf.MoveTowards(animator.GetFloat("Speed"), targetAnimSpeed, Time.deltaTime * 5f);
+                animator.SetFloat("Speed", smoothSpeed);
+            }
+        }
+    }
+    void SetAnimationSpeed(float currentSpeed)
+    {
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            float animSpeed = Mathf.Clamp01(currentSpeed / speed); // Normalized 0–1
+            animator.SetFloat("Speed", animSpeed); // Drives blend tree
         }
     }
 }

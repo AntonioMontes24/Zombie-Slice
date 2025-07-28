@@ -24,13 +24,6 @@ public class Checkpoint : MonoBehaviour
         {
             // Save new spawn point
             GameManager.instance.playerSpawnPoint = transform.position;
-
-            // Save checkpoint kills
-            if (KillManager.instance != null)
-            {
-                KillManager.instance.SaveCheckpointKills();  // Save kills at checkpoint
-            }
-
             StartCoroutine(Flash());
         }
     }

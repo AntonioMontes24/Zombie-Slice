@@ -16,23 +16,24 @@ public class MainMenu : MonoBehaviour
     [Header("Controller Navigation")]
     [SerializeField] private GameObject firstSelectedButton; // for controller nav
     public OptionsMenu optionsMenuScript; // assign via Inspector
-
+     public GameObject WebGLMessage;
+    public GameObject mainMenuButton;
     private void Start()
     {
-        if(mainMenuPanel != null)
+        if (mainMenuPanel != null)
         {
             mainMenuPanel.SetActive(true);
         }
-        if(optionsMenuPanel != null)
+        if (optionsMenuPanel != null)
         {
             optionsMenuPanel.SetActive(false);
         }
 
-        if(AudioManager.instance != null)
+        if (AudioManager.instance != null)
         {
             AudioManager.instance.ApplySavedVolumeToMixer();
         }
-        if(firstSelectedButton != null)
+        if (firstSelectedButton != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(firstSelectedButton);
@@ -43,7 +44,7 @@ public class MainMenu : MonoBehaviour
     public void PlayGame()
     {
 
-        if(AudioManager.instance != null)
+        if (AudioManager.instance != null)
         {
             AudioManager.instance.StopMusic();
         }
@@ -55,11 +56,11 @@ public class MainMenu : MonoBehaviour
 
     public void OptionsMenu()
     {
-        if(mainMenuPanel != null)
+        if (mainMenuPanel != null)
         {
             mainMenuPanel.SetActive(false);
         }
-        if(optionsMenuPanel != null)
+        if (optionsMenuPanel != null)
         {
             optionsMenuPanel.SetActive(true);
 
@@ -70,6 +71,8 @@ public class MainMenu : MonoBehaviour
             }
         }
     }
+
+
 
     public void ReturnFromOptions()
     {
@@ -90,11 +93,17 @@ public class MainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
-    }
+#if UNITY_WEBGL
+        {
+            mainMenuButton.SetActive(false);
+            WebGLMessage.SetActive(true);
 
+        }
+#elif UNITY_EDITOR
+    UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+
+    }
 }

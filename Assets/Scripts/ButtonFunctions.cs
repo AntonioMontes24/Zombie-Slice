@@ -4,9 +4,35 @@ using TMPro;
 
 public class ButtonFunctions : MonoBehaviour
 {
-   public void resume()
+
+    [Header("Door Interaction")]
+    [SerializeField] private float holdDuration = 1f;
+    [SerializeField] private int sceneBuildIndex = 2;
+    //[SerializeField] private KeyCode interactKey = KeyCode.X;
+    [SerializeField] private TMP_Text InteractText;
+
+    [Header("UI")]
+    [SerializeField] private TMP_Text interactPrompt;
+
+
+    private bool isPlayerNearDoor = false;
+    public void resume()
     {
         GameManager.instance.stateUnpause();
+    }
+
+    public void backToMain()
+    {
+        // Destroy persistent singletons
+        if (GameManager.instance != null) Destroy(GameManager.instance.gameObject);
+    if (AudioManager.instance != null) Destroy(AudioManager.instance.gameObject);
+
+    // Optionally clear Time.timeScale if paused
+    Time.timeScale = 1f;
+    
+        SceneManager.LoadScene(1);
+
+        
     }
     public void restart()
     {
@@ -33,12 +59,12 @@ public class ButtonFunctions : MonoBehaviour
         {
             
             GameManager.instance.player.transform.position = GameManager.instance.playerSpawnPoint;
-
-           
             GameManager.instance.player.GetComponent<PlayerHealth>().Revive();
 
-            GameManager.instance.statePause();
+            GameManager.instance.ResetAfterRespawn();
+            GameManager.instance.respawnHook?.Invoke();
 
+            GameManager.instance.statePause();
             GameManager.instance.stateUnpause();
         }
     }
@@ -49,12 +75,6 @@ public class ButtonFunctions : MonoBehaviour
     {
 
         SceneManager.sceneLoaded -= OnSceneReloaded;
-
-        if (KillManager.instance != null)
-        {
-            KillManager.instance.ResetKills();
-        }
-
         if (GameManager.instance != null) {
 
             GameManager.instance.ResetBarriers();
@@ -108,38 +128,26 @@ public class ButtonFunctions : MonoBehaviour
 
     public void quit()
     {
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#else
+#if UNITY_WEBGL
+        if (GameManager.instance != null)
+        {
+            if (GameManager.instance.menuActive != null)
+            {
+                GameManager.instance.menuActive.SetActive(false);
+            }
 
-        Application.Quit();
+            GameManager.instance.menuActive = GameManager.instance.menuWebGLQuit;
+            GameManager.instance.menuActive.SetActive(true);
+        }
+#elif UNITY_EDITOR
+    UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
 #endif
     }
 
-    [Header("Door Interaction")]
-    [SerializeField] private float holdDuration = 1f;
-    [SerializeField] private int sceneBuildIndex = 2;
-    //[SerializeField] private KeyCode interactKey = KeyCode.X;
-    [SerializeField] private TMP_Text InteractText;
 
-    [Header("UI")]
-    [SerializeField] private TMP_Text interactPrompt;
-
-  
-    private bool isPlayerNearDoor = false;
-
-    private void Start()
-    {
     
-
-    }
-
-
-    private void Update()
-    {
-        
-
-    }
 
    
 }
