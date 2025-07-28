@@ -3,7 +3,7 @@ using TMPro;
 
 public class PickupPromptTrigger : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI promptText; // Assign in Inspector
+    [SerializeField] public TextMeshProUGUI promptText; // Assign in Inspector
     [SerializeField] private string message = "Hold Interact to pick up";
 
     private void Start()
