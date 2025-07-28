@@ -6,6 +6,12 @@ public class KeyItem : MonoBehaviour
 
     private bool playerInRange = false;
     private PlayerInventory playerInventory;
+    private PickupPromptTrigger pickupPrompt;
+
+    private void Start()
+    {
+        pickupPrompt = GetComponent<PickupPromptTrigger>();
+    }
 
     void Update()
     {
@@ -14,6 +20,13 @@ public class KeyItem : MonoBehaviour
             if (playerInventory != null)
             {
                 playerInventory.AddKey(keyID);
+                Destroy(gameObject);
+
+                if (pickupPrompt != null && pickupPrompt.promptText != null)
+                {
+                    pickupPrompt.promptText.enabled = false;
+                }
+
                 Destroy(gameObject);
             }
         }
