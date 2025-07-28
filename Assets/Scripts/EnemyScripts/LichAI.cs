@@ -211,6 +211,7 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 
         if (GameManager.instance != null)
         {
+            GameManager.instance.enemyNameText.text = "Lich";
             GameManager.instance.UpdateEnemyHealthBar(this);
         }
 

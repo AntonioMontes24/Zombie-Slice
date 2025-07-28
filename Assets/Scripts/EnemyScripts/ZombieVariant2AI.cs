@@ -89,6 +89,7 @@ public class ZombieVariant2AI : MonoBehaviour, IDamage, iEnemyHealth
         }
         if(GameManager.instance != null)
         {
+            GameManager.instance.enemyNameText.text = "Slayer";
             GameManager.instance.UpdateEnemyHealthBar(this);
             if(GameManager.instance.enemyInfoPanel != null)
             {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 
 public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
@@ -55,6 +56,11 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
     [SerializeField] int search_distance;
     bool executing_phase;
     int current_phase;
+    private Vector3 lastPosition;
+    private float stuckCheckInterval = 1.0f; // check every second
+    private float stuckThreshold = 0.1f;
+    private float stuckTimer = 0f;
+    private bool isStuck = false;
 
     bool has_moved_to_spawn;
 
@@ -88,10 +94,18 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
             if (GameManager.instance != null)
             {
                 GameManager.instance.UpdateEnemyHealthBar(this);
+                GameManager.instance.enemyNameText.text = "Meaty";
                 if (GameManager.instance.enemyInfoPanel != null)
                 {
                     GameManager.instance.enemyInfoPanel.SetActive(true);
                 }
+            }
+
+            if(agent.isOnNavMesh && (agent.isStopped || isStuck || !executing_phase))
+            {
+                agent.ResetPath();
+                executing_phase = false;
+                isStuck = false;
             }
 
             if (currHealth <= 0)
@@ -127,6 +141,8 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
 
     IEnumerator walkToSpot()
     {
+        executing_phase = true;
+
         // choose a spot and move to it
         // grab a random spot in our sphere on the navmesh
         Vector3 randPos = Random.insideUnitSphere * search_distance;
@@ -135,17 +151,32 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // check if the position is on the navmesh
         NavMeshHit hit;
         if(NavMesh.SamplePosition(randPos, out hit, search_distance, 1))
+        {
             agent.SetDestination(hit.position);
             agent.isStopped = false;
+            animator.SetFloat("Speed", 1);
+            aud.PlayOneShot(aud_clip_engaged);
 
-        // NavMesh.SamplePosition(randPos, out hit, search_distance, 1);
-
-        animator.SetFloat("Speed", 1);
-
-        aud.PlayOneShot(aud_clip_engaged);
-
-        yield return new WaitForSeconds(3);
-
+            float startTime = Time.time;
+            while(agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
+            {
+                if(Time.time - startTime > 5f)
+                {
+                    agent.ResetPath();
+                    animator.SetFloat("Speed", 0);
+                    executing_phase = false;
+                    yield break;
+                }
+                yield return null;
+            }
+            animator.SetFloat("Speed", 0);
+            agent.isStopped = true;
+        }
+        else
+        {
+            animator.SetFloat("Speed", 0);
+        }
+        executing_phase = false;
     }
 
 
@@ -213,15 +244,15 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
         // get or current health percentage
         health_percentage = currHealth * 100 / maxHealth ;
 
-        if(health_percentage > 80)
+        if(health_percentage >= 70)
         {
             current_phase = 1;
         }
-        else if (health_percentage > 40)
+        else if (health_percentage <= 69 && health_percentage >= 31)
         {
             current_phase = 2;
         }
-        else 
+        else if(health_percentage <= 30)
         { 
             current_phase = 3;
         }
@@ -460,6 +491,48 @@ public class MeatyZombieBossAI : MonoBehaviour, IDamage, iEnemyHealth
                         break;
                     }
             }
+
+            if (agent.hasPath && !agent.isStopped)
+            {
+                stuckTimer += Time.deltaTime;
+                if (stuckTimer >= stuckCheckInterval)
+                {
+                    if (Vector3.Distance(transform.position, lastPosition) < stuckThreshold)
+                    {
+                        isStuck = true;
+                        agent.ResetPath();
+                        animator.SetFloat("Speed", 0);
+                        executing_phase = false;
+                    }
+                    else
+                    {
+                        isStuck = false;
+                    }
+                    lastPosition = transform.position;
+                    stuckTimer = 0f;
+                }
+            }
+            else
+            {
+                stuckTimer = 0f;
+                lastPosition = transform.position;
+            }
         }
     }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Walls"))
+        {
+            if(agent.enabled && agent.isOnNavMesh && !isStuck)
+            {
+                agent.ResetPath();
+                executing_phase = false;
+                isStuck = true;
+            }
+        }
+    }
+
+
+
 }

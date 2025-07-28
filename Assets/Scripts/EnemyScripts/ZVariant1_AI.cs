@@ -80,7 +80,10 @@ public class ZVariant1_AI : MonoBehaviour, IDamage, iEnemyHealth
         currHealth = Mathf.Max(currHealth, 0);
 
         if (GameManager.instance != null)
+        {
             GameManager.instance.UpdateEnemyHealthBar(this); //Moved it to a single statemenet
+            GameManager.instance.enemyNameText.text = "Zombie";
+        } 
         else
             Debug.LogError("GameManager.instance is NULL!!");
 
