@@ -164,13 +164,6 @@ public class ObjectiveManager : MonoBehaviour
         {
             GameManager.instance.zombieCountText.text = Mathf.Max(0, zombieCount).ToString("F0");
         }
-        if (amount < 0)
-        {
-            if(KillManager.instance != null)
-            {
-                KillManager.instance.registerKill();
-            }
-        }
         CheckObjective();
     }
 

@@ -443,7 +443,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 98303
+    m_Bits: 4096
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -593,9 +593,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3638911070570068518, guid: 0830086465bbffd4ab64ee6fc8c82d74, type: 3}
       insertIndex: -1
       addedObject: {fileID: 758870463}
-    - targetCorrespondingSourceObject: {fileID: 3638911070570068518, guid: 0830086465bbffd4ab64ee6fc8c82d74, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 758870464}
     - targetCorrespondingSourceObject: {fileID: 3638911070570068518, guid: 0830086465bbffd4ab64ee6fc8c82d74, type: 3}
       insertIndex: -1
       addedObject: {fileID: 758870459}
@@ -989,7 +986,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5101751982561402909, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 38.014
+      value: 33.733997
       objectReference: {fileID: 0}
     - target: {fileID: 5101751982561402909, guid: 990a9081f7bca934fb273ed8662a1806, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1286,7 +1283,7 @@ Transform:
   m_GameObject: {fileID: 407943173}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.5725208, z: -0, w: -0.81989026}
-  m_LocalPosition: {x: -18.908, y: 0.99, z: 33.714}
+  m_LocalPosition: {x: -18.908, y: 0.99, z: 29.433998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2017,18 +2014,6 @@ MonoBehaviour:
   exitType: 0
   specificSceneName: 
   spawnPointName: 
---- !u!114 &758870464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 758870457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf21ff5b0516b9c4b8c1f0973dcc0fd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &779215926 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5185380206506086631, guid: 27db3cba8c86e446e8f4641874116de7, type: 3}
@@ -2087,7 +2072,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 45.36
+      value: 41.079998
       objectReference: {fileID: 0}
     - target: {fileID: 6608563071680767752, guid: e8b5e9b5989c37347a152ce835229325, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3063,9 +3048,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombiePrefab: {fileID: 3724468654230534146, guid: cf42ec7b33686054e89bbfdef43bde67, type: 3}
-  numOfZombies: 6
-  minSpawnRadius: 6
-  maxSpawnRadius: 15
+  numOfZombies: 5
+  minSpawnRadius: 7
+  maxSpawnRadius: 13
   groundLayer:
     serializedVersion: 2
     m_Bits: 4096
@@ -4697,7 +4682,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6421617986286599527, guid: e02b6de742e7c294482730e46e9cd7ab, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 47.724
+      value: 43.443996
       objectReference: {fileID: 0}
     - target: {fileID: 6421617986286599527, guid: e02b6de742e7c294482730e46e9cd7ab, type: 3}
       propertyPath: m_LocalRotation.w
@@ -8352,7 +8337,7 @@ Transform:
   m_GameObject: {fileID: 6277197716350324714}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.978214, y: -0.00000047683716, z: 41.81}
+  m_LocalPosition: {x: -21.978214, y: -0.00000047683716, z: 37.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8447,6 +8432,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6277197716350042726}
+  - component: {fileID: 6277197716350324715}
   m_Layer: 15
   m_Name: PFB_Building_Full
   m_TagString: Untagged
@@ -8454,6 +8440,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!208 &6277197716350324715
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6277197716350324714}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 5.365, y: 2.5, z: 7.205}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.37, y: 2.61, z: -1.94}
+  m_TimeToStationary: 0.5
 --- !u!1 &6277197716350529470
 GameObject:
   m_ObjectHideFlags: 0
