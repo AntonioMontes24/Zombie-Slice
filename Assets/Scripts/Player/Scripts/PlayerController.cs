@@ -43,7 +43,6 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
 
     private void OnDisable()
     {
-        inputActions.UI.Disable();
         inputActions.Input.Disable();
     }
 
@@ -72,14 +71,6 @@ public class PlayerController : MonoBehaviour, IOpen//Added open interface for c
             }
         }
 
-        if (PlayerController.inputActions != null)
-        {
-            PlayerController.inputActions.UI.Enable();
-            PlayerController.inputActions.Input.Enable();
-            Debug.Log("InputActions re-enabled in SpawnPlayer()");
-
-        }
-        
     }
 
     // Update is called once per frame

@@ -101,7 +101,6 @@ public class PlayerWeaponManager : MonoBehaviour
             initialRightHandPos = rightHandGrip.localPosition;
 
         ammoText.SetText("00");
-        GameManager.instance.ammoyBar.fillAmount = 0f;
 
         movement = GetComponentInParent<PlayerMovement>();
         if (movement == null)
@@ -170,7 +169,6 @@ public class PlayerWeaponManager : MonoBehaviour
                 Shoot();
                 currentGun.ammoCur--;
                 ammoText.SetText(currentGun.ammoCur + " / " + currentGun.ammoReserve);
-                GameManager.instance.ammoyBar.fillAmount = (float)currentGun.ammoCur / currentGun.ammoMax;
                 playedEmptySound = false;
 
                 if (currentGun.ammoCur <= 0 && currentGun.ammoReserve > 0)
@@ -199,15 +197,13 @@ public class PlayerWeaponManager : MonoBehaviour
 
     void Shoot()//Handles damage/Ray cast/ and checks for current gun and gun stats
     {
-        if (weaponList.Count == 0 || gameplayCamera == null || barrelTip == null) return;
-
+        if (weaponList.Count == 0 || gameplayCamera == null) return;
         FireArmStats currentGun = weaponList[currentWeaponIndex] as FireArmStats;
         if (currentGun == null) return;
 
         if (currentGun.shootSound != null)
             aud.PlayOneShot(currentGun.shootSound);
 
-        // Ray Setup
         Ray ray;
         if (isAiming)
             ray = gameplayCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
@@ -219,83 +215,56 @@ public class PlayerWeaponManager : MonoBehaviour
                 Random.Range(-spreadAngle, spreadAngle),
                 0
             ) * barrelTip.forward;
+
             ray = new Ray(barrelTip.position, spreadDir);
         }
 
-        Debug.DrawRay(ray.origin, ray.direction * currentGun.shootRange, Color.red, 1f);
-
-        // Muzzle flash
-        if (muzzleFlashPrefab != null)
+        if (muzzleFlashPrefab != null && barrelTip != null)//Muzzle flash handler
         {
+            muzzleFlashTime = 0.1f;
             GameObject flash = Instantiate(muzzleFlashPrefab, barrelTip.position, barrelTip.rotation, barrelTip);
-            Destroy(flash, 0.1f);
+            Destroy(flash, muzzleFlashTime);
         }
 
-        // Perform raycast
+        Debug.DrawRay(ray.origin, ray.direction * currentGun.shootRange, Color.red, 1f);
         RaycastHit[] hits = Physics.RaycastAll(ray, currentGun.shootRange, ~ignoreLayer, QueryTriggerInteraction.Ignore);
         System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-
-        // Find valid hit
-        RaycastHit? validHit = null;
-        foreach (var h in hits)
-        {
-            if (h.collider != null && !h.collider.CompareTag("Lights") && !h.collider.CompareTag("Player"))
-            {
-                validHit = h;
-                break;
-            }
-        }
-
-        //Always eject shell
-        if (shellCasingPrefab != null && shellEjectionPoint != null)
-        {
-            GameObject shell = Instantiate(shellCasingPrefab, shellEjectionPoint.position, shellEjectionPoint.rotation);
-            Rigidbody rb = shell.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                Vector3 ejectDirection = shellEjectionPoint.right +
-                    (shellEjectionPoint.up * Random.Range(-0.2f, 0.2f)) +
-                    (shellEjectionPoint.forward * Random.Range(-0.1f, 0.1f));
-                rb.AddForce(ejectDirection.normalized * shellEjectForce, ForceMode.Impulse);
-                rb.AddTorque(Random.insideUnitSphere * shellEjectForce, ForceMode.Impulse);
-            }
-            Destroy(shell, 3f);
-        }
+        RaycastHit? validHit = hits.FirstOrDefault(hit => !hit.collider.CompareTag("Lights") && !hit.collider.CompareTag("Player"));
 
         if (validHit.HasValue)
         {
             RaycastHit hit = validHit.Value;
 
-            // enemy UI
             if (hit.collider.CompareTag("Enemy"))
             {
                 iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
                 if (enemyHealth != null)
+                {
                     GameManager.instance.SetCurrentEnemy(enemyHealth);
+                }
             }
             else
             {
                 GameManager.instance.HideEnemyUI();
             }
 
-            // hit VFX
             if (currentGun.hitEffect != null)
                 Instantiate(currentGun.hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
 
             if (!hit.collider.CompareTag("Enemy") && currentGun.bulletHolePrefab != null)
             {
-                GameObject bulletHole = Instantiate(currentGun.bulletHolePrefab, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal));
+                var bulletHole = Instantiate(currentGun.bulletHolePrefab, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal));
                 bulletHole.transform.SetParent(hit.transform);
                 Destroy(bulletHole, 10f);
             }
             else if (hit.collider.CompareTag("Enemy") && currentGun.zombieBloodHit != null)
             {
-                GameObject bloodEffect = Instantiate(currentGun.zombieBloodHit, hit.point + hit.normal * -0.1f, Quaternion.LookRotation(hit.normal));
+                var bloodEffect = Instantiate(currentGun.zombieBloodHit, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal));
                 bloodEffect.transform.SetParent(hit.transform);
                 Destroy(bloodEffect, 0.5f);
             }
 
-            IDamage dmg = hit.collider.GetComponentInParent<IDamage>();
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
             if (dmg != null)
                 dmg.takeDamage(currentGun.shootDamage);
 
@@ -308,6 +277,21 @@ public class PlayerWeaponManager : MonoBehaviour
                 Destroy(tracer, 2f);
             }
 
+            if (shellCasingPrefab != null && shellEjectionPoint != null)//------Shell casing Prefab
+            {
+                GameObject shell = Instantiate(shellCasingPrefab, shellEjectionPoint.position, shellEjectionPoint.rotation);
+                Rigidbody rb = shell.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    Vector3 ejectDirection = shellEjectionPoint.right + // Random Shell ejection
+                        (shellEjectionPoint.up * Random.Range(-0.2f, 0.2f)) +
+                        (shellEjectionPoint.forward * Random.Range(-0.1f, 0.1f));
+                    rb.AddForce(ejectDirection.normalized * shellEjectForce, ForceMode.Impulse);
+                    rb.AddTorque(Random.insideUnitSphere * shellEjectForce, ForceMode.Impulse);
+                }
+                Destroy(shell, 3f);
+            }
+
             currentGunOffset.y -= weaponRecoilKick;
             currentLeftHandOffset.z -= handRecoilKick;
             currentRightHandOffset.z -= handRecoilKick;
@@ -315,23 +299,11 @@ public class PlayerWeaponManager : MonoBehaviour
         else
         {
             GameManager.instance.HideEnemyUI();
-            if (tracerPrefab != null)
-            {
-                GameObject tracer = Instantiate(tracerPrefab, barrelTip.position, Quaternion.LookRotation(ray.direction));
-                Rigidbody rb = tracer.GetComponent<Rigidbody>();
-                if (rb != null)
-                    rb.AddForce(ray.direction * 1000f, ForceMode.Impulse);
-                Destroy(tracer, 2f);
-            }
         }
     }
-
-
     public void HandleMeleeAttack()// Handles melee attacks light and heavy
     {
         if (!canFire || !HasGun() || movement == null) return;
-        if (GameManager.instance != null && GameManager.instance.isPaused)
-            return;
 
         var weapon = weaponList[currentWeaponIndex];
         if (weapon is not MeleeWeaponStats melee) return;
@@ -381,17 +353,14 @@ public class PlayerWeaponManager : MonoBehaviour
 
         if (hitSomething)
         {
-            if (hit.collider.gameObject == gameObject)
-                return; // ← Prevent stabbing self
 
-            IDamage dmg = hit.collider.GetComponentInParent<IDamage>();
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
             iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
 
             if (dmg != null)
                 dmg.takeDamage(melee.damage * 2); // More damage for heavy attack
 
-            if ((hit.transform.root.CompareTag("Enemy"))
-)
+            if (hit.collider.CompareTag("Enemy"))
             {     
                     if (melee.zombieHit != null)
                     aud.PlayOneShot(melee.zombieHit);
@@ -445,19 +414,16 @@ public class PlayerWeaponManager : MonoBehaviour
 
         if (hitSomething)
         {
-            if (hit.collider.gameObject == gameObject)
-                return; // ← Prevent stabbing self
 
-            IDamage dmg = hit.collider.GetComponentInParent<IDamage>();
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
             iEnemyHealth enemyHealth = hit.collider.GetComponent<iEnemyHealth>();
 
             if (dmg != null)
                 dmg.takeDamage(melee.damage); // More damage for heavy attack
 
-            if ((hit.transform.root.CompareTag("Enemy")))
-
-                {
-                    if (melee.zombieHit != null)
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                if (melee.zombieHit != null)
                     aud.PlayOneShot(melee.zombieHit);
 
                 if (enemyHealth != null)
@@ -509,7 +475,6 @@ public class PlayerWeaponManager : MonoBehaviour
         isReloading = false;
         reloadCoroutine = null;
         ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
-        GameManager.instance.ammoyBar.fillAmount = gun.ammoCur;
     }
 
     public void SetAiming(bool aim)//Sets aiming bool
@@ -644,7 +609,6 @@ public class PlayerWeaponManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.flashAmmoPickUp.SetActive(false);
         ammoText.SetText(CurrentGun.ammoCur + " / " + CurrentGun.ammoReserve);
-        GameManager.instance.ammoyBar.fillAmount = CurrentGun.ammoCur;
     }
 
     public void UpdateAmmoUi()// Helper to update Ammo UI
@@ -653,7 +617,6 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             FireArmStats gun = CurrentGun;
             ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
-            GameManager.instance.ammoyBar.fillAmount = gun.ammoCur;
         }
     }
 
@@ -707,7 +670,6 @@ public class PlayerWeaponManager : MonoBehaviour
             barrelTip = currentWeaponInstance.transform.Find("BarrelTip");
             shellEjectionPoint = currentWeaponInstance.transform.Find("ShellEjection");
             ammoText.SetText(gun.ammoCur + " / " + gun.ammoReserve);
-            GameManager.instance.ammoyBar.fillAmount = gun.ammoCur;
         }
         else
         {
@@ -716,7 +678,6 @@ public class PlayerWeaponManager : MonoBehaviour
             barrelTip = null;
             shellEjectionPoint = null;
             ammoText.SetText("∞");
-            GameManager.instance.ammoyBar.fillAmount = 100f;
         }
 
         var player = Object.FindFirstObjectByType<PlayerController>();
@@ -777,7 +738,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             if (hit.CompareTag("Enemy"))
             {
-                IDamage dmg = hit.GetComponentInParent<IDamage>();
+                IDamage dmg = hit.GetComponent<IDamage>();
                 if (dmg != null)
                 {
                     dmg.takeDamage(weaponList[currentWeaponIndex] is MeleeWeaponStats melee ? melee.damage : 10);

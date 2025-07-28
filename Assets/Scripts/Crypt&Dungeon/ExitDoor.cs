@@ -52,7 +52,7 @@ public class ExitDoor : MonoBehaviour
 
     
 
-    public void LoadNext()
+    void LoadNext()
     {
         int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
         if (nextIndex < SceneManager.sceneCountInBuildSettings)

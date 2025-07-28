@@ -34,11 +34,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform cameraTransform;
     [SerializeField] float crouchCameraY = 0.8f;
     [SerializeField] float standCameraY = 1.6f;
-    [SerializeField] float crouchGravMultiplier = 0.5f;
 
     private bool isCrouching = false;
     private float originalWalkSpeed;
-    private float originalGravity;
 
     public float currentStamina;
     private float regenTimer;
@@ -60,7 +58,6 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         originalWalkSpeed = walkSpeed;
-        originalGravity = gravity;
     }
 
     public void HandleMove()//Movement
@@ -122,21 +119,16 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleSprint() //Sprint
     {
-        sprintHeld = PlayerController.inputActions.Input.Sprint.ReadValue<float>() > 0.1f;
-        bool sprintInput = sprintHeld && moveDir.magnitude > 0.1f;
-
         if (isCrouching)// This flag checks if the player is crouching// If crouching forces isprinting to false; this will allow the player to hold sprint  button and still fire
         {
             isSprinting = false;
-            regenTimer += Time.deltaTime;
-
-            if (regenTimer >= staminaRegenDelay)
-            {
-                currentStamina += staminaRegenRate * Time.deltaTime; // Regenerate stamina
-                currentStamina = Mathf.Min(currentStamina, maxStamina); // Clamp to max
-            }
+            return;
         }
-        else if (sprintInput && canSprint)
+
+        sprintHeld = PlayerController.inputActions.Input.Sprint.ReadValue<float>() > 0.1f;
+        bool sprintInput = sprintHeld && moveDir.magnitude > 0.1f;
+
+        if (sprintInput && canSprint)
         {
             isSprinting = true;
             currentStamina -= staminaDrainRate * Time.deltaTime;//Drain stamina
@@ -160,7 +152,6 @@ public class PlayerMovement : MonoBehaviour
         if (staminaSlider != null)
             staminaSlider.value = currentStamina;
     }
-
 
 
     public void HandleJump()//Jump
@@ -213,8 +204,7 @@ public class PlayerMovement : MonoBehaviour
                 cameraTransform.localPosition = camPos;
             }
 
-            walkSpeed = isCrouching ? originalWalkSpeed / crouchSpeedMultiplier : originalWalkSpeed;
-            gravity = isCrouching ? originalGravity / crouchGravMultiplier : originalGravity;
+            walkSpeed = isCrouching ? originalWalkSpeed * crouchSpeedMultiplier : originalWalkSpeed;
         }
     }
 

@@ -9,285 +9,224 @@ using UnityEngine.Audio;
 public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 {
     // create some serialized variables
-    [Header("Lich Health")]
     [SerializeField] int currHealth;                        // the current health
-    [SerializeField] int _maxHealth = 100;
+    [SerializeField] int _maxHealth;                        // max health of lich
+    [SerializeField] float speed;                           // the speed when walking normally
+    [SerializeField] float speedModifier;                   // the modifier if running or slowed
+    [SerializeField] int faceTargetSpeed;                   // how fast he faces the target when not moving
 
-    [Header("Lich Movement")]
-    [SerializeField] float speed = 3.5f;                           // the speed when walking normally
-    [SerializeField] float speedModifier = 1f;                   // the modifier if running or slowed
-    [SerializeField] int faceTargetSpeed = 5;                   // how fast he faces the target when not moving
-
-    [Header("Lich Components")]
     [SerializeField] Renderer model;                        // Model we will use when we flash a new color on hit or when damaged.
     [SerializeField] NavMeshAgent agent;                    // NavMeshAgent to traverse our navmesh
     [SerializeField] Animator animator;                     // this will handle our animations
 
-    [Header("Player Detection")]
     [SerializeField] bool playerInRange;                    // is our player in range to be chased
-    private Transform playerTransform;
     Vector3 playerDirection;                                // Direction of our player
-    //[SerializeField] int field_of_view = 60;                     // the number of degrees our of enemy can see
+    [SerializeField] int field_of_view;                     // the number of degrees our of enemy can see
     [SerializeField] Transform headPos;                     // for raycast to player. Can he see where we are at
-    //float angle_to_player;                                  // the angle to the player 
+    float angle_to_player;                                  // the angle to the player 
 
     // blightball fields
-    [Header("Blight Ball Attack")]
     [SerializeField] Transform shootPosition;               // where does our blightball spawn from
     [SerializeField] GameObject blightBall;                 // our projectile
     [SerializeField] int blightBallDuration;                // how long a blightball lasts
 
     // field for Blightstorms
-    [Header("Blight Storm Attack")]
     [SerializeField] Transform BS1Position;               // where does our blightball spawn from
     [SerializeField] Transform BS2Position;               // where does our blightball spawn from
     [SerializeField] Transform BS3Position;               // where does our blightball spawn from
     [SerializeField] Transform BS4Position;               // where does our blightball spawn from
 
-    [Header("Lich Audio")]
     [SerializeField] AudioSource aud;
     [SerializeField] AudioClip aud_clip_idle;
     [SerializeField] AudioClip aud_clip_attack;
     [SerializeField] AudioClip aud_clip_death;
-    [SerializeField] float idleAudioPlayRate = 5f;
-    private float audioTimer;
+    [SerializeField] int audioCounter;
 
+    bool audio_is_playing;
+
+    // we will check for blight storm then blight ball
+    // [SerializeField] int blightBallCounter;                 // increment to see if we can attack
+    // [SerializeField] int blightBallRate;                    // our rate of fire
+    // [SerializeField] int blightStormCounter;                // increment to see if we can blight storm
+    // [SerializeField] int blightStormRate;                   // our rate of fire for blight storm
 
     // new random attack info
     int attackToUse;
-    [SerializeField] float attackDelay = 1.0f;
-    //int attackCounter;
-    //[SerializeField] int attackRate = 100;
-    private float cooldownTimer;
-    private bool isAttacking = false;
+    int attackCounter;
+    [SerializeField] int attackRate;
 
-    public int CurrentHealth => currHealth;
-    public int maxHealth => _maxHealth;
+    // the boss has two attacks. 
+    // 1. Blightball 
+    // 2. Blight Storm
 
-    void Awake()
+    public int CurrentHealth
     {
-        if (animator == null) animator = GetComponent<Animator>();
-        if (agent == null) agent = GetComponent<NavMeshAgent>();
-        if (aud == null) aud = GetComponent<AudioSource>();
-
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            playerTransform = playerObj.transform;
-        }
-        else
-        {
-            Debug.LogError("LichAI: Player tag not found!");
-            enabled = false;
-        }
-
+        get { return currHealth; }
     }
 
-    void Start()
+    public int maxHealth
     {
-        currHealth = _maxHealth;
-        audioTimer = idleAudioPlayRate;
-        cooldownTimer = attackDelay;
-
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.SetCurrentEnemy(this);
-            GameManager.instance.UpdateEnemyHealthBar(this);
-        }
-        else
-        {
-            Debug.LogWarning("LichAI: GameManager instance no found at start.");
-        }
-        if (ObjectiveManager.instance != null)
-        {
-            ObjectiveManager.instance.updateZombieCount(1);
-        }
-
-        if (aud != null && aud_clip_idle != null && !aud.isPlaying)
-        {
-            aud.clip = aud_clip_idle;
-            aud.loop = true;
-            aud.Play();
-        }
+        get { return _maxHealth; }
     }
 
-    void Update()
+    IEnumerator removeCorpse()
     {
-        if (currHealth <= 0 || playerTransform == null) return;
+        ObjectiveManager.instance.updateZombieCount(-1);
+        animator.enabled = false;
 
-        if (playerInRange)
-        {
-            faceTarget();
-        }
+        // Enable the Animator
+        animator.enabled = true;
 
-        if (cooldownTimer > 0)
-        {
-            cooldownTimer -= Time.deltaTime;
-        }
+        //Rebind the animator and update it
+        animator.Rebind();
+        animator.Update(0f);
 
-        audioTimer -= Time.deltaTime;
-        if (audioTimer <= 0)
-        {
-            if (aud != null && aud_clip_idle != null && !aud.isPlaying)
-            {
-                aud.clip = aud_clip_idle;
-                aud.loop = true;
-                aud.Play();
-            }
-            audioTimer = idleAudioPlayRate;
-        }
+        animator.SetTrigger("isDead");
 
-        if (!isAttacking && cooldownTimer <= 0 && playerInRange && HasLineOfSightToPlayer())
-        {
-            cooldownTimer = attackDelay;
+        aud.Stop();
 
-            if (aud != null && aud.isPlaying && aud.clip == aud_clip_idle)
-            {
-                aud.Stop();
-            }
+        if (aud_clip_death != null)
+            aud.PlayOneShot(aud_clip_death);
 
-            if (aud != null && aud_clip_attack != null)
-            {
-                aud.PlayOneShot(aud_clip_attack);
-            }
+        // wait 2 seconds
+        yield return new WaitForSeconds(5);
+       
 
-            attackToUse = chooseAttack();
-
-            if (attackToUse >= 2)
-            {
-                StartCoroutine(ShootAttackRoutine("shootBlightBall"));
-            }
-            else
-            {
-                StartCoroutine(ShootAttackRoutine("shootBlightstorm"));
-            }
-        }
-    }
-
-    IEnumerator ShootAttackRoutine(string triggerName)
-    {
-        isAttacking = true;
-        //attackCounter = 0;
-
-        if (animator != null)
-        {
-            animator.SetTrigger(triggerName);
-
-            yield return null;
-
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-            float waitTime = 0f;
-
-            if (stateInfo.shortNameHash == Animator.StringToHash("Standing 1H Magic Attack 01"))
-            {
-                waitTime = stateInfo.length;
-            }
-            else if (stateInfo.shortNameHash == Animator.StringToHash("Standing 2H Magic Attack 05"))
-            {
-                waitTime = stateInfo.length;
-            }
-            else
-            {
-                waitTime = 3.0f;
-            }
-            waitTime += 0.1f;
-
-
-            yield return new WaitForSeconds(waitTime);
-        }
-        else
-        {
-            yield return new WaitForSeconds(3.0f);
-        }
-        isAttacking = false;
-    }
-
-    public void takeDamage(int amount)
-    {
-        if (currHealth <= 0) return;
-
-        currHealth -= amount;
-
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.UpdateEnemyHealthBar(this);
-        }
-
-        if (currHealth <= 0)
-        {
-            currHealth = 0;
-            Die();
-        }
-    }
-
-    void Die()
-    {
-        if (agent != null && agent.enabled)
-        {
-            agent.isStopped = true;
-            agent.velocity = Vector3.zero;
-            agent.enabled = false;
-        }
-
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.HideEnemyUI();
-        }
-
-        if (aud != null)
-        {
-            aud.Stop();
-            if (aud_clip_death != null)
-            {
-                aud.PlayOneShot(aud_clip_death);
-            }
-        }
-
-        if (animator != null)
-        {
-            animator.SetTrigger("isDead");
-        }
-
-        if (ObjectiveManager.instance != null)
-        {
-            ObjectiveManager.instance.updateZombieCount(-1);
-        }
-
-        StartCoroutine(RemoveCorpseAfterDelay(5f));
-
-
-    }
-
-    IEnumerator RemoveCorpseAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
         Destroy(gameObject);
+
     }
+
+    IEnumerator shootBlightBall()
+    {
+        // reset attack counter
+        attackCounter = 0;
+
+        // reset the timer set the animation
+        // blightBallCounter = 0;
+        yield return new WaitForSeconds(0.1f);
+
+        // StartCoroutine(attackSound());
+
+        animator.SetTrigger("shootBlightBall");
+
+    }
+
+    IEnumerator shootBlightStorm()
+    {
+        // reset the attack counter
+        attackCounter = 0;
+
+        // reset the timer set the animation
+        // blightStormCounter = 0;
+        yield return new WaitForSeconds(0.1f);
+
+        // StartCoroutine(attackSound());
+
+        animator.SetTrigger("shootBlightstorm");
+
+    }
+
+    
 
     public void createBlightBall()
     {
-        if (blightBall != null && shootPosition != null)
-        {
-            Instantiate(blightBall, shootPosition.position, transform.rotation);
-        }
+        // create one of our prefabs at the shoot position 
+        Instantiate(blightBall, shootPosition.position, transform.rotation);
     }
 
     public void createBlightStorm()
     {
-        if (blightBall != null)
-        {
-            Instantiate(blightBall, BS1Position.position, transform.rotation);
-            Instantiate(blightBall, BS2Position.position, transform.rotation);
-            Instantiate(blightBall, BS3Position.position, transform.rotation);
-            Instantiate(blightBall, BS4Position.position, transform.rotation);
-        }
+        // make four blightballs
+        Instantiate(blightBall, BS1Position.position, transform.rotation);
+        Instantiate(blightBall, BS2Position.position, transform.rotation);
+        Instantiate(blightBall, BS3Position.position, transform.rotation);
+        Instantiate(blightBall, BS4Position.position, transform.rotation);
     }
 
     public int chooseAttack()
     {
         return Random.Range(0, 5);
 
+    }  
+
+    public void takeDamage(int amount)
+    {
+        if (currHealth > 0)
+        {
+            currHealth -= amount;
+            GameManager.instance.UpdateEnemyHealthBar(this);
+
+            if (currHealth <= 0)
+            {
+                // remove the corpse by destroying the gameObject
+                StartCoroutine(removeCorpse());
+                GameManager.instance.enemyInfoPanel.SetActive(false);
+            }
+        }
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        currHealth = _maxHealth;
+        audioCounter = 749;
+
+        animator = GetComponent<Animator>();
+
+        if (aud_clip_idle != null)
+           // TODO 
+
+        ObjectiveManager.instance.updateZombieCount(1);
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+        if (currHealth > 0)
+        {
+
+            // attackCounter++;
+
+            // we are alive to lets check if we can attack
+            if (canWeSeeThePlayer() && playerInRange)
+            {
+                
+                if (audioCounter >= 750)
+                {
+                    audioCounter = 0;
+                    // play sound
+                    if (aud_clip_attack != null)
+                        aud.PlayOneShot(aud_clip_attack);
+                    
+                }
+                else
+                {
+                    audioCounter++;
+                    attackCounter++;
+                }
+            }
+            // we check blight storm before we check blight ball
+            if (canWeSeeThePlayer() && playerInRange && attackCounter >= attackRate)
+            {
+                
+                attackToUse = chooseAttack();
+
+                if(attackToUse >= 2)
+                {
+                    // we can blight ball
+                    StartCoroutine(shootBlightBall());
+                }
+                else
+                {
+                    // we can blight storm
+                    StartCoroutine(shootBlightStorm());
+                }
+
+            }
+
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -297,11 +236,6 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
         {
             // player is in range! 
             playerInRange = true;
-            if (GameManager.instance != null)
-            {
-                GameManager.instance.SetCurrentEnemy(this);
-                GameManager.instance.UpdateEnemyHealthBar(this);
-            }
         }
     }
 
@@ -317,35 +251,39 @@ public class LichAI : MonoBehaviour, IDamage, iEnemyHealth
 
     void faceTarget()
     {
-        if (playerTransform == null) return;
+        // turn our enemy towards the player when he is not moving
+        // we need a direction not a position to rotate, example a position - a position
 
-        Vector3 directionToPlayer = playerTransform.position - transform.position;
-        directionToPlayer.y = 0;
-        Quaternion rotate_val = (Quaternion.LookRotation(directionToPlayer));
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotate_val, Time.deltaTime * faceTargetSpeed);
+        Quaternion rotate_val = (Quaternion.LookRotation(new Vector3(playerDirection.x, 0, playerDirection.z)));
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotate_val, Time.deltaTime * faceTargetSpeed);
 
     }
 
-    bool HasLineOfSightToPlayer()
+    bool canWeSeeThePlayer()
     {
-        if (playerTransform == null || headPos == null) return false;
-
-
         // take the players current position from the game manager and subtract our position
-        playerDirection = playerTransform.position - headPos.position;
-        //angle_to_player = Vector3.Angle(playerDirection, transform.forward);
+        playerDirection = GameManager.instance.player.transform.position - headPos.position;
+
+        // get our angle to the player
+        angle_to_player = Vector3.Angle(playerDirection, transform.forward);
 
         // make our Raycast to the player. If it hits the player, we have line of sight. 
         RaycastHit hit_player;
-        int layerMask = LayerMask.GetMask("Default", "Player");
 
-        if (Physics.Raycast(headPos.position, playerDirection, out hit_player, Mathf.Infinity, layerMask))
+        if (Physics.Raycast(headPos.position, playerDirection, out hit_player))
         {
-            if (hit_player.collider.CompareTag("Player"))
+            // check if its the player we hit
+            if (angle_to_player <= field_of_view && hit_player.collider.CompareTag("Player"))
             {
+
+                faceTarget();
+
+                // we need to return true since we found the player
                 return true;
             }
+
         }
+
         return false;
     }
 }

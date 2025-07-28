@@ -243,11 +243,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 93687320}
   m_SourcePrefab: {fileID: 100100000, guid: 361e3d5cdb2eadb43a7e7bacd9accd86, type: 3}
---- !u!1 &66486196 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2946873011948580738, guid: 44fd55eb9bc8ee04d9091737a7348cee, type: 3}
-  m_PrefabInstance: {fileID: 694511769}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &81832931 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1314193541681366, guid: 361e3d5cdb2eadb43a7e7bacd9accd86, type: 3}
@@ -1878,7 +1873,6 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: fd094a62dc92e4242afb15f96bdd19ed, type: 2}
-    - {fileID: 11400000, guid: b86e7cb4af52d394fbab829ab6610d9a, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -1893,20 +1887,6 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 66486196}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
           m_CallState: 2
 --- !u!1001 &859235444
 PrefabInstance:
@@ -3392,7 +3372,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Press Esc to skip cutscene
+  m_text: 'Press cancel to skip cutscene
 
 '
   m_isRightToLeft: 0

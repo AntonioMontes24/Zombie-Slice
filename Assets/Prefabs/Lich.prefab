@@ -399,8 +399,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09116e6626ae22146922759bcf10daf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currHealth: 100
-  _maxHealth: 100
+  currHealth: 50
+  _maxHealth: 50
   speed: 5
   speedModifier: 1
   faceTargetSpeed: 12
@@ -408,6 +408,7 @@ MonoBehaviour:
   agent: {fileID: 6112530286498518637}
   animator: {fileID: 6020589850151343814}
   playerInRange: 0
+  field_of_view: 120
   headPos: {fileID: 3584360736666557756}
   shootPosition: {fileID: 7594432034687839646}
   blightBall: {fileID: 2554906872843287506, guid: ad4c2c4a93e73d04bb7ed717a568b42b, type: 3}
@@ -418,10 +419,10 @@ MonoBehaviour:
   BS4Position: {fileID: 4100099895953587533}
   aud: {fileID: 2140722750802982662}
   aud_clip_idle: {fileID: 8300000, guid: b53cdcf2b54718548afd0153df3910b3, type: 3}
-  aud_clip_attack: {fileID: 8300000, guid: 92c0fafad1587b34cad637b67e2f9c3d, type: 3}
+  aud_clip_attack: {fileID: 8300000, guid: 3d682447053f90f46b75fe829859bc71, type: 3}
   aud_clip_death: {fileID: 8300000, guid: 453c3bd9770d7a44794604a7eb398b8d, type: 3}
-  idleAudioPlayRate: 5
-  attackDelay: 3
+  audioCounter: 0
+  attackRate: 200
 --- !u!95 &6020589850151343814
 Animator:
   serializedVersion: 7

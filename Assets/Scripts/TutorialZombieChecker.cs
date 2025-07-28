@@ -1,38 +1,38 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using System.Collections;
+//using UnityEngine;
+//using UnityEngine.SceneManagement;
+//using System.Collections;
 
-public class ApartmentTutorialZombieChecker : MonoBehaviour
-{
-    private bool isChecking = false;
+//public class ApartmentTutorialZombieChecker : MonoBehaviour
+//{
+//    private bool isChecking = false;
 
-    void Update()
-    {
+//    void Update()
+//    {
        
-        if (SceneManager.GetActiveScene().name != "Apartment_Tutorial")
-            return;
+//        if (SceneManager.GetActiveScene().name != "Apartment_Tutorial")
+//            return;
 
         
-        if (isChecking)
-            return;
+//        if (isChecking)
+//            return;
 
         
-        int zombieCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
+//        int zombieCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
 
-        if (zombieCount == 0)
-        {
+//        if (zombieCount == 0)
+//        {
             
-            StartCoroutine(DelayThenLoadNextScene());
-            isChecking = true;
-        }
-    }
+//            StartCoroutine(DelayThenLoadNextScene());
+//            isChecking = true;
+//        }
+//    }
 
-    private IEnumerator DelayThenLoadNextScene()
-    {
-        yield return new WaitForSeconds(3f);
+//    private IEnumerator DelayThenLoadNextScene()
+//    {
+//        yield return new WaitForSeconds(3f);
 
         
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex + 1);
-    }
-}
+//        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+//        SceneManager.LoadScene(currentSceneIndex + 1);
+//    }
+//}

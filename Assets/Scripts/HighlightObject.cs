@@ -36,7 +36,7 @@ public class HighlightObject : MonoBehaviour
 
             // Optional Emission Glow
             instancedMaterials[i].EnableKeyword("_EMISSION");
-            instancedMaterials[i].SetColor("_EmissionColor", highlightColor * .65f);
+            instancedMaterials[i].SetColor("_EmissionColor", highlightColor * .5f);
         }
     }
 

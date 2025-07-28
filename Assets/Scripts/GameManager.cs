@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
 
-    [SerializeField] public GameObject menuActive;
+    [SerializeField] GameObject menuActive;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuVideo;
     [SerializeField] GameObject menuControls;
 
-    [SerializeField] public GameObject menuWebGLQuit;
     [SerializeField] GameObject inGameUI;
 
     public GameObject bittenStatusGroup;
@@ -76,7 +75,6 @@ public class GameManager : MonoBehaviour
     public GameObject flashAmmoPickUp;
 
     public bool isPaused;
-    private bool gameEnded = false;
 
     float timeScaleOrig;
     [SerializeField] private Button resetControlsButton;//For controllerNav
@@ -165,11 +163,6 @@ public class GameManager : MonoBehaviour
         {
             inGameUI.SetActive(true);
         }
-        if (menuWebGLQuit != null)
-        {
-            menuWebGLQuit.SetActive(false);
-        }
-
         PlayerController.inputActions?.UI.Enable();
     }
 
@@ -192,59 +185,56 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-#if UNITY_WEBGL
-    if (PlayerController.inputActions.UI.WebGLPause.triggered)
-#else
         if (PlayerController.inputActions.UI.Cancel.triggered)
-#endif
         {
-            if (!gameEnded)
+            if (menuActive == null)
             {
-                if (menuActive == null)
+                statePause();
+                menuActive = menuPause;
+                menuActive.SetActive(isPaused);
+                if (inGameUI != null)
                 {
-                    statePause();
-                    menuActive = menuPause;
-                    menuActive.SetActive(isPaused);
-                    if (inGameUI != null)
-                    {
-                        inGameUI.SetActive(false);
-                    }
-                    SelectFirstButton(menuActive);
+                    inGameUI.SetActive(false);
                 }
-                else if (menuActive == menuPause)
-                {
-                    stateUnpause();
-                }
-                else if (menuActive == menuOptions)
-                {
-                    menuActive.SetActive(false);
-                    menuActive = menuPause;
-                    menuActive.SetActive(true);
-                    SelectFirstButton(menuActive);
-                }
-                else if (menuActive == menuAudio || menuActive == menuVideo || menuActive == menuControls)
-                {
-                    menuActive.SetActive(false);
-                    menuActive = menuOptions;
-                    menuActive.SetActive(true);
-                    SelectFirstButton(menuActive);
-                }
+                SelectFirstButton(menuActive);
+            }
+            else if (menuActive == menuPause)
+            {
+                stateUnpause();
+            }
+            else if (menuActive == menuOptions)
+            {
+                menuActive.SetActive(false);
+                menuActive = menuPause;
+                menuActive.SetActive(true);
+                SelectFirstButton(menuActive);
+            }
+            else if (menuActive == menuAudio || menuActive == menuVideo || menuActive == menuControls)
+            {
+                menuActive.SetActive(false);
+                menuActive = menuOptions;
+                menuActive.SetActive(true);
+                SelectFirstButton(menuActive);
             }
         }
 
         // only update game timer if not paused
-        if (!isPaused && !gameEnded)
+        if (!isPaused)
         {
             if (remainingTime > 0)
             {
                 remainingTime -= Time.deltaTime;
             }
-            else 
+            else if (remainingTime <= 0)
             {
                 remainingTime = 0;
-                if (!gameEnded)
+                if (!isPaused)
                 {
                     youRanOutOfTime();
+                }
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.StopMusic();
                 }
             }
         }
@@ -273,17 +263,17 @@ public class GameManager : MonoBehaviour
     {
         isPaused = true;
         Time.timeScale = 0;
-        AudioManager.instance?.MusicSource?.Pause();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        menuPause.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
+        SelectFirstButton(menuPause);
     }
 
     public void stateUnpause()
     {
         isPaused = false;
         Time.timeScale = timeScaleOrig;
-        AudioManager.instance?.MusicSource?.UnPause();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -398,66 +388,46 @@ public class GameManager : MonoBehaviour
 
     public void youLose()
     {
-        if (gameEnded) return;
-
-        gameEnded = true;
         statePause();
-
         //hide ingame ui when you have lost
         if (inGameUI != null)
         {
             inGameUI.SetActive(false);
         }
-
         AudioManager.instance.StopMusic();
         menuActive = menuLose;
         menuActive.SetActive(true);
-
         if (flashDamageScreen != null)
         {
             flashDamageScreen.SetActive(false);
         }
-        SelectFirstButton(menuLose);
     }
 
     public void youRanOutOfTime()
     {
-        if(gameEnded) return;
-
-        gameEnded = true;
         statePause();
-
         if (inGameUI != null)
         {
             inGameUI.SetActive(false);
         }
         AudioManager.instance.StopMusic();
-
         menuActive = menuNoTime;
         menuActive.SetActive(true);
-
         if (flashDamageScreen != null)
         {
             flashDamageScreen.SetActive(false);
         }
-        SelectFirstButton(menuNoTime);
     }
 
     public void youWin()
     {
-        if (gameEnded) return;
-        gameEnded = true;
         statePause();
-
         if (inGameUI != null)
         {
             inGameUI.SetActive(false);
         }
-        AudioManager.instance.StopMusic();
-
         menuActive = menuWin;
         menuActive.SetActive(true);
-        SelectFirstButton(menuWin);
     }
 
     public void SetCurrentEnemy(iEnemyHealth en)
@@ -589,33 +559,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        if(PlayerController.inputActions != null)
-        {
-            PlayerController.inputActions.UI.Disable();
-            PlayerController.inputActions.Input.Disable();
-        }
-    }
-    public void ResetAfterRespawn()
-    {
-        gameEnded = false;
-        isPaused = false;
-
-        Time.timeScale = timeScaleOrig;
-
-        if (menuLose != null) menuLose.SetActive(false);
-        if (menuWin != null) menuWin.SetActive(false);
-        if (menuNoTime != null) menuNoTime.SetActive(false);
-        if (menuPause != null) menuPause.SetActive(false);
-        if (menuOptions != null) menuOptions.SetActive(false);
-
-        menuActive = null;
-
-        if (inGameUI != null)
-            inGameUI.SetActive(true);
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-    }
+    //    if (playerHealth != null)
+    //        playerHealth.ResetHealth();
+    //}
 }

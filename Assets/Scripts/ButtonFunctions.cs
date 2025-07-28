@@ -8,21 +8,6 @@ public class ButtonFunctions : MonoBehaviour
     {
         GameManager.instance.stateUnpause();
     }
-
-    public void backToMain()
-    {
-        // Destroy persistent singletons
-    if (GameManager.instance != null) Destroy(GameManager.instance.gameObject);
-    if (KillManager.instance != null) Destroy(KillManager.instance.gameObject);
-    if (AudioManager.instance != null) Destroy(AudioManager.instance.gameObject);
-
-    // Optionally clear Time.timeScale if paused
-    Time.timeScale = 1f;
-    
-        SceneManager.LoadScene(1);
-
-        
-    }
     public void restart()
     {
         //GameManager.instance.respawnHook?.Invoke();
@@ -48,12 +33,12 @@ public class ButtonFunctions : MonoBehaviour
         {
             
             GameManager.instance.player.transform.position = GameManager.instance.playerSpawnPoint;
+
+           
             GameManager.instance.player.GetComponent<PlayerHealth>().Revive();
 
-            GameManager.instance.ResetAfterRespawn();
-            GameManager.instance.respawnHook?.Invoke();
-
             GameManager.instance.statePause();
+
             GameManager.instance.stateUnpause();
         }
     }
@@ -123,24 +108,13 @@ public class ButtonFunctions : MonoBehaviour
 
     public void quit()
     {
-#if UNITY_WEBGL
-        if (GameManager.instance != null)
-        {
-            if (GameManager.instance.menuActive != null)
-            {
-                GameManager.instance.menuActive.SetActive(false);
-            }
-
-            GameManager.instance.menuActive = GameManager.instance.menuWebGLQuit;
-            GameManager.instance.menuActive.SetActive(true);
-        }
-#elif UNITY_EDITOR
-    UnityEditor.EditorApplication.isPlaying = false;
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
 #else
-    Application.Quit();
+
+        Application.Quit();
 #endif
     }
-
 
     [Header("Door Interaction")]
     [SerializeField] private float holdDuration = 1f;
@@ -153,6 +127,19 @@ public class ButtonFunctions : MonoBehaviour
 
   
     private bool isPlayerNearDoor = false;
+
+    private void Start()
+    {
+    
+
+    }
+
+
+    private void Update()
+    {
+        
+
+    }
 
    
 }

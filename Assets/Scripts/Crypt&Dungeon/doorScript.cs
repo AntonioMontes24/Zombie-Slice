@@ -13,7 +13,6 @@ public class doorScript : MonoBehaviour
     [SerializeField] float openAngleOffsetY = -90f;
     [SerializeField] bool useSlidingDoor = false; //sliding door 
     [SerializeField] Vector3 openPositionOffSet = new Vector3(0, 0, -3f); //door sliding
-    [SerializeField] private bool flipOpenDirection = false;
 
     private Vector3 closedPosition;
     private Vector3 targetPosition;
@@ -119,8 +118,7 @@ public class doorScript : MonoBehaviour
 
         else if (isOpen)
         {
-            float angle = flipOpenDirection ? -openAngleOffsetY : openAngleOffsetY;
-            targetRotation = closeRotation * Quaternion.Euler(0, angle, 0);
+            targetRotation = closeRotation * Quaternion.Euler(0, 90f, 0);
         }
         else
         {

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 public class PickupSpawner : MonoBehaviour
 {
@@ -10,7 +9,6 @@ public class PickupSpawner : MonoBehaviour
     public class PickupItem
     {
         public GameObject pickupPrefab;
-        [Range(0f, 1f)]
         public float spawnChance;
     }
 
@@ -20,10 +18,6 @@ public class PickupSpawner : MonoBehaviour
     [SerializeField] float maxSpawnArea, minSpawnArea;
     [SerializeField] float spawnForce = 5f; // for pop effect
 
-
-    [Header("NavMesh Spawn Settings")]
-    [SerializeField] float navMeshSampleRadius = 2.0f; // how far to search for a valid nav position
-    [SerializeField] int navMeshAreaMask = NavMesh.AllAreas;
 
     private void Awake()
     {
@@ -59,23 +53,23 @@ public class PickupSpawner : MonoBehaviour
                 continue;
             }
 
-            Vector3 randomOffset = new Vector3(Random.Range(minSpawnArea, maxSpawnArea) * (Random.value > 0.5f ? 1 : -1), 0, Random.Range(minSpawnArea, maxSpawnArea) * (Random.value > 0.5f ? 1 : -1));
+            Vector3 randomOffset = new Vector3(Random.Range(minSpawnArea, maxSpawnArea), 0, Random.Range(minSpawnArea, maxSpawnArea));
 
-            Vector3 potentialSpawnPos = deathPosition + randomOffset;
+            Vector3 finalSpawnPos = deathPosition + randomOffset + Vector3.up * 0.5f;
 
-            NavMeshHit hit;
-            if(NavMesh.SamplePosition(potentialSpawnPos, out hit, navMeshSampleRadius, navMeshAreaMask))
+            GameObject spawnedItem = Instantiate(pickupToSpawn, finalSpawnPos, Quaternion.Euler(0, Random.Range(0, 360), 0));
+
+            Rigidbody rb = spawnedItem.GetComponent<Rigidbody>();
+            if(rb == null)
             {
-                Vector3 finalSpawnPos = hit.position + Vector3.up * 0.5f;
-                GameObject spawnedItem = Instantiate(pickupToSpawn, finalSpawnPos, Quaternion.Euler(0, Random.Range(0, 360), 0));
-                Rigidbody rb = spawnedItem.GetComponent<Rigidbody>();
-                if (rb == null)
-                {
-                    rb = spawnedItem.AddComponent<Rigidbody>();
-                }
-                Vector3 popDirection = (Vector3.up + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized);
-                rb.AddForce(popDirection * spawnForce, ForceMode.Impulse);
+                rb = spawnedItem.AddComponent<Rigidbody>();
             }
+            Vector3 popDirection = (Vector3.up + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized);
+            rb.AddForce(popDirection * spawnForce, ForceMode.Impulse);
+
+            //var t = Instantiate(pickupToSpawn, transform.position, Quaternion.identity).GetComponent<Transform>();
+            //var pos = transform.position + new Vector3(Random.Range(minSpawnArea, maxSpawnArea), 0, Random.Range(minSpawnArea, maxSpawnArea));
+            //t.SetPositionAndRotation(pos, Quaternion.Euler(0, Random.Range(0, 360), 0));
         }
     }
 

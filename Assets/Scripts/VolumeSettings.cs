@@ -9,7 +9,6 @@ public class VolumeSettings : MonoBehaviour
     [SerializeField] public Slider musicSlider;
     [SerializeField] public Slider sfxSlider;
     [SerializeField] public Slider menuSlider;
-    private AudioManager mAudioManager;
 
     public const string MIXER_MUSIC = "Music";
     public const string MIXER_SFX = "SFX";
@@ -30,7 +29,7 @@ public class VolumeSettings : MonoBehaviour
         if(musicSlider != null) musicSlider.value = AudioManager.instance.GetMusicVolume();
         if(sfxSlider != null) sfxSlider.value = AudioManager.instance.GetSFXVolume();
         if(menuSlider != null) menuSlider.value = AudioManager.instance.GetMenuVolume();
-        mAudioManager = AudioManager.instance;
+
 
     }
 
@@ -67,8 +66,6 @@ public class VolumeSettings : MonoBehaviour
         mixer.SetFloat(MIXER_MUSIC, targetVolume);
         PlayerPrefs.SetFloat(AudioManager.MUSIC_KEY, volume);
         PlayerPrefs.Save();
-        if (mAudioManager != null && volume > 0.01f)
-            mAudioManager.PlayButtonHoverSound();
     }
 
     void SetSFXVolume(float volume)
@@ -77,8 +74,6 @@ public class VolumeSettings : MonoBehaviour
         mixer.SetFloat(MIXER_SFX, targetVolume);
         PlayerPrefs.SetFloat(AudioManager.SFX_KEY, volume);
         PlayerPrefs.Save();
-        if (mAudioManager != null && volume > 0.01f)
-            mAudioManager.PlayButtonHoverSound();
     }
 
     void SetMenuVolume(float volume)
@@ -87,8 +82,6 @@ public class VolumeSettings : MonoBehaviour
         mixer.SetFloat(MIXER_MENU, targetVolume);
         PlayerPrefs.SetFloat(AudioManager.MENU_KEY, volume);
         PlayerPrefs.Save();
-        if (mAudioManager != null && volume > 0.01f)
-            mAudioManager.PlayButtonHoverSound();
     }
 
     public void ResetVolumesToDefault()
